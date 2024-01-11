@@ -7,11 +7,17 @@ export default () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [reEnterPassword, setReEnterPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const auth = getAuth();
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        setErrorMessage("");
+        if (password !== reEnterPassword) {
+            setErrorMessage("Passwords do not match");
+            return;
+        }
         await createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -54,6 +60,20 @@ export default () => {
                         required
                         placeholder="Password"
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="reenter-password">
+                        Re-Enter Password
+                    </label>
+                    <input
+                        id="reenter-password"
+                        name="reenter-password"
+                        type="password"
+                        value={reEnterPassword}
+                        onChange={(e) => setReEnterPassword(e.target.value)}
+                        required
+                        placeholder="Re-Enter Password"
                     />
                 </div>
                 <div>
