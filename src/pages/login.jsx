@@ -8,7 +8,7 @@ import 'firebaseui/dist/firebaseui.css'
 import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 
-import auth from '../firebase'
+import {auth} from '../firebase'
 
 export default () => {
     useEffect(() => {

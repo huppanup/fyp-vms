@@ -21,7 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const analytics = getAnalytics(app);
-export const db = getFirestore(app);
+const db = getFirestore(app);
 
 // Detect authorization state
 
@@ -33,5 +33,5 @@ onAuthStateChanged(auth, user => {
     }
 })
 
-export default auth;
+export {app, auth, db} ;
 
