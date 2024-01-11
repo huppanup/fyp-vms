@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import firebase from 'firebase/compat/app';
 
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+import { NavLink, useNavigate } from 'react-router-dom'
 
 
 export default () => {
@@ -47,6 +48,12 @@ export default () => {
             />
             <button variant="contained" onClick={verify}>VERIFY</button>
             <div id="email"></div>
+            <p>
+                Already have an account?{' '}
+                <NavLink to="/login_template" >
+                    Sign in
+                </NavLink>
+            </p>
         </>
     )
 }

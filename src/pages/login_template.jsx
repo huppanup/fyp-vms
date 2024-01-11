@@ -68,7 +68,7 @@ export default () => {
             </form>
             <p>
                 No account yet? {' '}
-                <NavLink to="/signup" >
+                <NavLink to="/login_manual" >
                     Sign Up
                 </NavLink>
             </p>
