@@ -6,6 +6,7 @@ import 'firebaseui/dist/firebaseui.css'
 
 // React
 import React, {useEffect} from "react";
+import {Link} from "react-router-dom";
 
 import auth from '../firebase'
 
@@ -18,8 +19,7 @@ export default () => {
                 {
                     provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
                     requireDisplayName: false
-                },
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                }
               ],
             signInSuccessUrl: 'https://www.google.com',
         });
@@ -29,7 +29,6 @@ export default () => {
         <>
             <h1 className="text-center my-3 title">Login Page</h1>
             <div id="firebaseui-auth-container"></div>
-            <div id="loader" className="text-center">Loading form</div>
         </>
     )
 }
