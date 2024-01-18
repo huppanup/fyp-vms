@@ -1,0 +1,72 @@
+.nav {
+    background-color: #003366;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 50px;
+    justify-content: space-between;
+}
+
+.top-bar {
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bottom-bar {
+    margin-bottom: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 8%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.home {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.map {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.cloud {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.setting {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.personal-info {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 0.5);
+}
