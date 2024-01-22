@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,7 +15,8 @@ const firebaseConfig = {
   storageBucket: "fyp-vms-4c56e.appspot.com",
   messagingSenderId: "622719935238",
   appId: "1:622719935238:web:a01c1a6d67c8d4a8a7f487",
-  measurementId: "G-ZK0NSJW8TV"
+  measurementId: "G-ZK0NSJW8TV",
+  databaseURL: "https://fyp-vms-4c56e-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
@@ -22,6 +24,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
+const database = getDatabase(app);
 
 // Detect authorization state
 
@@ -33,5 +36,5 @@ onAuthStateChanged(auth, user => {
     }
 })
 
-export {app, auth, db} ;
+export {app, auth, db, database} ;
 
