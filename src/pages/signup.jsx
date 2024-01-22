@@ -1,78 +1,116 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+import React, {useEffect} from "react";
+import {app, auth, db} from '../firebase';
+import firebase from 'firebase/compat/app';
+import validator from 'validator';
+
+import { getAuth, sendSignInLinkToEmail, validatePassword } from "firebase/auth";
 
 
 export default () => {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('')
+    const [checkPassword, setCheckPassword] = React.useState('');
+    const [signUpReady, setSignUpReady] = React.useState(0);
+    const [pwStrength, setpwStrength] = React.useState('');
+    const pwStrengthMessage = ['Password Strength: Strong', 'Password Strength: Weak. Your password should be at least 8 characters long, including 1 lowercase, number, and symbol.'];
     const auth = getAuth();
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        await createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user);
-                navigate("/login_template");
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
-                setErrorMessage(errorMessage);
-            });
+    /*
+    const actionCodeSettings = {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be in the authorized domains list in the Firebase Console.
+        url: 'http://localhost:3000/login_manual/?email=' + firebase.auth().currentUser.email,
+        handleCodeInApp: true,
+      };
+    */
+    const actionCodeSettings ={
+        url: 'http://localhost:3000/signup/verified',
+        handleCodeInApp: true,
     };
 
+    const validatePassword = (value) => {
+        if (validator.isStrongPassword(value, { 
+            minLength: 8, minLowercase: 1, minUppercase: 0,
+            minNumbers: 1, minSymbols: 1 
+        })) { 
+            setpwStrength(0);
+        } else { 
+            setpwStrength(1); 
+        } 
+        setPassword(value);
+    }
+
+    const matchPassword = (value) => {
+        if (password == value){
+            setSignUpReady(1);
+        } else {
+            setSignUpReady(0);
+        }
+        setCheckPassword(value);
+    }
+
+    const verify = () => {
+        console.log(actionCodeSettings);
+        sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
+            console.log("Email sent")
+            alert("Please check your email for the verification link.")
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        })
+
+    };
     return (
         <>
-            <h1 className="text-center my-3 title">Sign Up</h1>
-            <form className="signup-form">
-                <div>
-                    <label htmlFor="email-address">
-                        Email address
+            <div className="container">
+            <div className="login-module">
+            <div className="login-contents">
+            <h1 className="text-center title">Create Account</h1>
+            <form className="login-form">
+            <div className="form-input">
+            <label htmlFor="password">
+                        E-mail
                     </label>
-                    <input
-                        type="email"
-                        label="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        placeholder="Email address"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">
+            <input
+                type="email"
+                name="email"
+                placeholder="E-mail"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+            />
+            </div>
+            <div className="form-input">
+            <label htmlFor="password">
                         Password
                     </label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <button
-                        type="submit"
-                        onClick={onSubmit}>
-                        Sign up
-                    </button>
-                </div>
-                { errorMessage && (
-                    <p style={{color: "red"}} className="error-message">{errorMessage}</p>
-                )}
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={password}
+                onChange={e => validatePassword(e.target.value)}
+            />
+            { (pwStrength == 1) && (<p style={{color: "red"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
+            { (pwStrength == 0) && (<p style={{color: "green"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
+            </div>
+            <div className="form-input">
+            <input
+                type="password"
+                name="checkPassword"
+                placeholder="Re-enter password"
+                value={checkPassword}
+                disabled={ pwStrength ? true : false}
+                onChange={e => matchPassword(e.target.value)}
+            />
+            { (pwStrength == 0) && (checkPassword != '') && (signUpReady==0) && (<p style={{color: "red"}} className="error-message">Password does not match.</p>)}
+            </div>
+            <button variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={verify}>SIGN UP</button>
+            <div id="email"></div>
             </form>
-            <p>
-                Already have an account?{' '}
-                <NavLink to="/login_template" >
-                    Sign in
-                </NavLink>
-            </p>
+            </div>
+            </div>
+            </div>
         </>
     )
 }

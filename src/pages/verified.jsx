@@ -1,34 +1,35 @@
-import React, {useState} from 'react';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { NavLink, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 export default () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const auth = getAuth();
 
-    const onLogIn = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            navigate("/home");
-            console.log(user);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-            setErrorMessage(errorMessage);
-        });
-    }
+        await createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
+                navigate("/login");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+                setErrorMessage(errorMessage);
+            });
+    };
 
     return (
         <>
-            <h1 className="text-center my-3 title">Welcome!</h1>
-            <form className="login-form">
+            <h1 className="text-center my-3 title">Sign Up</h1>
+            <form className="signup-form">
                 <div>
                     <label htmlFor="email-address">
                         Email address
@@ -58,8 +59,8 @@ export default () => {
                 <div>
                     <button
                         type="submit"
-                        onClick={onLogIn}>
-                        Log In
+                        onClick={onSubmit}>
+                        Sign up
                     </button>
                 </div>
                 { errorMessage && (
@@ -67,9 +68,9 @@ export default () => {
                 )}
             </form>
             <p>
-                No account yet? {' '}
-                <NavLink to="/signup" >
-                    Sign Up
+                Already have an account?{' '}
+                <NavLink to="/login_template" >
+                    Sign in
                 </NavLink>
             </p>
         </>
