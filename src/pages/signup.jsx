@@ -116,7 +116,7 @@ export default () => {
             />
             { (pwStrength == 0) && (checkPassword != '') && (signUpReady==0) && (<p style={{color: "red"}} className="error-message">Password does not match.</p>)}
             </div>
-            <button variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={onSubmit}>SIGN UP</button>
+            <button className="login-button" variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={onSubmit}>SIGN UP</button>
             <div id="email"></div>
             </form>
             </div>

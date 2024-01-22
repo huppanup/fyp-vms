@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaStar } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
-import "./home.css";
+import "../stylesheets/home.css";
 import Navbar from "../components/navbar";
 
 export default () => {
@@ -73,7 +73,7 @@ export default () => {
   
   return (
     <>
-      <div className="container">
+      <div className="home-container">
         <div className="nav">
           <Navbar />
         </div>

@@ -57,7 +57,7 @@ export default () => {
                     />
                 </div>
                 <div>
-                    <button
+                    <button className="login-button"
                         type="submit"
                         onClick={onSubmit}>
                         Sign up

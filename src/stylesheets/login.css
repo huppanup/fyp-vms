@@ -58,7 +58,7 @@
     opacity: 0.5; /* Firefox */
   }
 
-button{
+.login-button{
     color: white;
     background-color: #003366;
     border: 0px solid #434343;
