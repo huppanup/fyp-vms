@@ -2,12 +2,14 @@
 import React, {useEffect} from "react";
 import {app, auth, db} from '../firebase';
 import firebase from 'firebase/compat/app';
+import { NavLink, useNavigate } from 'react-router-dom';
 import validator from 'validator';
 
-import { getAuth, sendSignInLinkToEmail, validatePassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail, validatePassword } from "firebase/auth";
 
 
 export default () => {
+    const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('')
     const [checkPassword, setCheckPassword] = React.useState('');
@@ -15,17 +17,25 @@ export default () => {
     const [pwStrength, setpwStrength] = React.useState('');
     const pwStrengthMessage = ['Password Strength: Strong', 'Password Strength: Weak. Your password should be at least 8 characters long, including 1 lowercase, number, and symbol.'];
     const auth = getAuth();
-    /*
-    const actionCodeSettings = {
-        // URL you want to redirect back to. The domain (www.example.com) for this
-        // URL must be in the authorized domains list in the Firebase Console.
-        url: 'http://localhost:3000/login_manual/?email=' + firebase.auth().currentUser.email,
-        handleCodeInApp: true,
-      };
-    */
+
     const actionCodeSettings ={
-        url: 'http://localhost:3000/signup/verified',
+        url: 'http://localhost:3000',
         handleCodeInApp: true,
+    };
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        await createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
+                navigate("/login");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            });
     };
 
     const validatePassword = (value) => {
@@ -61,6 +71,7 @@ export default () => {
         })
 
     };
+
     return (
         <>
             <div className="container">
@@ -105,7 +116,7 @@ export default () => {
             />
             { (pwStrength == 0) && (checkPassword != '') && (signUpReady==0) && (<p style={{color: "red"}} className="error-message">Password does not match.</p>)}
             </div>
-            <button variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={verify}>SIGN UP</button>
+            <button variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={onSubmit}>SIGN UP</button>
             <div id="email"></div>
             </form>
             </div>

@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.main-panel {
+    flex-grow: 1;
+    flex: 1 1 auto;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+h1 {
+    display: flex;
+    margin-top: 10vh;
+    margin-left: 8vw;
+    color: #003366;
+}
+
+table {
+    margin-left: 8vw;
+    margin-top: 3vh;
+    padding-right: 20vw;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+table tr th {
+    text-align: left;
+    color: black;
+    padding-bottom: 2vh;
+    border-bottom: 1px solid #003366;
+}
+
+td {
+    border-bottom: 1px solid #003366;
+    padding-bottom: 2vh;
+    padding-top: 2vh;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    max-width: 60vw;
+    margin: 10vh auto;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 4px;
+  }
+  
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 8px;
+    font-size: 16px;
+}
+  
+.search-button {
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: transparent;
+  }
