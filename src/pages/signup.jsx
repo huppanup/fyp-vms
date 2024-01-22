@@ -4,6 +4,7 @@ import {app, auth, db} from '../firebase';
 import firebase from 'firebase/compat/app';
 import { NavLink, useNavigate } from 'react-router-dom';
 import validator from 'validator';
+import Popup from "../components/popup";
 
 import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail, validatePassword } from "firebase/auth";
 
@@ -11,7 +12,9 @@ import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail, validat
 export default () => {
     const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('')
+    const [password, setPassword] = React.useState('');
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const [message, setMessage] = React.useState('');
     const [checkPassword, setCheckPassword] = React.useState('');
     const [signUpReady, setSignUpReady] = React.useState(0);
     const [pwStrength, setpwStrength] = React.useState('');
@@ -29,12 +32,16 @@ export default () => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
-                navigate("/login");
+                verify();
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
+                if (errorCode == "auth/email-already-in-use"){
+                    setMessage(email + " is already in use. Please try again with a different email.");
+                    setModalOpen(true);
+                    setEmail('');
+                }
             });
     };
 
@@ -60,14 +67,15 @@ export default () => {
     }
 
     const verify = () => {
-        console.log(actionCodeSettings);
         sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
-            console.log("Email sent")
-            alert("Please check your email for the verification link.")
+            setModalOpen(true);
+            setMessage("Your account has been successfully created! Please check your inbox to verify your account.");
+
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log(errorMessage);
         })
 
     };
@@ -75,6 +83,7 @@ export default () => {
     return (
         <>
             <div className="container">
+            <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} />
             <div className="login-module">
             <div className="login-contents">
             <h1 className="text-center title">Create Account</h1>
