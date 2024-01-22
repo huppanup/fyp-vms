@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaStar } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "./home.css";
@@ -92,17 +92,15 @@ export default () => {
           <table className="table">
             <thead>
               <tr>
+                <th className="star-head"></th>
                 <th>Name</th>
                 <th>Date Added</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
             {likedLocations.map((location) => (
                 <tr key={location.name}>
-                  <td>{location.name}</td>
-                  <td>{location.dateAdded}</td>
-                  <td>
+                  <td className="star-cell">
                     <button
                       onClick={() => toggleLike(location)}
                       className={`favorite-button ${likedLocations.some(
@@ -110,10 +108,12 @@ export default () => {
                       ) && "active"}`}
                     >
                       {likedLocations.some((likedLocation) => likedLocation.name === location.name)
-                        ? "Remove Favorite"
-                        : ""}
+                        ? <FaStar className="star-icon active" size={20} />
+                        : <FaStar className="star-icon" size={20} />}
                     </button>
                   </td>
+                  <td>{location.name}</td>
+                  <td>{location.dateAdded}</td>
                 </tr>
               ))}
             </tbody>
