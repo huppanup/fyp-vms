@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import Modal from 'react-modal';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const customStyles = {
     overlay: {
@@ -12,7 +13,7 @@ const customStyles = {
       left: "0",
     },
     content: {
-      width: "360px",
+      width: "350px",
       height: "180px",
       zIndex: "150",
       position: "absolute",
@@ -27,8 +28,8 @@ const customStyles = {
     },
   };
 
-export default ({modalOpen, setModalOpen, message}) => {
-
+export default ({modalOpen, setModalOpen, message, navigateTo}) => {
+    const navigate = useNavigate();
     return (
         <Modal
           isOpen={modalOpen}
@@ -38,7 +39,10 @@ export default ({modalOpen, setModalOpen, message}) => {
           contentLabel="Pop up Message"
           shouldCloseOnOverlayClick={true}
         >
-        {message}
+        <div className="popup-body" style={{display: "flex", height: "140px",margin:"auto", color: "#434343", fontSize: "14px", verticalAlign:"middle", textAlign:"center", alignItems: "center", justifyContent:"center"}}>
+            {message}
+        </div>
+        <div className="popup-footer" style={{height: "35px", textAlign:"center", verticalAlign:"center"}}><button className="login-button" onClick={ () => navigateTo ? navigate(navigateTo):setModalOpen(false)} style={{width: "100px", textAlign:"center", marginTop: "0"}}>CLOSE</button></div>
         </Modal>
     );
 }

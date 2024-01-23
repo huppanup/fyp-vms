@@ -22,7 +22,11 @@ export default () => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage);
-            setErrorMessage(errorMessage);
+            if (errorCode == "auth/invalid-email" || errorCode == "auth/invalid-login-credentials"){
+                setErrorMessage("Incorrect email or password. Please try again.");
+            } else {
+                setErrorMessage(errorMessage);
+            }
         });
     }
 
@@ -67,7 +71,7 @@ export default () => {
                     </button>
                 </div>
                 { errorMessage && (
-                    <p style={{color: "red"}} className="error-message">{errorMessage}</p>
+                    <p style={{color: "red", marginTop:"10px"}} className="error-message">{errorMessage}</p>
                 )}
             </form>
             <p>

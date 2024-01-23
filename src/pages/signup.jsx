@@ -10,10 +10,10 @@ import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail, validat
 
 
 export default () => {
-    const navigate = useNavigate();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [modalOpen, setModalOpen] = React.useState(false);
+    const [link, setLink] = React.useState(false);
     const [message, setMessage] = React.useState('');
     const [checkPassword, setCheckPassword] = React.useState('');
     const [signUpReady, setSignUpReady] = React.useState(0);
@@ -30,9 +30,7 @@ export default () => {
         e.preventDefault();
         await createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user);
-                verify();
+                verify();          
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -54,6 +52,9 @@ export default () => {
         } else { 
             setpwStrength(1); 
         } 
+        if (checkPassword){
+            setCheckPassword('');
+        }
         setPassword(value);
     }
 
@@ -69,12 +70,15 @@ export default () => {
     const verify = () => {
         sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
             setModalOpen(true);
+            setLink('/login');
             setMessage("Your account has been successfully created! Please check your inbox to verify your account.");
 
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            setModalOpen(true);
+            setMessage("There has been a problem sending email verification. Please try again later.");
             console.log(errorMessage);
         })
 
@@ -83,7 +87,7 @@ export default () => {
     return (
         <>
             <div className="container">
-            <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} />
+            <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={link}/>
             <div className="login-module">
             <div className="login-contents">
             <h1 className="text-center title">Create Account</h1>
