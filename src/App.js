@@ -1,8 +1,6 @@
 import logo from './logo.svg';
-import Main from './pages/main'
 import Signup from './pages/signup'
 import Login from './pages/login'
-import Verified from './pages/verified'
 import Home from './pages/home'
 import {PrivateRoute} from './PrivateRoute'
 import { AuthProvider } from "./AuthContext"
@@ -23,7 +21,6 @@ function App() {
         <Route element={<PrivateRoute/> }>
           <Route path="home" element={<Home />} />
         </Route>
-        <Route path="signup/verified" element={<Verified />} />
         <Route path="signup" element={<Signup />} />
         <Route path="login" element={<Login />} />
       </Routes>
