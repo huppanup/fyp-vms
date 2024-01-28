@@ -4,21 +4,33 @@ import Signup from './pages/signup'
 import Login from './pages/login'
 import Verified from './pages/verified'
 import Home from './pages/home'
+import {PrivateRoute} from './PrivateRoute'
+import { AuthProvider } from "./AuthContext"
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import React, {useState, useEffect} from "react";
+import {app, auth, db} from './firebase';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
   return (
     <Router>
+      <AuthProvider>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route element={<PrivateRoute/> }>
+          <Route exact path="/" element={<Navigate to="/home" />} />
+        </Route>
+        <Route element={<PrivateRoute/> }>
+          <Route path="home" element={<Home />} />
+        </Route>
         <Route path="signup/verified" element={<Verified />} />
         <Route path="signup" element={<Signup />} />
         <Route path="login" element={<Login />} />
-        <Route path="home" element={<Home />} />
       </Routes>
+      </AuthProvider>
     </Router>
   );
+  
 }
 
 export default App;

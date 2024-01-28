@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import firebase from "firebase/compat/app"
+import "firebase/compat/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
@@ -20,21 +20,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+const app = firebase.initializeApp(firebaseConfig);
+const auth = app.auth();
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const database = getDatabase(app);
 
 // Detect authorization state
 
-onAuthStateChanged(auth, user => {
-    if (user != null) {
-        console.log('logged in');
-    } else {
-        console.log('No user.');
-    }
-})
+// onAuthStateChanged(auth, user => {
+//     if (user != null) {
+//         console.log('logged in');
+//     } else {
+//         console.log('No user.');
+//     }
+// })
 
 export {app, auth, db, database} ;
 

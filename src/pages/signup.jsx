@@ -1,15 +1,14 @@
 
-import React, {useEffect} from "react";
-import {app, auth, db} from '../firebase';
-import firebase from 'firebase/compat/app';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React from "react";
 import validator from 'validator';
 import Popup from "../components/popup";
+import {useAuth} from '../AuthContext'
 
-import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail, validatePassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
 
 export default () => {
+    const {signup, verify} = useAuth();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -25,22 +24,28 @@ export default () => {
         url: 'http://localhost:3000',
         handleCodeInApp: true,
     };
-
+    const clearInput = () => {
+        setEmail('');
+        setPassword('');
+        setCheckPassword('');
+    }
     const onSubmit = async (e) => {
         e.preventDefault();
-        await createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                verify();          
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                if (errorCode == "auth/email-already-in-use"){
-                    setMessage(email + " is already in use. Please try again with a different email.");
-                    setModalOpen(true);
-                    setEmail('');
-                }
-            });
+        try{
+            const user = await signup(email, password);
+            await verify(user.user);
+            setModalOpen(true);
+            setLink('/login');
+            setMessage("Your account has been successfully created! Please check your inbox to verify your account.");
+        } catch(error) {
+            if (error.code === "auth/email-already-in-use"){
+                setMessage(email + " is already in use. Please try again with a different email.");              
+            } else {
+                setMessage(error.message);
+            }
+                setModalOpen(true);
+                clearInput();
+        };
     };
 
     const validatePassword = (value) => {
@@ -59,30 +64,13 @@ export default () => {
     }
 
     const matchPassword = (value) => {
-        if (password == value){
+        if (password === value){
             setSignUpReady(1);
         } else {
             setSignUpReady(0);
         }
         setCheckPassword(value);
     }
-
-    const verify = () => {
-        sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
-            setModalOpen(true);
-            setLink('/login');
-            setMessage("Your account has been successfully created! Please check your inbox to verify your account.");
-
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            setModalOpen(true);
-            setMessage("There has been a problem sending email verification. Please try again later.");
-            console.log(errorMessage);
-        })
-
-    };
 
     return (
         <>
@@ -115,8 +103,8 @@ export default () => {
                 value={password}
                 onChange={e => validatePassword(e.target.value)}
             />
-            { (pwStrength == 1) && (<p style={{color: "red"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
-            { (pwStrength == 0) && (<p style={{color: "green"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
+            { (pwStrength === 1) && (<p style={{color: "red"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
+            { (pwStrength === 0) && (<p style={{color: "green"}} className="error-message">{pwStrengthMessage[pwStrength]}</p>)}
             </div>
             <div className="form-input">
             <input
@@ -127,7 +115,7 @@ export default () => {
                 disabled={ pwStrength ? true : false}
                 onChange={e => matchPassword(e.target.value)}
             />
-            { (pwStrength == 0) && (checkPassword != '') && (signUpReady==0) && (<p style={{color: "red"}} className="error-message">Password does not match.</p>)}
+            { (pwStrength === 0) && (checkPassword !== '') && (signUpReady===0) && (<p style={{color: "red"}} className="error-message">Password does not match.</p>)}
             </div>
             <button className="login-button" variant="contained" disabled={ (signUpReady && email) ? false : true} onClick={onSubmit}>SIGN UP</button>
             <div id="email"></div>

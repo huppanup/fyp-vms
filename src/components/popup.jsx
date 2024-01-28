@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import Modal from 'react-modal';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const customStyles = {
     overlay: {
@@ -46,3 +46,4 @@ export default ({modalOpen, setModalOpen, message, navigateTo}) => {
         </Modal>
     );
 }
+// TODO: Long messages overflow the popup body.

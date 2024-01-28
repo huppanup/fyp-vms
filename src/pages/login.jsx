@@ -1,33 +1,32 @@
 import React, {useState} from 'react';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NavLink, useNavigate } from 'react-router-dom'
+import {useAuth} from '../AuthContext'
 import "../stylesheets/login.css"
 
 export default () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     const auth = getAuth();
 
-    const onLogIn = (e) => {
+    async function onLogIn(e) {
         e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
+        try {
+            await login(email,password);
             navigate("/home");
-            console.log(user);
-        })
-        .catch((error) => {
+        } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            console.log(errorMessage);
             if (errorCode == "auth/invalid-email" || errorCode == "auth/invalid-login-credentials"){
                 setErrorMessage("Incorrect email or password. Please try again.");
             } else {
                 setErrorMessage(errorMessage);
             }
-        });
+        }
     }
 
     return (

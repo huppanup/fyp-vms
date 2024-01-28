@@ -8,8 +8,12 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 
-export default () => {
+import firebase from 'firebase/compat/app';
+import {app, auth, db} from '../firebase';
+import {useAuth} from '../AuthContext'
 
+export default () => {
+    const {logout} = useAuth();
     const location = useLocation();
     const isCurrentLink = (link) => {
         return location.pathname === link;
@@ -51,6 +55,7 @@ export default () => {
                     </div>
                 </Link>
             </div>
+            
             <div className={`nav-item ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
                 <Link to="/personal-info" class="personal-info">
                     <div style={{ margin: '0 10px' }}>
@@ -58,6 +63,11 @@ export default () => {
                     </div>
                 </Link>
             </div>
+
+            {/* TEMPORARY!! */}
+            <button onClick={logout}>
+                SIGN OUT
+            </button>
             </div>
         </div>
         </>
