@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import Signup from './pages/signup'
 import Login from './pages/login'
 import Home from './pages/home'
+import Cloud from './pages/cloud'
 import {PrivateRoute} from './PrivateRoute'
 import { AuthProvider } from "./AuthContext"
 import './App.css';
@@ -20,6 +21,7 @@ function App() {
         </Route>
         <Route element={<PrivateRoute/> }>
           <Route path="home" element={<Home />} />
+          <Route path="cloud" element={<Cloud />} />
         </Route>
         <Route path="signup" element={<Signup />} />
         <Route path="login" element={<Login />} />

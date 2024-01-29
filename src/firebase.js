@@ -3,6 +3,7 @@ import "firebase/compat/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,6 +26,7 @@ const auth = app.auth();
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const database = getDatabase(app);
+const storage = getStorage(app);
 
 // Detect authorization state
 
@@ -36,5 +38,5 @@ const database = getDatabase(app);
 //     }
 // })
 
-export {app, auth, db, database} ;
+export {app, auth, db, database, storage} ;
 

@@ -8,24 +8,31 @@ import Navbar from "../components/navbar";
 export default () => {
   const database = getDatabase();
   const auth = getAuth();
-  const user = auth.currentUser;
-  var userId = "123456";
-  if (user) {
-    userId = user.uid;
-  }
-  console.log(userId);
   const [likedLocations, setLikedLocations] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const likedLocationsRef = ref(database, "users/" + userId + "/likedLocations");
-    onValue(likedLocationsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const likedLocationsList = Object.values(data);
-        setLikedLocations(likedLocationsList);
+    const fetchUser = async () => {
+      const user = await auth.currentUser;
+      if (user) {
+        setUserId(user.uid);
       }
-    });
-  }, [userId]);
+    };
+    fetchUser();
+  }, [auth]);
+
+  useEffect(() => {
+    if (userId) {
+      const likedLocationsRef = ref(database, `users/${userId}/likedLocations`);
+      onValue(likedLocationsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const likedLocationsList = Object.values(data);
+          setLikedLocations(likedLocationsList);
+        }
+      });
+    }
+  }, [userId, database]);
 
   const toggleLike = (location) => {
     const isLiked = likedLocations.some((likedLocation) => likedLocation.name === location.name);
@@ -82,13 +89,13 @@ export default () => {
             <input
               type="text"
               class="search-input"
-              placeholder="Search venue..."
+              placeholder="Search Venue..."
             />
             <button class="search-button">
-              <FaSearch />
+              <FaSearch size={18} />
             </button>
           </div>
-          <h1> My Favorites </h1>
+          <h1 className="favorites"> My Favorites </h1>
           <table className="table">
             <thead>
               <tr>
