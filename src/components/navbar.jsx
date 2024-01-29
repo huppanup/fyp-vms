@@ -20,7 +20,7 @@ export default () => {
     }
     return (
         <>
-        <div className="nav">
+        <div className="nav" style = {{position: "absolute", x: 0}}>
             <div className="top-bar">
             <div>
                 <img src={logo} alt="Logo" className="logo" />
