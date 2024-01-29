@@ -1,16 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { NavLink, useNavigate } from 'react-router-dom'
 import {useAuth} from '../AuthContext'
+import Popup from '../components/popup'
 import "../stylesheets/login.css"
 
 export default () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { currentUser, login, logout } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
-    const auth = getAuth();
+
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const message = "Please verify your email first.";
+
+    useEffect(() => {
+        if (currentUser !== null){
+            if (!currentUser.emailVerified){
+                logout()
+                setModalOpen(true)
+            } else {
+                navigate("/home")
+            } 
+        }
+      }, [])
 
     async function onLogIn(e) {
         e.preventDefault();
@@ -32,6 +46,7 @@ export default () => {
     return (
         <>
             <div className="container">
+            <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={false}/>
             <div className="login-module">
             <div className="login-contents">
             <h1 className="text-center title">Welcome!</h1>
