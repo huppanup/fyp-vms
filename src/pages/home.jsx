@@ -3,7 +3,6 @@ import { FaSearch, FaStar } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
-import Navbar from "../components/navbar";
 
 export default () => {
   const database = getDatabase();
@@ -80,10 +79,7 @@ export default () => {
   
   return (
     <>
-      <div className="home-container">
-        <div className="nav">
-          <Navbar />
-        </div>
+      <div className="main-container">
         <div className="main-panel">
           <div class="search-bar">
             <input

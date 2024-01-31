@@ -25,22 +25,22 @@ export default () => {
             <div>
                 <img src={logo} alt="Logo" className="logo" />
             </div>
-            <div className={`nav-item ${isCurrentLink('/home') ? 'active' : ''}`}>
-                <Link to="/home" className={"home"}>
-                    <div style={{ margin: '0 10px' }}>
+            <div className={`nav-box ${isCurrentLink('/home') ? 'active' : ''}`}>
+                <Link to="/home" className={"nav-item"}>
+                    <div style={{ margin: '0 10px', alignItems: 'center'}}>
                         <FaHouseChimney size={30} color="white" />
                     </div>
                 </Link>
             </div>
-            <div className={`nav-item ${isCurrentLink('/map') ? 'active' : ''}`}>
-                <Link to="/map" className="map">
+            <div className={`nav-box ${isCurrentLink('/map') ? 'active' : ''}`}>
+                <Link to="/map" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
                         <FaMapMarkedAlt size={30} color="white" />
                     </div>
                 </Link>
             </div>
-            <div className={`nav-item ${isCurrentLink('/cloud') ? 'active' : ''}`}>
-                <Link to="/cloud" className="cloud">
+            <div className={`nav-box ${isCurrentLink('/cloud') ? 'active' : ''}`}>
+                <Link to="/cloud" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
                         <FaCloud size={30} color="white" />
                     </div>

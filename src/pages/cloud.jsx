@@ -2,7 +2,6 @@ import React from 'react';
 import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown } from "react-icons/fa";
 import { useEffect, useState } from 'react';
 import { getStorage, ref, listAll, getDownloadURL, getMetadata } from "firebase/storage";
-import Navbar from "../components/navbar";
 import "../stylesheets/cloud.css";
 
 export default () => {
@@ -90,10 +89,7 @@ export default () => {
     
     return (
         <>
-        <div className="cloud-container">
-            <div className="nav">
-                <Navbar />
-            </div>
+        <div className="main-container">
             <div className="cloud-main-panel">
             <div className="cloud-location">
                 <div className="cloud-header">

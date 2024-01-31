@@ -1,6 +1,9 @@
-.home-container {
+.main-container {
     display: flex;
+    position: absolute;
+    right:0;
     height: 100vh;
+    width: calc(100vw - 60px);
 }
 
 .main-panel {

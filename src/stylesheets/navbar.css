@@ -3,8 +3,16 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 50px;
+    width: 60px;
     justify-content: space-between;
+    box-shadow: 0 4px 10px #003366bc;
+}
+
+.nav-box {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
 }
 
 .top-bar {
@@ -32,25 +40,10 @@
     margin-bottom: 15px;
 }
 
-.home {
-    margin-top: 15px;
+.nav-item {
+    margin: auto;
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
-}
-
-.map {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
-.cloud {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
 }
 
 .setting {
