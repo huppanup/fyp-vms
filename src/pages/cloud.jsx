@@ -1,12 +1,46 @@
 import React from 'react';
-import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown } from "react-icons/fa";
+import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown, FaUpload } from "react-icons/fa";
 import { useEffect, useState } from 'react';
 import { getStorage, ref, listAll, getDownloadURL, getMetadata } from "firebase/storage";
 import "../stylesheets/cloud.css";
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import Modal from "react-modal";
 
 export default () => {
     const [files, setFiles] = useState([]);
     const storage = getStorage();
+    const [locations, setLocations] = useState([]);
+    const [currentFolder, setCurrentFolder] = useState('');
+    const [selectedLocation, setSelectedLocation] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const customModalStyles = {
+      overlay: {
+        backgroundColor: " rgba(0, 0, 0, 0.4)",
+        width: "100%",
+        height: "100vh",
+        zIndex: "10",
+        position: "fixed",
+        top: "0",
+        left: "0",
+      },
+      content: {
+        width: "500px",
+        height: "500px",
+        zIndex: "150",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        borderRadius: "10px",
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+        backgroundColor: "white",
+        justifyContent: "center",
+        overflow: "auto",
+        textAlign: "center",
+      },
+    };
 
     const fetchFiles = (listRef) => {
         return listAll(listRef)
@@ -51,19 +85,47 @@ export default () => {
                   return Promise.all(formattedFiles);
                 });
         };
+
+      const openModal = () => {
+        setIsModalOpen(true);
+      }
+
+      const closeModal = () => {
+        setIsModalOpen(false);
+      }
+
+      useEffect(() => {
+        const storageRef = ref(storage);
+      
+        listAll(storageRef)
+        .then((res) => {
+          const fetchedLocationNames = res.prefixes.map((prefix) => {
+            const formattedName = prefix.name.replace(/_/g, ' ');
+            return formattedName;
+          });
+          setLocations(fetchedLocationNames);
+        })
+        .catch((error) => {
+          console.error('Error fetching location names:', error);
+        });
+      }, []);
       
       useEffect(() => {
-        const listRef = ref(storage, 'HKUST_fusion');
+        if (locations.length > 0) {
+          if (selectedLocation.length == "") setSelectedLocation(locations[0]);
+          const reformattedName = selectedLocation.replace(/ /g, "_");
+          const listRef = ref(storage, reformattedName);
+          setCurrentFolder(reformattedName);
       
-        fetchFiles(listRef)
-          .then((formattedFiles) => {
-            setFiles(formattedFiles);
-            console.log(formattedFiles);
-          })
-          .catch((error) => {
-            console.error('Error fetching files:', error);
-          });
-      }, []);
+          fetchFiles(listRef)
+            .then((formattedFiles) => {
+              setFiles(formattedFiles);
+            })
+            .catch((error) => {
+              console.error('Error fetching files:', error);
+            });
+        } 
+      }, [locations, selectedLocation]);
       
     const changeBytes = (bytes, decimals = 2) => {
         if (bytes === 0) return '0 Bytes';
@@ -75,12 +137,11 @@ export default () => {
     }
 
     const handleFolderClick = (folderId) => {
-        console.log(folderId);
         const folderRef = ref(storage, folderId);
+        setCurrentFolder(folderId);
         fetchFiles(folderRef)
           .then((formattedFiles) => {
             setFiles(formattedFiles); // Replace previous files with the new fetched files
-            console.log(formattedFiles);
           })
           .catch((error) => {
             console.error('Error fetching files for folder:', error);
@@ -94,13 +155,34 @@ export default () => {
             <div className="cloud-location">
                 <div className="cloud-header">
                     <div className="header-left">
-                        <FaStar className="cloud-star-icon" size={40} />
-                        <h1 className="location-name">HKUST Fusion</h1>
-                        <FaCaretDown size={20} className="cloud-dropdown"/>
+                        <FaStar className="star-icon active" size={40} />
+                        <Dropdown className='location-name'
+                            options={locations}
+                            value={selectedLocation}
+                            onChange={(option) => setSelectedLocation(option.value)}
+                            placeholder=""
+                            controlClassName="myControl"
+                            arrowClassName="myArrow"
+                        />
                     </div>
                 </div>
                 <div className="cloud-body">
                     <div className="cloud-data">
+                        <div className="cloud-upload">
+                          <h2 className="folder-location">{"/" + currentFolder}</h2>
+                          <button className='upload-button' onClick={openModal}> <FaUpload size={15} className='upload'/>Upload Files</button>
+                          <Modal
+                            isOpen={isModalOpen}
+                            onRequestClose={() => setIsModalOpen(false)}
+                            ariaHideApp={false}
+                            style={customModalStyles}
+                            contentLabel="Cloud Upload Form"
+                            shouldCloseOnOverlayClick={false}
+                          >
+                          <h2>Upload Files</h2>
+                          <button onClick={closeModal}>close</button>
+                          </Modal>
+                        </div>
                         <table className="cloud-table">
                             <thead>
                             <tr>

@@ -18,7 +18,6 @@
 
 .cloud-location {
     align-items: stretch;
-    background-color: white;
     width: 100%;
     flex: 1;
     display: flex;
@@ -42,7 +41,26 @@
 
 .location-name {
     margin-left: 20px;
+}
+
+.Dropdown-control.myControl {
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
     color: #003366;
+    border: none;
+}
+
+.is-open .Dropdown-arrow.myArrow {
+    border-color: transparent transparent #003366;
+}
+
+.Dropdown-arrow.myArrow {
+    border-color: #003366 transparent transparent;
+    margin-top: 10px;
 }
 
 .cloud-star-icon {
@@ -58,7 +76,7 @@
 .cloud-data {
     width: 90%;
     background-color: white;
-    margin-top: 5%;
+    margin-top: 3%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
@@ -74,7 +92,7 @@
 
 .cloud-table {
     width: 90%;
-    margin-top: 20px;
+    margin-top: 25px;
     border-spacing: 0;
 }
 
@@ -102,4 +120,33 @@
 
 .arrow-down {
     color: gray;
+}
+
+.cloud-upload {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-location {
+    color: #003366;
+    margin-left: 5%;
+}
+
+.upload-button {
+    margin-right: 5%;
+    color: white;
+    background-color: #003366;
+    border: 0px solid #434343;
+    border-radius: 25px;
+    width: 180px;
+    height: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+.upload {
+    margin-right: 7px;
 }
