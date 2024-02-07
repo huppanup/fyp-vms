@@ -1,0 +1,153 @@
+.main-container {
+    display: flex;
+    position: absolute;
+    right: 0;
+    height: 100vh;
+    width: calc(100vw - 60px);
+}
+
+#tab {
+    width: 30px;
+    height:30px;
+    
+}
+
+.map-main-panel {
+    width: 100%;
+    display: flex;
+}
+
+.cloud-location {
+    align-items: stretch;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cloud-header {
+    margin-left: 30px;
+    margin-top: 10px;
+    max-height: 100px;
+    flex: 1;
+    align-items: center;
+    text-align: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.location-name {
+    margin-left: 20px;
+}
+
+.Dropdown-control.myControl {
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    color: #003366;
+    border: none;
+}
+
+.is-open .Dropdown-arrow.myArrow {
+    border-color: transparent transparent #003366;
+}
+
+.Dropdown-arrow.myArrow {
+    border-color: #003366 transparent transparent;
+    margin-top: 10px;
+}
+
+.cloud-star-icon {
+    color:gray;
+}
+
+.cloud-dropdown {
+    margin-top: 5px;
+    margin-left: 5px;
+    color: #003366;
+}
+
+.cloud-data {
+    width: 90%;
+    background-color: white;
+    margin-top: 3%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.cloud-body {
+    background-color: rgba(0, 51, 102, 0.06);
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.cloud-table {
+    width: 90%;
+    margin-top: 25px;
+    border-spacing: 0;
+}
+
+.cloud-table tr th {
+    text-align: left;
+    color: black;
+    padding-left: 10px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-bottom: 1px solid #003366;
+    line-height: 2rem;
+}
+
+.cloud-table td {
+    color: gray;
+    border-bottom: 1px solid #003366;
+    line-height: 2rem;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    font-size: 13px;
+}
+
+.arrow-down {
+    color: gray;
+}
+
+.cloud-upload {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-location {
+    color: #003366;
+    margin-left: 5%;
+}
+
+.upload-button {
+    margin-right: 5%;
+    color: white;
+    background-color: #003366;
+    border: 0px solid #434343;
+    border-radius: 25px;
+    width: 180px;
+    height: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+.upload {
+    margin-right: 7px;
+}

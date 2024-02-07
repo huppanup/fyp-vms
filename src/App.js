@@ -5,6 +5,7 @@ import Home from './pages/home'
 import Cloud from './pages/cloud'
 import Map from './pages/map'
 import NavBar from "./components/navbar";
+import Dev from './pages/dev'
 import {PrivateRoute} from './PrivateRoute'
 import { AuthProvider } from "./AuthContext"
 import './App.css';
@@ -31,6 +32,7 @@ function App() {
             <Route path="home" element={<Home />} />
             <Route path="cloud" element={<Cloud />} />
             <Route path="map" element={<Map />} />
+            <Route path="dev" element={<Dev />} />
         </Route>
         </Route>
         <Route path="signup" element={<Signup />} />

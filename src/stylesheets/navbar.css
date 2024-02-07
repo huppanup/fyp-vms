@@ -46,13 +46,6 @@
     flex-direction: column;
 }
 
-.setting {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
 .personal-info {
     margin-top: 15px;
     display: flex;

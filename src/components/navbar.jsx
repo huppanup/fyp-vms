@@ -3,7 +3,7 @@ import "../stylesheets/navbar.css";
 import logo from "./logo.jpeg";
 import { FaHouseChimney } from "react-icons/fa6";
 import { FaMapMarkedAlt } from "react-icons/fa";
-import { FaCloud } from "react-icons/fa";
+import { FaCloud, FaCode } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
@@ -46,18 +46,17 @@ export default () => {
                     </div>
                 </Link>
             </div>
-            </div>
-            <div className="bottom-bar">
-            <div className={`nav-item ${isCurrentLink('/setting') ? 'active' : ''}`}>
-                <Link to="/setting" class="setting">
+            <div className={`nav-box ${isCurrentLink('/dev') ? 'active' : ''}`}>
+                <Link to="/dev" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
-                        <IoSettingsSharp size={30} color="white" />
+                        <FaCode size={30} color="white" />
                     </div>
                 </Link>
             </div>
-            
+            </div>
+            <div className="bottom-bar">
             <div className={`nav-item ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
-                <Link to="/personal-info" class="personal-info">
+                <Link to="/personal-info" className="personal-info">
                     <div style={{ margin: '0 10px' }}>
                         <IoPersonCircle size={30} color="white" />
                     </div>

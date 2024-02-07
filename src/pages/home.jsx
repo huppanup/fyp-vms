@@ -81,13 +81,13 @@ export default () => {
     <>
       <div className="main-container">
         <div className="main-panel">
-          <div class="search-bar">
+          <div className="search-bar">
             <input
               type="text"
-              class="search-input"
+              className="search-input"
               placeholder="Search Venue..."
             />
-            <button class="search-button">
+            <button className="search-button">
               <FaSearch size={18} />
             </button>
           </div>
