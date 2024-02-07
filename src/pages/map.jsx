@@ -17,6 +17,9 @@ export default () => {
     venueHandler.getFloorInfo((data) => {
       console.log(data);
     });
+    venueHandler.getConstraint((data) => {
+      console.log(data);
+    }); 
   },[curFloor]);
   
   
