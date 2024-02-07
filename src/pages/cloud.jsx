@@ -9,8 +9,8 @@ import 'react-dropdown/style.css';
 import Modal from "react-modal";
 
 export default () => {
-    const [files, setFiles] = useState([]);
     const storage = getStorage();
+    const [files, setFiles] = useState([]);
     const [venues, setVenues] = useState([]);
     const [currentFolder, setCurrentFolder] = useState('');
     const [selectedVenue, setSelectedVenue] = useState('');
@@ -160,18 +160,6 @@ export default () => {
       }
     };
 
-    const handleFileSelect = (event) => {
-      setSelectedFile(event.target.files[0]);
-    };
-
-    const openModal = () => {
-      setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-      setIsModalOpen(false);
-    };
-
     const uploadFile = () => {
       if (selectedFile != null) {
         const file = selectedFile;
@@ -191,6 +179,18 @@ export default () => {
           setPopupOpen(true);
         });
       }
+    };
+
+    const handleFileSelect = (event) => {
+      setSelectedFile(event.target.files[0]);
+    };
+
+    const openModal = () => {
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
     };
     
     return (
