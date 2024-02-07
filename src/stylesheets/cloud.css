@@ -16,7 +16,7 @@
     flex-direction: column;
 }
 
-.cloud-location {
+.cloud-venue {
     align-items: stretch;
     width: 100%;
     flex: 1;
@@ -39,7 +39,7 @@
     width: 100%;
 }
 
-.location-name {
+.venue-name {
     margin-left: 20px;
 }
 
@@ -129,8 +129,14 @@
 }
 
 .folder-location {
+    display: flex;
+    align-items: center;
     color: #003366;
-    margin-left: 5%;
+    margin-left: 2%;
+}
+
+.folder-location .arrow-left {
+    margin-right: 10px;
 }
 
 .upload-button {
@@ -149,4 +155,41 @@
 
 .upload {
     margin-right: 7px;
+}
+
+.upload-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.upload-buttons .upload-close {
+    color: white;
+    background-color: gray;
+    border: 0px solid #434343;
+    border-radius: 25px;
+    width: 120px;
+    height: 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.upload-buttons .upload {
+    color: white;
+    background-color: #003366;
+    border: 0px solid #434343;
+    border-radius: 25px;
+    width: 120px;
+    height: 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.upload-file {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    height: 50px;
 }

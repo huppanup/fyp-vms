@@ -1,8 +1,9 @@
 import React from 'react';
-import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown, FaUpload } from "react-icons/fa";
+import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown, FaArrowLeft, FaUpload } from "react-icons/fa";
 import { useEffect, useState } from 'react';
-import { getStorage, ref, listAll, getDownloadURL, getMetadata } from "firebase/storage";
+import { getStorage, ref, listAll, getDownloadURL, getMetadata, uploadBytes } from "firebase/storage";
 import "../stylesheets/cloud.css";
+import Popup from '../components/popup';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import Modal from "react-modal";
@@ -10,10 +11,13 @@ import Modal from "react-modal";
 export default () => {
     const [files, setFiles] = useState([]);
     const storage = getStorage();
-    const [locations, setLocations] = useState([]);
+    const [venues, setVenues] = useState([]);
     const [currentFolder, setCurrentFolder] = useState('');
-    const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedVenue, setSelectedVenue] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [message, setMessage] = useState('');
 
     const customModalStyles = {
       overlay: {
@@ -26,8 +30,8 @@ export default () => {
         left: "0",
       },
       content: {
-        width: "500px",
-        height: "500px",
+        width: "400px",
+        height: "400px",
         zIndex: "150",
         position: "absolute",
         top: "50%",
@@ -86,34 +90,26 @@ export default () => {
                 });
         };
 
-      const openModal = () => {
-        setIsModalOpen(true);
-      }
-
-      const closeModal = () => {
-        setIsModalOpen(false);
-      }
-
       useEffect(() => {
         const storageRef = ref(storage);
       
         listAll(storageRef)
         .then((res) => {
-          const fetchedLocationNames = res.prefixes.map((prefix) => {
+          const fetchedVenueNames = res.prefixes.map((prefix) => {
             const formattedName = prefix.name.replace(/_/g, ' ');
             return formattedName;
           });
-          setLocations(fetchedLocationNames);
+          setVenues(fetchedVenueNames);
         })
         .catch((error) => {
-          console.error('Error fetching location names:', error);
+          console.error('Error fetching venue names:', error);
         });
       }, []);
       
       useEffect(() => {
-        if (locations.length > 0) {
-          if (selectedLocation.length == "") setSelectedLocation(locations[0]);
-          const reformattedName = selectedLocation.replace(/ /g, "_");
+        if (venues.length > 0) {
+          if (selectedVenue.length == "") setSelectedVenue(venues[0]);
+          const reformattedName = selectedVenue.replace(/ /g, "_");
           const listRef = ref(storage, reformattedName);
           setCurrentFolder(reformattedName);
       
@@ -125,7 +121,7 @@ export default () => {
               console.error('Error fetching files:', error);
             });
         } 
-      }, [locations, selectedLocation]);
+      }, [venues, selectedVenue]);
       
     const changeBytes = (bytes, decimals = 2) => {
         if (bytes === 0) return '0 Bytes';
@@ -147,19 +143,69 @@ export default () => {
             console.error('Error fetching files for folder:', error);
           });
     };
+
+    const handlePreviousClick = () => {
+      const lastIndex = currentFolder.lastIndexOf("/");
+      if (lastIndex != -1) {
+        const prevFolder = currentFolder.slice(0, lastIndex);
+        setCurrentFolder(prevFolder);
+        const previousRef = ref(storage, prevFolder);
+        fetchFiles(previousRef)
+          .then((formattedFiles) => {
+            setFiles(formattedFiles); // Replace previous files with the new fetched files
+          })
+          .catch((error) => {
+            console.error('Error fetching files for folder:', error);
+      });
+      }
+    };
+
+    const handleFileSelect = (event) => {
+      setSelectedFile(event.target.files[0]);
+    };
+
+    const openModal = () => {
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
+
+    const uploadFile = () => {
+      if (selectedFile != null) {
+        const file = selectedFile;
+        const fileLocation = currentFolder + "/" + file.name;
+        const storageRef = ref(storage, fileLocation);
+        uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          console.log('Uploaded a blob or file!');
+          closeModal();
+          setMessage("Uploaded successfully!");
+          setPopupOpen(true);
+        })
+        .catch((error) => {
+          console.error('Error uploading files:', error);
+          closeModal();
+          setMessage("Error uploading files: " + error);
+          setPopupOpen(true);
+        });
+      }
+    };
     
     return (
         <>
         <div className="main-container">
+          <Popup modalOpen={popupOpen} setModalOpen={setPopupOpen} message={message} navigateTo={false}/>
             <div className="cloud-main-panel">
-            <div className="cloud-location">
+            <div className="cloud-venue">
                 <div className="cloud-header">
                     <div className="header-left">
                         <FaStar className="star-icon active" size={40} />
-                        <Dropdown className='location-name'
-                            options={locations}
-                            value={selectedLocation}
-                            onChange={(option) => setSelectedLocation(option.value)}
+                        <Dropdown className='venue-name'
+                            options={venues}
+                            value={selectedVenue}
+                            onChange={(option) => setSelectedVenue(option.value)}
                             placeholder=""
                             controlClassName="myControl"
                             arrowClassName="myArrow"
@@ -169,7 +215,7 @@ export default () => {
                 <div className="cloud-body">
                     <div className="cloud-data">
                         <div className="cloud-upload">
-                          <h2 className="folder-location">{"/" + currentFolder}</h2>
+                          <h2 className="folder-location"><FaArrowLeft size={20} className='arrow-left' onClick={() => handlePreviousClick()}/>{"/" + currentFolder}</h2>
                           <button className='upload-button' onClick={openModal}> <FaUpload size={15} className='upload'/>Upload Files</button>
                           <Modal
                             isOpen={isModalOpen}
@@ -180,7 +226,11 @@ export default () => {
                             shouldCloseOnOverlayClick={false}
                           >
                           <h2>Upload Files</h2>
-                          <button onClick={closeModal}>close</button>
+                          <input type="file" className="upload-file" onChange={handleFileSelect} />
+                          <div className="upload-buttons">
+                            <button className="upload-close" onClick={closeModal}>Close</button>
+                            <button className="upload" onClick={uploadFile}>Upload</button>
+                          </div>
                           </Modal>
                         </div>
                         <table className="cloud-table">
