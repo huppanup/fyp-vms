@@ -94,7 +94,7 @@ function getConstraint(venueID, floorNo, callback){
                 const coordinates = data.split(" ");
                 for (let i = 0; i < coordinates.length; i += 2) {
                     const inConstraint = {
-                      id: "in" + id,
+                      id: id,
                       x: coordinates[i],
                       y: coordinates[i + 1],
                     };
@@ -112,7 +112,7 @@ function getConstraint(venueID, floorNo, callback){
                 const coordinates = data.split(" ");
                 for (let i = 0; i < coordinates.length; i += 2) {
                     const outConstraint = {
-                      id: "out" + id,
+                      id: id,
                       x: coordinates[i],
                       y: coordinates[i + 1],
                     };
