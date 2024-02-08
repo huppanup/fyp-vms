@@ -60,30 +60,12 @@ function getFloorInfo(venueID, floorNo, callback){
     });
     
 }
-
+// Retrieves constraints for floorNo as JSON.
+// STRUCTURE
+// { venueID : string, floorNo : string, in : [JSON], out : [JSON]}}
+// CONSTRAINT JSON
+// { id : int, x : string, y : string }
 function getConstraint(venueID, floorNo, callback){
-    // Returned JSON structure should be:
-    /*
-    { value:
-        { 
-            venueID: string,
-            floorNo: int,
-            in: [
-                { 
-                    id : int (index of constraint),
-                    x : string (x coordinate), 
-                    y : string (y coordinate)
-                }, 
-                { 
-                    id : int,
-                    x : string, 
-                    y : string
-                }, 
-                ... ],
-            out : [array of out-constraints]
-        }
-    }
-    */
     const inConstraintsInfo = [];
     const outConstraintsInfo = [];
     const inConstraintsRef = ref(storage, venueID + "/Constraint/inConstraints/" + floorNo);
@@ -119,10 +101,13 @@ function getConstraint(venueID, floorNo, callback){
                     id++;
                     outConstraintsInfo.push(outConstraint);
                 }
+                console.log("In constraint file")
             });
+            console.log("Moving to next file");
         })
     });
-
+    console.log("Data collection completed");
+    console.log(outConstraintsInfo);
     const constraintsInfo = {
         "venueID" : venueID,
         "floorNo" : floorNo,
