@@ -1,161 +1,107 @@
 import { storage } from './firebase';
 import { ref, getDownloadURL, listAll } from "firebase/storage";
+// NOTE: All functions here return a promise.
 
-// Retrieves and callbacks file URL from storage path
-function getFileURL(path, callback){
+// Retrieves file URL from storage path
+function getFileURL(path){
     const pathRef = ref(storage, path);
-    getDownloadURL(ref(storage, pathRef))
-        .then((url) => callback(url))
+    return getDownloadURL(ref(storage, pathRef))
+        .then((url) => { return url })
         .catch((e) => console.log(e));
 }
 
-/*
-// Requests download from storage path and callbacks the result. Type can be either text or json.
-function downloadData(path, type, callback){
+// Requests download from storage path. Type can be either text or json.
+function downloadData(path, type){
     // Data type should be either json or text, if neither it is set to text.
     if (type !== "json" && type !=="text"){
         type = "text";
     }
-    // Retrieves raw text
-    getFileURL(path, (url) => {
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = type;
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                callback(xhr.response);
-            }
-          };
-        xhr.open('GET', url);
-        xhr.send();
-    });
-}*/
 
-function downloadData(path, type) {
-    if (type !== "json" && type !=="text"){
-        type = "text";
-    }
-    return new Promise((resolve, reject) => {
-        getFileURL(path, (url) => {
-            const xhr = new XMLHttpRequest();
-            xhr.responseType = type;
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        resolve(xhr.response);
-                    } else {
-                        reject(new Error(`Error: ${xhr.status}`));
-                    }
-                }
-            };
-            xhr.open("GET", url);
-            xhr.send();
-        });
-    });
+    return getFileURL(path)
+        .then((url) => {
+            return fetch(url);
+        }).then((result) => {
+            if (!result.ok) {
+                throw new Error('Network response was not OK');
+            }
+            return type === "json" ? result.json() : result.text();
+        }).catch((e) => console.log("Error : " + e));
 }
 
 // Retrieves venue info as JSON.
 // STRUCTURE
 // { venueName : string, venueID : venueID, floors : [string]}
-function getVenueInfo(venueID, callback){
-    downloadData(venueID + "/info.json", "json").then((data) => {
+function getVenueInfo(venueID){
+    return downloadData(venueID + "/info.json", "json").then((data) => {
         const venueInfo = {
             "venueName" : data["site_name"],
             "venueID" : venueID,
             "floors" : data["floors"]
         }
-        callback(venueInfo);
+        return venueInfo;
     });
 }
 
 // Retrieves floor info as JSON.
 // STRUCTURE
 // { venueID : string, floorNo : string, floorplan : string, settings : JSON{ scale : float, deviation : int, transformation : [float]}}
-function getFloorInfo(venueID, floorNo, callback){
-    getFileURL(venueID + "/map/" + floorNo + "/map.jpg", (url) => {
-        downloadData(venueID + "/info.json", "json").then((data) => {
-            const floorinfo = {
-                "venueID" : venueID,
-                "floorNo" : floorNo,
-                "floorplan" : url,
-                "settings" : data["settings"][floorNo]
-            }
-            callback(floorinfo);
-        });
-    });
-    
+async function getFloorInfo(venueID, floorNo){
+    const mapFile = await getFileURL(venueID + "/map/" + floorNo + "/map.jpg");
+    const floorData = await downloadData(venueID + "/info.json", "json");
+    return {
+        "venueID" : venueID,
+        "floorNo" : floorNo,
+        "floorplan" : mapFile,
+        "settings" : floorData["settings"][floorNo]
+    };
 }
-// Retrieves constraints for floorNo as JSON.
-// STRUCTURE
+
+// Retrieves constraint info from given storage reference as an array of JSON.
+// [{ id : int, x : string, y : string }]
+async function getConstraints(storRef){
+    const res = await listAll(storRef);
+    let id = 0;
+    const constraintList = [];
+
+    for (const item of res.items) {
+        const data = await downloadData(item.fullPath, "text");
+        const coordinates = data.split(" ");
+
+        for (let i = 0; i < coordinates.length; i += 2) {
+        const constraint = {
+            id: id,
+            x: coordinates[i],
+            y: coordinates[i + 1],
+        };
+        id++;
+        constraintList.push(constraint);
+        }
+    }
+    return constraintList;
+}
+
+// Retrieves all constraint information for floorNo as JSON.
 // { venueID : string, floorNo : string, in : [JSON], out : [JSON]}}
-// CONSTRAINT JSON
-// { id : int, x : string, y : string }
-function getConstraint(venueID, floorNo, callback){
-    const inConstraintsInfo = [];
-    const outConstraintsInfo = [];
+async function getAllConstraints(venueID, floorNo){
     const inConstraintsRef = ref(storage, venueID + "/Constraint/inConstraints/" + floorNo);
     const outConstraintsRef = ref(storage, venueID + "/Constraint/outConstraints/" + floorNo);
-    const fetchInConstraints = listAll(inConstraintsRef).then((res) => {
-        let id = 0;
-        const promises = res.items.map((item) => {
-            return downloadData(item.fullPath, "text").then((data) => {
-                const coordinates = data.split(" ");
-                for (let i = 0; i < coordinates.length; i += 2) {
-                    const inConstraint = {
-                        id: id,
-                        x: coordinates[i],
-                        y: coordinates[i + 1],
-                    };
-                    id++;
-                    inConstraintsInfo.push(inConstraint);
-                }
-            });
-        });
-        return Promise.all(promises);
-    });
-    
-    const fetchOutConstraints = listAll(outConstraintsRef).then((res) => {
-        let id = 0;
-        const promises = res.items.map((item) => {
-            return downloadData(item.fullPath, "text").then((data) => {
-                const coordinates = data.split(" ");
-                for (let i = 0; i < coordinates.length; i += 2) {
-                    const outConstraint = {
-                        id: id,
-                        x: coordinates[i],
-                        y: coordinates[i + 1],
-                    };
-                    id++;
-                    outConstraintsInfo.push(outConstraint);
-                }
-            });
-        });
-        return Promise.all(promises);
-    });
+    const inConstraintsInfo = await getConstraints(inConstraintsRef);
+    const outConstraintsInfo = await getConstraints(outConstraintsRef);
 
-    Promise.all([fetchInConstraints, fetchOutConstraints])
-        .then(() => {
-            const constraintsInfo = {
+    return {
                 venueID: venueID,
                 floorNo: floorNo,
                 in: inConstraintsInfo,
                 out: outConstraintsInfo,
             };
-            return constraintsInfo;
-        })
-        .then((constraintsInfo) => {
-            callback(constraintsInfo);
-        })
-        .catch((error) => {
-            console.error("Error in fetching Constraints: " + error);
-        });
 }
 
 export default function VenueData(id, f) {
     this.venueID = id;
     this.floor = f;
-    this.getVenueInfo = (callback) => getVenueInfo(this.venueID, (data) => {callback(data)});
-    this.getFloorInfo = (callback) => getFloorInfo(this.venueID, this.floor, (data) => {callback(data)});
-    this.getConstraint = (callback) => getConstraint(this.venueID, this.floor, (data) => {callback(data)});
+    this.getVenueInfo = () => getVenueInfo(this.venueID);
+    this.getFloorInfo = () => getFloorInfo(this.venueID, this.floor);
+    this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
 }
 
 function editConstraint(locationID, floorNo, type, id, x, y){
