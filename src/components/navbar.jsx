@@ -28,28 +28,28 @@ export default () => {
             <div className={`nav-box ${isCurrentLink('/home') ? 'active' : ''}`}>
                 <Link to="/home" className={"nav-item"}>
                     <div style={{ margin: '0 10px', alignItems: 'center'}}>
-                        <FaHouseChimney size={30} color="white" />
+                        <FaHouseChimney size={25} color="white" />
                     </div>
                 </Link>
             </div>
             <div className={`nav-box ${isCurrentLink('/map') ? 'active' : ''}`}>
                 <Link to="/map" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
-                        <FaMapMarkedAlt size={30} color="white" />
+                        <FaMapMarkedAlt size={25} color="white" />
                     </div>
                 </Link>
             </div>
             <div className={`nav-box ${isCurrentLink('/cloud') ? 'active' : ''}`}>
                 <Link to="/cloud" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
-                        <FaCloud size={30} color="white" />
+                        <FaCloud size={25} color="white" />
                     </div>
                 </Link>
             </div>
             <div className={`nav-box ${isCurrentLink('/dev') ? 'active' : ''}`}>
                 <Link to="/dev" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
-                        <FaCode size={30} color="white" />
+                        <FaCode size={25} color="white" />
                     </div>
                 </Link>
             </div>
@@ -58,7 +58,7 @@ export default () => {
             <div className={`nav-item ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
                 <Link to="/personal-info" className="personal-info">
                     <div style={{ margin: '0 10px' }}>
-                        <IoPersonCircle size={30} color="white" />
+                        <IoPersonCircle size={25} color="white" />
                     </div>
                 </Link>
             </div>

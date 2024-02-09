@@ -3,13 +3,33 @@
     position: absolute;
     right: 0;
     height: 100vh;
-    width: calc(100vw - 60px);
+    width: calc(100vw - 65px);
+    z-index: -10;
 }
 
 #tab {
     width: 30px;
-    height:30px;
-    
+    height:30px; 
+}
+
+.sideBar{
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+iframe{
+    border: none !important;
+}
+
+#mapWrap {
+    position: relative;
+    width: 100%;
+}
+
+#mapContainer {
+    position: relative;
+    left: -50px;
+    height: 100%;
+    width: calc(100% + 50px);
 }
 
 .map-main-panel {

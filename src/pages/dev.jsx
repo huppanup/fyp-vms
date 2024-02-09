@@ -11,14 +11,6 @@ export default () => {
   const venueHandler = new VenueData(curVenueID, curFloor);
 
   const [venueInfo, setVenueInfo] = useState();
-  // useEffect(() => {
-  //   venueHandler.getVenueInfo((data) => {
-  //     console.log(data);
-  //   });
-  //   venueHandler.getFloorInfo((data) => {
-  //     console.log(data);
-  //   });
-  // },[curFloor]);
   
   return (
     <>
