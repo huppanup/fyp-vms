@@ -101,7 +101,7 @@ async function getAllConstraints(venueID, floorNo){
 async function getMagData(venueID, floorNo) {
     const magneticData = await downloadData(venueID + "/MagData/MagSeriesData/" + floorNo + "/mag_series.txt", "text");
     const magSeriesData = magneticData.split("\n");
-    const magneticList = [];
+    let magneticList = [];
     magSeriesData.forEach(array => {
         const magSeriesArray = array.split(";");
         if (magSeriesArray[0].length === 0) return;
@@ -111,10 +111,21 @@ async function getMagData(venueID, floorNo) {
         }, []);
         const x = magData[0].split(",")[0];
         const y = magData[0].split(",")[1];
+        const data = magData.slice(1);
+        let dataList = [];
+        data.forEach(item => {
+            const dataJSON = {
+                "gravity_drifting" : item.split(",")[0],
+                "horizontal_vertex" : item.split(",")[1],
+                "vertical_vertex" : item.split(",")[2]
+            }
+            dataList.push(dataJSON);
+        });
+        
         const magnetic = {
             "x" : x,
             "y" : y,
-            "mag_vex_sequences" : magData.slice(1),
+            "mag_vex_sequences" : dataList,
         };
         magneticList.push(magnetic);
     });
@@ -125,6 +136,41 @@ async function getMagData(venueID, floorNo) {
     };
 }
 
+// Retrieves WIFI information for floorNo as JSON.
+// { venueID : string, floorNo : string, wifi : [JSON] } 
+async function getWifiData(venueID, floorNo) {
+    const wifiData = await downloadData(venueID + "/WifiData/FingerprintData/" + floorNo + "/fingerprint.txt", "text");
+    const wifiSeriesData = wifiData.split("\n");
+    let WifiList = [];
+    wifiSeriesData.forEach(array => {
+        const wifiSeriesArray = array.split(" ");
+        const x = wifiSeriesArray[0].split(",")[0];
+        const y = wifiSeriesArray[0].split(",")[1];
+        const data = wifiSeriesArray.slice(1);
+        
+        let dataList = [];
+        data.forEach(item => {
+            const dataJSON = {
+                "SSID" : item.split(",")[0],
+                "threshold" : item.split(",")[1].split(".")[0],
+                "enabled" : item.split(",")[3]
+            }
+            dataList.push(dataJSON);
+        });
+        const wifi = {
+            "x" : x,
+            "y" : y,
+            "data" : dataList
+        }
+        WifiList.push(wifi);
+    });
+    return {
+        "venueID" : venueID,
+        "floorNo" : floorNo,
+        "wifi" : WifiList
+    };
+}
+
 export default function VenueData(id, f) {
     this.venueID = id;
     this.floor = f;
@@ -132,6 +178,7 @@ export default function VenueData(id, f) {
     this.getFloorInfo = () => getFloorInfo(this.venueID, this.floor);
     this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
     this.getMagData = () => getMagData(this.venueID, this.floor);
+    this.getWifiData = () => getWifiData(this.venueID, this.floor);
 }
 
 function editConstraint(locationID, floorNo, type, id, x, y){
