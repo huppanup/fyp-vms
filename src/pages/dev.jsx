@@ -24,6 +24,7 @@ export default () => {
         <button onClick={() => venueHandler.getAllConstraints().then((data) => {setVenueInfo(data);})}>Get Constraint</button>
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
         <button onClick={() => venueHandler.getVenueInfo().then((data) => {setVenueInfo(data);})}>Get Venue Information</button>
+        <button onClick={() => venueHandler.getMagData().then((data) => {setVenueInfo(data);})}>Get Magnetic Data Information</button>
         </div>
         <div><a>{JSON.stringify(venueInfo)}</a></div>
         </div>

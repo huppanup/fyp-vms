@@ -96,12 +96,42 @@ async function getAllConstraints(venueID, floorNo){
             };
 }
 
+// Retrieves magnetic series information for floorNo as JSON.
+// { venueID : string, floorNo : string, magnetic : [JSON] } 
+async function getMagData(venueID, floorNo) {
+    const magneticData = await downloadData(venueID + "/MagData/MagSeriesData/" + floorNo + "/mag_series.txt", "text");
+    const magSeriesData = magneticData.split("\n");
+    const magneticList = [];
+    magSeriesData.forEach(array => {
+        const magSeriesArray = array.split(";");
+        if (magSeriesArray[0].length === 0) return;
+        const magData = magSeriesArray.reduce((acc, item) => {
+            const subItems = item.split(" ");
+            return acc.concat(subItems);
+        }, []);
+        const x = magData[0].split(",")[0];
+        const y = magData[0].split(",")[1];
+        const magnetic = {
+            "x" : x,
+            "y" : y,
+            "mag_vex_sequences" : magData.slice(1),
+        };
+        magneticList.push(magnetic);
+    });
+    return {
+        "venueID" : venueID,
+        "floorNo" : floorNo,
+        "magnetic" : magneticList
+    };
+}
+
 export default function VenueData(id, f) {
     this.venueID = id;
     this.floor = f;
     this.getVenueInfo = () => getVenueInfo(this.venueID);
     this.getFloorInfo = () => getFloorInfo(this.venueID, this.floor);
     this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
+    this.getMagData = () => getMagData(this.venueID, this.floor);
 }
 
 function editConstraint(locationID, floorNo, type, id, x, y){
