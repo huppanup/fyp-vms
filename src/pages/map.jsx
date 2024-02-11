@@ -1,17 +1,18 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import "../stylesheets/map.css";
 import { ReactSVG } from "react-svg";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import 'leaflet/dist/leaflet.css'
 
 export default () => {
   const [collapsed, setCollapsed] = React.useState(false);
-
   return (
     <>
     <div className="main-container">
         <div className="map-main-panel" >
-        <div style={{display:"flex",flexDirection:"row",alignItems: "center"}}>
+        <div style={{display:"flex",flexDirection:"row",alignItems: "center",zIndex:"100"}}>
         <Sidebar className="sideBar" collapsed={collapsed} collapsedWidth={"0px"} >
           <Menu>
             <SubMenu label="Charts">
@@ -26,7 +27,15 @@ export default () => {
         </div>
         <div id="mapWrap">
         <div id="mapContainer">
-        <iframe width="100%" height="100%" src="https://www.openstreetmap.org/export/embed.html?bbox=127.08180248737337%2C37.319532987776675%2C127.08387047052386%2C37.321023990244015&amp;layer=mapnik" style={ {border : "1px solid black"}}></iframe>
+          <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} style={{ height:"100vh", width:"100%"}}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[51.505, -0.09]}>
+            </Marker>
+          </MapContainer>
+        
         </div>
         </div>
         </div>

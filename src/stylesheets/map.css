@@ -7,9 +7,8 @@
     z-index: -10;
 }
 
-#tab {
-    width: 30px;
-    height:30px; 
+#map {
+    height: 100vh;
 }
 
 .sideBar{
@@ -28,7 +27,7 @@ iframe{
 #mapContainer {
     position: relative;
     left: -50px;
-    height: 100%;
+    height: 100vh;
     width: calc(100% + 50px);
 }
 
