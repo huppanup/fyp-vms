@@ -11,6 +11,31 @@
     height: 100vh;
 }
 
+/* Tab Navigation */
+
+.tabNav{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.tabNav ul {
+    margin:auto;
+    padding: 0;
+    
+}
+
+.tabNav ul.selected{
+    border-bottom: 2px solid #003366;
+}
+
+.tabNav ul:hover{
+    cursor: pointer;
+    border-bottom: 2px solid #5492cf;
+    color:#5e5e5e
+}
+/* Tab Navigation End*/
+
 .sideBar{
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }

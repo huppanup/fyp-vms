@@ -5,6 +5,7 @@ import Home from './pages/home'
 import Cloud from './pages/cloud'
 import Map from './pages/map'
 import NavBar from "./components/navbar";
+import Header from "./components/Header"
 import Dev from './pages/dev'
 import {PrivateRoute} from './PrivateRoute'
 import { AuthProvider } from "./AuthContext"
@@ -24,15 +25,22 @@ function App() {
         </Route>
         <Route element={<PrivateRoute/> }>
         <Route element={(
-              <>
-                <NavBar />
-                <Outlet />
-              </>
-            )}>
-            <Route path="home" element={<Home />} />
-            <Route path="cloud" element={<Cloud />} />
-            <Route path="map" element={<Map />} />
-            <Route path="dev" element={<Dev />} />
+          <>
+            <NavBar />
+            <Outlet />
+          </>
+        )}>
+          <Route path="home" element={<Home />} />
+          <Route element={(
+          <>
+            <Header />
+            <Outlet />
+          </>
+        )}>
+          <Route path="cloud" element={<Cloud />} />
+          <Route path="map" element={<Map />} />
+          </Route>
+          <Route path="dev" element={<Dev />} />
         </Route>
         </Route>
         <Route path="signup" element={<Signup />} />

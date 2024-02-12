@@ -18,6 +18,7 @@ export default () => {
     const isCurrentLink = (link) => {
         return location.pathname === link;
     }
+
     return (
         <>
         <div className="nav" style = {{position: "absolute", x: 0}}>

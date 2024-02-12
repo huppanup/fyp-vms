@@ -1,5 +1,5 @@
 import {database} from "./firebase"
-import { ref, push, update } from "firebase/database";
+import { ref, push, update, onValue } from "firebase/database";
 
 export function addVenue(name) {
     return push(ref(database,'venues/'), name).key; // Returns key value of added venue
@@ -17,4 +17,14 @@ export function deleteVenue(id){
     updates[id] = null;
     update(ref(database,'venues/'), updates).then()
     .catch((e) => {console.log("Failed to remove venue.")});
+}
+
+export function getLikedLocations(id){
+    const likedVenues = ref(database, 'users/' + id + '/likedLocations');
+    var result;
+    onValue(likedVenues, (snapshot) => {
+        const data = snapshot.val();
+        result = data;
+    });
+    return result;
 }

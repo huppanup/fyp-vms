@@ -2,15 +2,27 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import "../stylesheets/cloud.css";
 import VenueData from '../VenueDataHandler';
+import { getLikedLocations } from '../DBHandler';
 import { addVenue, renameVenue } from "../DBHandler";
+import { useAuth } from '../AuthContext';
 
 export default () => {
   const [curVenueID, setCurVenueID] = useState('HKUST_fusion');
   const [curFloor, setCurFloor] = useState('LSK1');
+  const {currentUser} = useAuth();
 
   const venueHandler = new VenueData(curVenueID, curFloor);
 
   const [venueInfo, setVenueInfo] = useState();
+
+  function getLikedLocationsNames(){
+      const locations = getLikedLocations(currentUser.uid);
+      const result = [];
+      for (var key in locations){
+        result.push({[key] : locations[key]["name"]})
+      }
+      return result
+  }
   
   return (
     <>
@@ -26,6 +38,9 @@ export default () => {
         <button onClick={() => venueHandler.getVenueInfo().then((data) => {setVenueInfo(data);})}>Get Venue Information</button>
         <button onClick={() => venueHandler.getMagData().then((data) => {setVenueInfo(data);})}>Get Magnetic Data Information</button>
         <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
+        <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
+        <button onClick={() => setVenueInfo(getLikedLocationsNames())}>Get Liked Locations</button>
+
         </div>
         <div><a>{JSON.stringify(venueInfo)}</a></div>
         </div>

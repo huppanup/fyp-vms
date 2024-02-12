@@ -1,0 +1,38 @@
+.header {
+    margin-left: 65px;
+    max-height: 100px;
+    flex: 1;
+    align-items: center;
+    text-align: center;
+}
+
+.header-left {
+    display: flex;
+    margin-left: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.venue-name {
+    margin-left: 20px;
+}
+
+.Dropdown-control.myControl {
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    color: #003366;
+    border: none;
+}
+
+.is-open .Dropdown-arrow.myArrow {
+    border-color: transparent transparent #003366;
+}
+
+.Dropdown-arrow.myArrow {
+    border-color: #003366 transparent transparent;
+    margin-top: 10px;
+}

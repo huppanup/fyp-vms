@@ -4,23 +4,41 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import "../stylesheets/map.css";
 import { ReactSVG } from "react-svg";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import { useSearchParams } from "react-router-dom";
 import 'leaflet/dist/leaflet.css'
+import ConstraintMenu from '../components/ConstraintMenu';
+import FloorplanMenu from '../components/FloorplanMenu';
 
 export default () => {
   const [collapsed, setCollapsed] = React.useState(false);
+  const [constTab, setConstTab] = React.useState(true);
+  const [currentV, setCurrentV] = React.useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  
+
+  useEffect(() => {
+    console.log("Current V : " + currentV);
+    setSearchParams({["id"]: currentV});
+  },[currentV]);
+  
   return (
     <>
     <div className="main-container">
         <div className="map-main-panel" >
-        <div style={{display:"flex",flexDirection:"row",alignItems: "center",zIndex:"100"}}>
-        <Sidebar className="sideBar" collapsed={collapsed} collapsedWidth={"0px"} >
+        <div style={{display:"flex", height:"100vh", flexDirection:"row",zIndex:"100"}}>
+        <Sidebar className="sideBar" height={"100vh"} width={"350px"} collapsed={collapsed} collapsedWidth={"0px"} >
           <Menu>
-            <SubMenu label="Charts">
-              <MenuItem> Pie charts </MenuItem>
-              <MenuItem> Line charts </MenuItem>
+            <SubMenu label="Floor">
+              <MenuItem> G </MenuItem>
+              <MenuItem> LG1 </MenuItem>
             </SubMenu>
-            <MenuItem> Documentation </MenuItem>
-            <MenuItem> Calendar </MenuItem>
+            <button onClick={()=> setCurrentV("HKUST_fusion")}>CHANGE VENUE</button>
+            <nav className="tabNav">
+              <ul className={constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Constraints</a></ul>
+              <ul className={!constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Floor Plan</a></ul>
+            </nav>
+            {constTab ? <ConstraintMenu /> : <FloorplanMenu />}
           </Menu>
         </Sidebar>
         <ReactSVG onClick={() => setCollapsed(!collapsed)}src='./tab.svg' style={{width:"50px", zIndex: "100"}}>SVG AREA</ReactSVG>

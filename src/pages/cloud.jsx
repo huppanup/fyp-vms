@@ -203,17 +203,6 @@ export default () => {
         <Popup modalOpen={popupOpen} setModalOpen={setPopupOpen} message={message} navigateTo={false} />
         <div className="cloud-main-panel">
           <div className="cloud-venue">
-            <div className="cloud-header">
-              <div className="header-left">
-                <FaStar className="star-icon active" size={40} />
-                <Dropdown className="venue-name" options={venues} value={selectedVenue}
-                  onChange={(option) => setSelectedVenue(option.value)}
-                  placeholder=""
-                  controlClassName="myControl"
-                  arrowClassName="myArrow"
-                />
-              </div>
-            </div>
             <div className="cloud-body">
               <div className="cloud-data">
                 <div className="cloud-upload">
