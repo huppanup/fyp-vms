@@ -139,8 +139,13 @@
     margin-right: 10px;
 }
 
-.upload-button {
+.button-container {
+    display: flex;
+    gap: 10px;
     margin-right: 5%;
+}
+
+.upload-button {
     color: white;
     background-color: #003366;
     border: 0px solid #434343;
@@ -192,4 +197,13 @@
     margin-top: 100px;
     margin-bottom: 100px;
     height: 50px;
+}
+
+.cloud-table .cloud-checkbox-th {
+    width: 40px;
+}
+
+.cloud-table .cloud-checkbox-td {
+    padding-left: 10px;
+    width: 40px;
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown, FaArrowLeft, FaUpload} from "react-icons/fa";
+import { FaStar, FaCaretDown, FaFolder, FaFile, FaArrowDown, FaArrowLeft, FaUpload, FaTrash} from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { getStorage, ref, listAll, getDownloadURL, getMetadata, uploadBytes } from "firebase/storage";
+import { getStorage, ref, listAll, getDownloadURL, getMetadata, uploadBytes, deleteObject } from "firebase/storage";
 import "../stylesheets/cloud.css";
 import "react-dropdown/style.css";
 import Popup from "../components/popup";
@@ -14,6 +14,8 @@ export default () => {
   const [venues, setVenues] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState("");
   const [currentFolder, setCurrentFolder] = useState("");
+  const [checkedItems, setCheckedItems] = useState({});
+  const [selectAll, setSelectAll] = useState(false);
  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -112,11 +114,10 @@ export default () => {
 
   useEffect(() => {
     if (venues.length > 0) {
-      if (selectedVenue.length == "") setSelectedVenue(venues[0]);
+      if (!selectedVenue) setSelectedVenue(venues[0]);
       const reformattedName = selectedVenue.replace(/ /g, "_");
       const listRef = ref(storage, reformattedName);
       setCurrentFolder(reformattedName);
-
       fetchFiles(listRef)
         .then((formattedFiles) => {
           setFiles(formattedFiles);
@@ -175,6 +176,13 @@ export default () => {
           closeModal();
           setMessage("Uploaded successfully!");
           setPopupOpen(true);
+          const folderRef = ref(storage, currentFolder);
+          fetchFiles(folderRef).then((formattedFiles) => {
+            setFiles(formattedFiles);
+          })
+          .catch((error) => {
+            console.error("Error fetching files for folder:", error);
+          });
         })
         .catch((error) => {
           console.error("Error uploading files:", error);
@@ -197,6 +205,55 @@ export default () => {
     setIsModalOpen(false);
   };
 
+  const deleteFile = () => {
+    const filesToDelete = Object.entries(checkedItems)
+    .filter(([filename, isChecked]) => isChecked)
+    .map(([filename]) => filename);
+
+    const deletePromises = filesToDelete.map((file) => {
+      const deleteRef = ref(storage, currentFolder + "/" + file);
+      return deleteObject(deleteRef);
+    });
+  
+    Promise.all(deletePromises)
+      .then(() => {
+        setCheckedItems({});
+        setMessage("Deleted successfully!");
+        setPopupOpen(true);
+        const folderRef = ref(storage, currentFolder);
+        fetchFiles(folderRef)
+          .then((formattedFiles) => {
+            setFiles(formattedFiles);
+          })
+          .catch((error) => {
+            console.error("Error fetching files for folder:", error);
+          });
+      })
+      .catch((error) => {
+        setMessage("Error deleting files: " + error);
+        setPopupOpen(true);
+      });
+  };
+
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+    setCheckedItems((prevState) => {
+      const updatedItems = {};
+      files.forEach((file) => {
+        if (!file.data.isFolder) updatedItems[file.data.filename] = checked;
+      });
+      return updatedItems;
+    });
+  };
+  
+  const handleCheckBox = (e, filename) => {
+    setCheckedItems((prevState) => ({
+      ...prevState,
+      [filename]: e.target.checked,
+    }));
+  };
+
   return (
     <>
       <div className="main-container">
@@ -210,6 +267,12 @@ export default () => {
                     <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
                     {"/" + currentFolder}
                   </h2>
+                  <div className="button-container">
+                  {
+                    Object.values(checkedItems).includes(true) && (
+                      <button className="upload-button" onClick={deleteFile}> <FaTrash size={15} className="upload" /> Delete Files </button>
+                    )
+                  }
                   <button className="upload-button" onClick={openModal}> <FaUpload size={15} className="upload" /> Upload Files </button>
                   <Modal
                     isOpen={isModalOpen}
@@ -226,10 +289,18 @@ export default () => {
                       <button className="upload" onClick={uploadFile}>Upload</button>
                     </div>
                   </Modal>
+                  </div>
                 </div>
                 <table className="cloud-table">
                   <thead>
                     <tr>
+                      <th className="cloud-checkbox-th">
+                        <input
+                            type="checkbox"
+                            checked={selectAll}
+                            onChange={handleSelectAll}
+                        />
+                      </th>
                       <th>Name <FaArrowDown size={10} className="arrow-down" /></th>
                       <th>Last Modified <FaArrowDown size={10} className="arrow-down" /></th>
                       <th>File Size <FaArrowDown size={10} className="arrow-down" />
@@ -239,6 +310,15 @@ export default () => {
                   <tbody>
                     {files.map((file) => (
                       <tr key={file.data.filename}>
+                        <td className="cloud-checkbox-td">
+                          <input
+                            type="checkbox"
+                            checked={checkedItems[file.data.filename] || false}
+                            disabled={file.data.isFolder}
+                            onChange={(e) => handleCheckBox(e, file.data.filename)}
+                            className="cloud-checkbox"
+                          />
+                        </td>
                         {file.data.isFolder ? (
                           <td>
                             <a href="#" onClick={() => handleFolderClick(file.data.fileURL)}
