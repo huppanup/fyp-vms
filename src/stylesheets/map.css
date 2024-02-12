@@ -2,13 +2,13 @@
     display: flex;
     position: absolute;
     right: 0;
-    height: 100vh;
+        height: calc(100% - 100px);
     width: calc(100vw - 65px);
     z-index: -10;
 }
 
 #map {
-    height: 100vh;
+    height: 100%;
 }
 
 /* Tab Navigation */
@@ -52,7 +52,7 @@ iframe{
 #mapContainer {
     position: relative;
     left: -50px;
-    height: 100vh;
+    height: 100%;
     width: calc(100% + 50px);
 }
 

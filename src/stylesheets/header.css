@@ -1,14 +1,13 @@
 .header {
     margin-left: 65px;
+    padding-left: 20px;
     max-height: 100px;
-    flex: 1;
+    width: calc(100% - 85px);
     align-items: center;
     text-align: center;
 }
 
 .header-left {
-    display: flex;
-    margin-left: 20px;
     align-items: center;
     width: 100%;
 }

@@ -26,8 +26,8 @@ export default () => {
     <>
     <div className="main-container">
         <div className="map-main-panel" >
-        <div style={{display:"flex", height:"100vh", flexDirection:"row",zIndex:"100"}}>
-        <Sidebar className="sideBar" height={"100vh"} width={"350px"} collapsed={collapsed} collapsedWidth={"0px"} >
+        <div style={{display:"flex", height:"100%", flexDirection:"row",zIndex:"100"}}>
+        <Sidebar className="sideBar" height={"100%"} width={"350px"} collapsed={collapsed} collapsedWidth={"0px"} >
           <Menu>
             <SubMenu label="Floor">
               <MenuItem> G </MenuItem>
@@ -45,7 +45,7 @@ export default () => {
         </div>
         <div id="mapWrap">
         <div id="mapContainer">
-          <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} style={{ height:"100vh", width:"100%"}}>
+          <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} style={{ height:"100%", width:"100%"}}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
