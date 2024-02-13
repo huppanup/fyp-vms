@@ -47,7 +47,7 @@ export default () => {
               <ul className={constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Constraints</a></ul>
               <ul className={!constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Floor Plan</a></ul>
             </nav>
-            {constTab ? <ConstraintMenu /> : <FloorplanMenu />}
+            {constTab ? <ConstraintMenu currentFloor={selectedFloor}/> : <FloorplanMenu />}
             </div>
           </Menu>
         </Sidebar>
