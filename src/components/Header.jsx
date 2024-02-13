@@ -35,17 +35,35 @@ export default () => {
     }
 
     useEffect(() => {
-        const locations = getLikedLocations(currentUser.uid);
-        
-        const result = [];
-        for (var key in locations){
-            result.push({ value : key, label : locations[key]["name"]});
-        }
-        
-        setVenues(result);
-        console.log(result);
-        if (selectedVenue === "" || selectedVenue === null){
-            handleLocationSelect(result[0]);    
+        const likedLocation = getLikedLocations(currentUser.uid);
+        if (likedLocation != null) {
+          const result = [];
+          for (var key in likedLocation){
+              result.push({ value : key, label : likedLocation[key]["name"]});
+          }
+          setVenues(result);
+          console.log(result);
+          if (selectedVenue === "" || selectedVenue === null){
+              handleLocationSelect(result[0]);    
+          }
+        } else {
+          const storageRef = ref(storage);
+          listAll(storageRef)
+            .then((res) => {
+              const fetchedVenueNames = [];
+              res.prefixes.map((prefix) => {
+                const formattedName = prefix.name.replace(/_/g, " ");
+                fetchedVenueNames.push({ value : prefix.name, label : formattedName });
+                console.log(fetchedVenueNames);
+              });
+              setVenues(fetchedVenueNames);
+              if (selectedVenue === "" || selectedVenue === null){
+                handleLocationSelect(fetchedVenueNames[0]);
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching venue names:", error);
+            });
         }
       }, []);
 
