@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaStar } from "react-icons/fa";
+import { FaSearch, FaStar, FaPlus } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
+import Popup from "../components/popup"
+import { addVenue } from "../DBHandler";
+import { LargeButton } from "../components/LargeButton";
+
 
 export default () => {
   const database = getDatabase();
   const auth = getAuth();
   const [likedLocations, setLikedLocations] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -77,9 +82,11 @@ export default () => {
       });
   };
   
+  const message = <div><div>Venue Name</div><input type="text" name="text"></input></div>;
   return (
     <>
       <div className="main-container">
+      <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={false}/>
         <div className="main-panel">
           <div className="search-bar">
             <input
@@ -121,7 +128,9 @@ export default () => {
               ))}
             </tbody>
           </table>
+          
         </div>
+        <div style={{position: "fixed", right:"250px", bottom:"100px"}}><LargeButton onClick={() => setModalOpen(true)} icon={<FaPlus size={15} />} value={"Add Venue"} /></div>
       </div>
     </>
   );

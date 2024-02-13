@@ -1,0 +1,27 @@
+/* Button Styles */
+
+.large-button{
+    position: absolute;
+    width : auto;
+    min-width: 150px;
+    padding: 0 30px;
+    height : 45px;
+    color : white;
+    background-color:#003366;
+    border : 0;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius : 25px;
+    display : flex;
+    align-items: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+#icon {
+    display : flex;
+    align-items: center;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
