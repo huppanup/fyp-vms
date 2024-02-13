@@ -32,6 +32,7 @@ function downloadData(path, type){
 // STRUCTURE
 // { venueName : string, venueID : venueID, floors : [string]}
 function getVenueInfo(venueID){
+    console.log("Fetching venue info for " + venueID);
     return downloadData(venueID + "/info.json", "json").then((data) => {
         const venueInfo = {
             "venueName" : data["site_name"],
@@ -171,7 +172,7 @@ async function getWifiData(venueID, floorNo) {
     };
 }
 
-export default function VenueData(id, f) {
+export default function VenueData(id, f = null) {
     this.venueID = id;
     this.floor = f;
     this.getVenueInfo = () => getVenueInfo(this.venueID);

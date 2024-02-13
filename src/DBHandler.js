@@ -1,8 +1,13 @@
 import {database} from "./firebase"
-import { ref, push, update, onValue } from "firebase/database";
+import { get, ref, push, update, onValue } from "firebase/database";
 
 export function addVenue(name) {
     return push(ref(database,'venues/'), name).key; // Returns key value of added venue
+}
+
+export async function checkVenueExists(id) {
+    const snapshot = await get(ref(database, 'venues/' + id ))
+    return snapshot.exists;
 }
 
 export function renameVenue(id, newName){

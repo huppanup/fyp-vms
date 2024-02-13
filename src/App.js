@@ -37,8 +37,8 @@ function App() {
             <Outlet />
           </>
         )}>
-          <Route path="cloud" element={<Cloud />} />
-          <Route path="map" element={<Map />} />
+          <Route path="cloud/:location?" element={<Cloud />} />
+          <Route path="map/:location?" element={<Map />} />
           </Route>
           <Route path="dev" element={<Dev />} />
         </Route>

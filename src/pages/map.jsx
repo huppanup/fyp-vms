@@ -4,41 +4,51 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import "../stylesheets/map.css";
 import { ReactSVG } from "react-svg";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import Dropdown from "react-dropdown";
+
 import 'leaflet/dist/leaflet.css'
+import VenueData from '../VenueDataHandler';
 import ConstraintMenu from '../components/ConstraintMenu';
 import FloorplanMenu from '../components/FloorplanMenu';
 
 export default () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [constTab, setConstTab] = React.useState(true);
-  const [currentV, setCurrentV] = React.useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [venueInfo, setVenueInfo] = React.useState();
+  const [selectedFloor, setSelectedFloor] = React.useState();
 
-  
+  const location = useLocation();
+  const currentVenue = new VenueData(location.pathname.split('/').pop());
 
   useEffect(() => {
-    console.log("Current V : " + currentV);
-    setSearchParams({["id"]: currentV});
-  },[currentV]);
+    const curPath = location.pathname.split('/')
+    if (curPath.length > 2 && curPath[2] !== "" && curPath[2] !== "undefined" ){
+      const newid = location.pathname.split('/').pop();
+      currentVenue.id = newid;
+      currentVenue.getVenueInfo().then((data) => setVenueInfo(data));
+    }
+  },[location.pathname]);
   
   return (
     <>
     <div className="main-container">
         <div className="map-main-panel" >
         <div style={{display:"flex", height:"100%", flexDirection:"row",zIndex:"100"}}>
-        <Sidebar className="sideBar" height={"100%"} width={"350px"} collapsed={collapsed} collapsedWidth={"0px"} >
+        <Sidebar className="sideBar" max-height={"100%"} width={"350px"} collapsed={collapsed} collapsedWidth={"0px"} >
           <Menu>
-            <SubMenu label="Floor">
-              <MenuItem> G </MenuItem>
-              <MenuItem> LG1 </MenuItem>
-            </SubMenu>
-            <button onClick={()=> setCurrentV("HKUST_fusion")}>CHANGE VENUE</button>
+          <div className="help" style={{height: "calc(100vh - 100px)"}}>
+            <Dropdown className="floor-name" options={venueInfo ? venueInfo.floors : "Loading"} value={selectedFloor}
+                onChange={(option) => setSelectedFloor(option.value)}
+                placeholder="Floors"
+                controlClassName="myControl"
+                arrowClassName="myArrow"/>
             <nav className="tabNav">
               <ul className={constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Constraints</a></ul>
               <ul className={!constTab ? "selected" : ""} onClick={() => setConstTab(!constTab)}><a>Floor Plan</a></ul>
             </nav>
             {constTab ? <ConstraintMenu /> : <FloorplanMenu />}
+            </div>
           </Menu>
         </Sidebar>
         <ReactSVG onClick={() => setCollapsed(!collapsed)}src='./tab.svg' style={{width:"50px", zIndex: "100"}}>SVG AREA</ReactSVG>

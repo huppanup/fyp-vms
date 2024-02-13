@@ -1,34 +1,33 @@
 import React from "react";
+import { MenuItem } from 'react-pro-sidebar';
+
 
 const customStyles = {
-    overlay: {
-      backgroundColor: " rgba(0, 0, 0, 0.4)",
-      width: "100%",
-      height: "100vh",
-      zIndex: "10",
-      position: "fixed",
-      top: "0",
-      left: "0",
-    },
-    content: {
-      width: "350px",
-      height: "180px",
-      zIndex: "150",
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      borderRadius: "10px",
-      boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
-      backgroundColor: "white",
-      justifyContent: "center",
-      overflow: "auto",
-    },
+    width: "100%",
+    height: "100%",
+    overflow: "scroll",
+    
   };
 
 export default () => {
     return (
-        <div>List of constraints...</div>
+        <div className="scrollable-list" style={customStyles}>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint1</MenuItem>
+        <MenuItem>Constraint2</MenuItem>
+        </div>
     );
 }
 // TODO: Long messages overflow the popup body.

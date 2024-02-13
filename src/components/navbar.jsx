@@ -16,7 +16,7 @@ export default () => {
     const {logout} = useAuth();
     const location = useLocation();
     const isCurrentLink = (link) => {
-        return location.pathname === link;
+        return location.pathname.includes(link);
     }
 
     return (
