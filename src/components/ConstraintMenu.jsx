@@ -8,8 +8,23 @@ const customStyles = {
     width: "100%",
     height: "100%",
     overflow: "scroll",
-    
-  };
+};
+
+const constraintsStyles = {
+    height: "60px",
+    backgroundColor: "rgba(0, 90, 180, 0.05)",
+    borderRadius: "15px",
+    width: "95%",
+    margin: "auto",
+    marginTop: "5px",
+    marginBottom: "5px"
+};
+
+const constraintsH3Styles = {
+    marginTop: "0px",
+    marginBottom: "5px",
+    color:"#003366",
+};
 
 export default (props) => {
     const [constraintsInfo, setConstraintsInfo] = React.useState({});
@@ -27,13 +42,19 @@ export default (props) => {
             {
             constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (
-                        <MenuItem key={"in" + item.id}>In-constraint {item.x} {item.y}</MenuItem>
+                        <MenuItem key={"in" + item.id} style={constraintsStyles}>
+                            <h4 style={constraintsH3Styles}>In-constraint</h4>
+                            {item.x} {item.y}
+                        </MenuItem>
                 ))
             }
             {
             constraintsInfo.out &&
                 constraintsInfo.in.map((item) => (
-                        <MenuItem key={"out" + item.id}>Out-constraint {item.x} {item.y}</MenuItem>
+                    <MenuItem key={"out" + item.id} style={constraintsStyles}>
+                        <h4 style={constraintsH3Styles}>Out-constraint</h4>
+                        {item.x} {item.y}
+                    </MenuItem>
                 ))
             }
         </div>
