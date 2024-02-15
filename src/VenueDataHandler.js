@@ -180,9 +180,30 @@ export default function VenueData(id, f = null) {
     this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
     this.getMagData = () => getMagData(this.venueID, this.floor);
     this.getWifiData = () => getWifiData(this.venueID, this.floor);
+    this.editConstraint = (type, id, x, y) => editConstraint(this.venueID, this.floorNo, type, id, x, y);
 }
 
-function editConstraint(locationID, floorNo, type, id, x, y){
+async function editConstraint(locationID, floorNo, type, id, x, y){
+    if (type === "in") {
+        const inConstraintsRef = ref(storage, locationID + "/Constraint/inConstraints/" + floorNo);
+        const res = await listAll(inConstraintsRef);
+        let idLeft = id;
+        for (const item of res.items) {
+            console.log(item);
+            const data = await downloadData(item.fullPath, "text");
+            const coordinates = data.split(" ");
+            if (coordinates.length / 2 <= idLeft) {
+                idLeft = idLeft - coordinates.length / 2;
+                continue;
+            } 
+            if (coordinates[2 * idLeft] === x && coordinates[2 * idLeft + 1] === y) {
+                console.log("found");
+            } else {
+                console.log(coordinates[2 * idLeft]);
+            }
+        }
+    }
+
     const result = {"success":true}
     return result
 }
