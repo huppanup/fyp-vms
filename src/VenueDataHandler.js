@@ -172,9 +172,15 @@ async function getWifiData(venueID, floorNo) {
     };
 }
 
+function test(text){
+    console.log(text); 
+    return "BYE";
+}
+
 export default function VenueData(id, f = null) {
     this.venueID = id;
     this.floor = f;
+    this.printHI = (txt) => test(txt);
     this.getVenueInfo = () => getVenueInfo(this.venueID);
     this.getFloorInfo = () => getFloorInfo(this.venueID, this.floor);
     this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);

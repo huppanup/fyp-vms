@@ -67,7 +67,7 @@ export default () => {
             />
             <ImageOverlay
               url="https://firebasestorage.googleapis.com/v0/b/fyp-vms-4c56e.appspot.com/o/HKUST_fusion%2Fmap%2F1F%2Fmap.jpg?alt=media&token=3337fa8e-8e46-4740-a71a-a80f9dccbd65"
-              bounds={new LatLngBounds([22.3355, 114.2625], [22.4375, 114.3655])}
+              bounds={new LatLngBounds([22.3355, 114.2625], [22.3375, 114.2655])}
               opacity={1}
               zIndex={10}
               style={imageStyle}

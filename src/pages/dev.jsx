@@ -5,16 +5,36 @@ import VenueData from '../VenueDataHandler';
 import { getLikedLocations } from '../DBHandler';
 import { addVenue, renameVenue } from "../DBHandler";
 import { useAuth } from '../AuthContext';
+import { useVenue } from '../LocationContext';
 import Sidebar from '../components/Sidebar';
 
 export default () => {
+  const {venueID,
+    floor,
+    setSelectedVenue,
+    setSelectedFloor,
+    checkVenueExists,
+    dataHandler
+  } = useVenue();
   const [curVenueID, setCurVenueID] = useState('HKUST_fusion');
   const [curFloor, setCurFloor] = useState('LSK1');
+  const [testing, setTesting] = useState('');
   const {currentUser} = useAuth();
 
   const venueHandler = new VenueData(curVenueID, curFloor);
 
   const [venueInfo, setVenueInfo] = useState();
+
+  function seeExecution(id){
+    return "Changed! " + id;
+  }
+
+  const test = new VenueData(venueID, floor);
+  
+  useEffect(() => {
+    console.log("Calling floor information");
+    test.getFloorInfo().then((d) => { console.log(d); setTesting(d)});
+  },[floor])
 
   function getLikedLocationsNames(){
       const locations = getLikedLocations(currentUser.uid);
@@ -38,6 +58,13 @@ export default () => {
         <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
         <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
         <button onClick={() => setVenueInfo(getLikedLocationsNames())}>Get Liked Locations</button>
+        <button onClick={() => setSelectedVenue("HKUST_fusion")}>Select venue</button>
+        <button onClick={() => setSelectedFloor("GF")}>Select GF</button>
+        <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
+        <button onClick={() => setTesting(dataHandler.floor)}>Test</button>
+        <div>{JSON.stringify(dataHandler)}</div>
+        <div>{test.venueID + test.floor}</div>
+        <div>{JSON.stringify(testing)}</div>
         <Sidebar />
         <div><a>{JSON.stringify(venueInfo)}</a></div>
   </div>
