@@ -7,6 +7,7 @@ import "react-dropdown/style.css";
 import Popup from "../components/popup";
 import Dropdown from "react-dropdown";
 import Modal from "react-modal";
+import { useLocation } from "react-router-dom";
 
 export default () => {
   const storage = getStorage();
@@ -21,6 +22,8 @@ export default () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
   const [message, setMessage] = useState("");
+
+  const location = useLocation();
 
   const customModalStyles = {
     overlay: {
@@ -114,8 +117,8 @@ export default () => {
 
   useEffect(() => {
     if (venues.length > 0) {
-      if (!selectedVenue) setSelectedVenue(venues[0]);
-      const reformattedName = selectedVenue.replace(/ /g, "_");
+      if (!selectedVenue) setSelectedVenue(location.pathname.split("/").pop());
+      const reformattedName = location.pathname.split("/").pop();
       const listRef = ref(storage, reformattedName);
       setCurrentFolder(reformattedName);
       fetchFiles(listRef)
@@ -126,7 +129,7 @@ export default () => {
           console.error("Error fetching files:", error);
         });
     }
-  }, [venues, selectedVenue]);
+  }, [venues, location.pathname]);
 
   const changeBytes = (bytes, decimals = 2) => {
     if (bytes === 0) return "0 Bytes";

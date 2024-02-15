@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { MenuItem } from 'react-pro-sidebar';
+import { FaEllipsisV } from "react-icons/fa";
 
 import VenueData from '../VenueDataHandler';
 
@@ -20,11 +21,24 @@ const constraintsStyles = {
     marginBottom: "5px"
 };
 
-const constraintsH3Styles = {
+const constraintsH4Styles = {
     marginTop: "0px",
     marginBottom: "5px",
     color:"#003366",
+    marginRight: "auto"
 };
+
+const menuItemContainerStyles = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+};
+
+const handleConstraintEdit = (currentVenue, type, id, x, y) => {
+    currentVenue.editConstraint(type, id, x, y).then(() => {
+        console.log("returned!");
+    })
+}
 
 export default (props) => {
     const [constraintsInfo, setConstraintsInfo] = React.useState({});
@@ -43,7 +57,10 @@ export default (props) => {
             constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (
                         <MenuItem key={"in" + item.id} style={constraintsStyles}>
-                            <h4 style={constraintsH3Styles}>In-constraint</h4>
+                            <div style={menuItemContainerStyles}>
+                                <h4 style={constraintsH4Styles}>In-constraint</h4>
+                                <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, "in", item.id, item.x, item.y)}/></span>
+                            </div>
                             {item.x} {item.y}
                         </MenuItem>
                 ))
@@ -52,7 +69,10 @@ export default (props) => {
             constraintsInfo.out &&
                 constraintsInfo.in.map((item) => (
                     <MenuItem key={"out" + item.id} style={constraintsStyles}>
-                        <h4 style={constraintsH3Styles}>Out-constraint</h4>
+                        <div style={menuItemContainerStyles}>
+                            <h4 style={constraintsH4Styles}>Out-constraint</h4>
+                            <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, "out", item.id, item.x, item.y)}/></span>
+                        </div>
                         {item.x} {item.y}
                     </MenuItem>
                 ))
