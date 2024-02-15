@@ -1,13 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, ImageOverlay } from 'react-leaflet'
-import "../stylesheets/map.css";
 import { ReactSVG } from "react-svg";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { useLocation } from "react-router-dom";
 import Dropdown from "react-dropdown";
 
 import 'leaflet/dist/leaflet.css'
+import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import ConstraintMenu from '../components/ConstraintMenu';
 import FloorplanMenu from '../components/FloorplanMenu';

@@ -5,6 +5,7 @@ import VenueData from '../VenueDataHandler';
 import { getLikedLocations } from '../DBHandler';
 import { addVenue, renameVenue } from "../DBHandler";
 import { useAuth } from '../AuthContext';
+import Sidebar from '../components/Sidebar';
 
 export default () => {
   const [curVenueID, setCurVenueID] = useState('HKUST_fusion');
@@ -25,11 +26,8 @@ export default () => {
   }
   
   return (
-    <>
-    <div className="main-container">
-        <div className="cloud-main-panel">
+    <div style={{position:"relative"}}>
         
-        <div>
         <button onClick={() => setCurFloor("LSK3")}>HI CLICK ME TO CHANGE THE FLOOR</button>
         <button onClick={() => addVenue("New Venue!")}>Add Venue</button>
         <button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>
@@ -40,11 +38,8 @@ export default () => {
         <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
         <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
         <button onClick={() => setVenueInfo(getLikedLocationsNames())}>Get Liked Locations</button>
-
-        </div>
+        <Sidebar />
         <div><a>{JSON.stringify(venueInfo)}</a></div>
-        </div>
   </div>
-    </>
 )  
 }

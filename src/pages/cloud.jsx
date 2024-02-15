@@ -258,100 +258,95 @@ export default () => {
   };
 
   return (
-    <>
-      <div className="main-container">
-        <Popup modalOpen={popupOpen} setModalOpen={setPopupOpen} message={message} navigateTo={false} />
-        <div className="cloud-main-panel">
-          <div className="cloud-venue">
-            <div className="cloud-body">
-              <div className="cloud-data">
-                <div className="cloud-upload">
-                  <h2 className="folder-location">
-                    <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
-                    {"/" + currentFolder}
-                  </h2>
-                  <div className="button-container">
-                  {
-                    Object.values(checkedItems).includes(true) && (
-                      <button className="upload-button" onClick={deleteFile}> <FaTrash size={15} className="upload" /> Delete Files </button>
-                    )
-                  }
-                  <button className="upload-button" onClick={openModal}> <FaUpload size={15} className="upload" /> Upload Files </button>
-                  <Modal
-                    isOpen={isModalOpen}
-                    onRequestClose={() => setIsModalOpen(false)}
-                    ariaHideApp={false}
-                    style={customModalStyles}
-                    contentLabel="Cloud Upload Form"
-                    shouldCloseOnOverlayClick={false}
-                  >
-                    <h2>Upload Files</h2>
-                    <input type="file" className="upload-file" onChange={handleFileSelect} />
-                    <div className="upload-buttons">
-                      <button className="upload-close" onClick={closeModal}>Close</button>
-                      <button className="upload" onClick={uploadFile}>Upload</button>
-                    </div>
-                  </Modal>
+      <div className="cloud-container">
+      <Popup modalOpen={popupOpen} setModalOpen={setPopupOpen} message={message} navigateTo={false} />
+          <div className="cloud-body">
+            <div className="cloud-header">
+              <h2 className="folder-path">
+                <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
+                {"/" + currentFolder}
+              </h2>
+              <div className="button-container">
+                {
+                  Object.values(checkedItems).includes(true) && (
+                    <button className="upload-button" onClick={deleteFile}> <FaTrash size={15} className="upload" /> Delete Files </button>
+                  )
+                }
+                <button className="upload-button" onClick={openModal}> <FaUpload size={15} className="upload" /> Upload Files </button>
+                <Modal
+                  isOpen={isModalOpen}
+                  onRequestClose={() => setIsModalOpen(false)}
+                  ariaHideApp={false}
+                  style={customModalStyles}
+                  contentLabel="Cloud Upload Form"
+                  shouldCloseOnOverlayClick={false}
+                >
+                  <h2>Upload Files</h2>
+                  <input type="file" className="upload-file" onChange={handleFileSelect} />
+                  <div className="upload-buttons">
+                    <button className="upload-close" onClick={closeModal}>Close</button>
+                    <button className="upload" onClick={uploadFile}>Upload</button>
                   </div>
-                </div>
-                <table className="cloud-table">
-                  <thead>
-                    <tr>
-                      <th className="cloud-checkbox-th">
-                        <input
-                            type="checkbox"
-                            checked={selectAll}
-                            onChange={handleSelectAll}
-                        />
-                      </th>
-                      <th>Name <FaArrowDown size={10} className="arrow-down" /></th>
-                      <th>Last Modified <FaArrowDown size={10} className="arrow-down" /></th>
-                      <th>File Size <FaArrowDown size={10} className="arrow-down" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {files.map((file) => (
-                      <tr key={file.data.filename}>
-                        <td className="cloud-checkbox-td">
-                          <input
-                            type="checkbox"
-                            checked={checkedItems[file.data.filename] || false}
-                            disabled={file.data.isFolder}
-                            onChange={(e) => handleCheckBox(e, file.data.filename)}
-                            className="cloud-checkbox"
-                          />
-                        </td>
-                        {file.data.isFolder ? (
-                          <td>
-                            <a href="#" onClick={() => handleFolderClick(file.data.fileURL)}
-                              style={{color: "black", textDecoration: "underline"}}>
-                              <FaFolder size={15} className="cloud-folder" />
-                              {file.data.filename}
-                            </a>
-                          </td>
-                        ) : (
-                          <td>
-                            <a href={file.data.fileURL} target="_blank" style={{color: "black", textDecoration: "underline"}}>
-                              <FaFile size={15} /> {file.data.filename}
-                            </a>
-                          </td>
-                        )}
-                        <td>
-                          {file.data.timestamp !== "-" ? new Date(file.data.timestamp).toISOString().split("T")[0] : "-"}
-                        </td>
-                        <td>
-                          {file.data.size !== "-" ? changeBytes(file.data.size) : "-"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                </Modal>
               </div>
+          </div>
+          <div className="list-container">
+          <table id="file-list">
+              <thead>
+                <tr>
+                  <th className="cloud-checkbox-th">
+                    <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                    />
+                  </th>
+                  <th>Name <FaArrowDown size={10} className="arrow-down" /></th>
+                  <th>Last Modified <FaArrowDown size={10} className="arrow-down" /></th>
+                  <th>File Size <FaArrowDown size={10} className="arrow-down" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {files.map((file) => (
+                  <tr key={file.data.filename}>
+                    <td className="cloud-checkbox-td">
+                      <input
+                        type="checkbox"
+                        checked={checkedItems[file.data.filename] || false}
+                        disabled={file.data.isFolder}
+                        onChange={(e) => handleCheckBox(e, file.data.filename)}
+                        className="cloud-checkbox"
+                      />
+                    </td>
+                    {file.data.isFolder ? (
+                      <td>
+                        <a href="#" onClick={() => handleFolderClick(file.data.fileURL)}
+                          style={{color: "black", textDecoration: "underline"}}>
+                          <FaFolder size={15} className="cloud-folder" />
+                          {file.data.filename}
+                        </a>
+                      </td>
+                    ) : (
+                      <td>
+                        <a href={file.data.fileURL} target="_blank" style={{color: "black", textDecoration: "underline"}}>
+                          <FaFile size={15} /> {file.data.filename}
+                        </a>
+                      </td>
+                    )}
+                    <td>
+                      {file.data.timestamp !== "-" ? new Date(file.data.timestamp).toISOString().split("T")[0] : "-"}
+                    </td>
+                    <td>
+                      {file.data.size !== "-" ? changeBytes(file.data.size) : "-"}
+                    </td>
+                  </tr>
+                ))}
+
+              </tbody>
+            </table>
             </div>
           </div>
-        </div>
       </div>
-    </>
   );
 };
