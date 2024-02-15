@@ -85,7 +85,7 @@ export default () => {
   const message = <div><div>Venue Name</div><input type="text" name="text"></input></div>;
   return (
     <>
-      <div className="main-container">
+      <div className="home-container">
       <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={false}/>
         <div className="main-panel">
           <div className="search-bar">

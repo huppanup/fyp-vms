@@ -1,9 +1,9 @@
-.main-container {
+.home-container {
     display: flex;
     position: absolute;
+    width: calc(100vw - 60px);
     right:0;
     height: 100vh;
-    width: calc(100vw - 60px);
 }
 
 .main-panel {
@@ -20,7 +20,7 @@
     color: #003366;
 }
 
-table {
+.table {
     width: 70%;
     margin: 0 auto;
     border-spacing: 0;

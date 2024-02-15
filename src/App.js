@@ -25,17 +25,17 @@ function App() {
         </Route>
         <Route element={<PrivateRoute/> }>
         <Route element={(
-          <>
+          <div style={{display:"flex", maxHeight:"100vh", maxWidth:"100vw"}}>
             <NavBar />
             <Outlet />
-          </>
+          </div>
         )}>
           <Route path="home" element={<Home />} />
           <Route element={(
-          <>
+            <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", maxHeight:"100vh", maxWidth:"100%"}}>
             <Header />
             <Outlet />
-          </>
+            </div>
         )}>
           <Route path="cloud/:location?" element={<Cloud />} />
           <Route path="map/:location?" element={<Map />} />
