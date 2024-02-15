@@ -255,7 +255,7 @@ export default () => {
   };
 
   return (
-      <div className="main-container">
+      <div className="cloud-container">
       <Popup modalOpen={popupOpen} setModalOpen={setPopupOpen} message={message} navigateTo={false} />
           <div className="cloud-body">
             <div className="cloud-header">
