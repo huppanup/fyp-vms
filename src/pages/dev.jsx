@@ -61,10 +61,6 @@ export default () => {
         <button onClick={() => setSelectedVenue("HKUST_fusion")}>Select venue</button>
         <button onClick={() => setSelectedFloor("GF")}>Select GF</button>
         <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
-        <button onClick={() => setTesting(dataHandler.floor)}>Test</button>
-        <div>{JSON.stringify(dataHandler)}</div>
-        <div>{test.venueID + test.floor}</div>
-        <div>{JSON.stringify(testing)}</div>
         <Sidebar />
         <div><a>{JSON.stringify(venueInfo)}</a></div>
   </div>
