@@ -6,6 +6,7 @@
     justify-content: space-between;
     box-shadow: 0 4px 10px #003366bc;
     flex: 0 0 65px;
+    z-index: 100;
 }
 
 .nav-box {

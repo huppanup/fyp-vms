@@ -1,0 +1,46 @@
+.sidebar-container{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.collapse{
+    animation: slideout 1s forwards;
+}
+
+.expand{
+    animation: slidein 1s forwards;
+}
+
+@keyframes slidein {
+    from{ transform: translateX(-100%);}
+    to{transform: translateX(0%);}
+    
+}
+
+@keyframes slideout {
+    from{transform: translateX(0%);}
+    to{ transform: translateX(-100%);}   
+}
+
+.sidebar{
+    width: 300px;
+    box-shadow: 0 0 10px #00000043;
+}
+
+.sidebar-tab{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    left: 299px;
+    height: 100%;
+    z-index: 20;
+    transform-style:preserve-3d;
+    align-items: center;
+    justify-content: center;
+}
+
+#tab{
+    align-self: center;
+}

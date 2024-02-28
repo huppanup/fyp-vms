@@ -25,17 +25,6 @@ export default () => {
 
   const [venueInfo, setVenueInfo] = useState();
 
-  function seeExecution(id){
-    return "Changed! " + id;
-  }
-
-  const test = new VenueData(venueID, floor);
-  
-  useEffect(() => {
-    console.log("Calling floor information");
-    test.getFloorInfo().then((d) => { console.log(d); setTesting(d)});
-  },[floor])
-
   function getLikedLocationsNames(){
       const locations = getLikedLocations(currentUser.uid);
       const result = [];
@@ -46,10 +35,12 @@ export default () => {
   }
   
   return (
-    <div style={{position:"relative"}}>
+  <div style={{display: "flex", position: "relative", height:"100%"}}>
+    <Sidebar collapsed={false} width={"300px"} />
+    <div className="bodyTemp" style={{zIndex: "-20",position:"relative", backgroundColor:"#000000", }}>
         
         <button onClick={() => setCurFloor("LSK3")}>HI CLICK ME TO CHANGE THE FLOOR</button>
-        <button onClick={() => addVenue("New Venue!")}>Add Venue</button>
+        <button onClick={() => addVenue("WKCD_xiqu")}>Add Venue</button>
         <button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>
         <button onClick={() => venueHandler.getAllConstraints().then((data) => {setVenueInfo(data);})}>Get Constraint</button>
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
@@ -61,8 +52,9 @@ export default () => {
         <button onClick={() => setSelectedVenue("HKUST_fusion")}>Select venue</button>
         <button onClick={() => setSelectedFloor("GF")}>Select GF</button>
         <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
-        <Sidebar />
+        
         <div><a>{JSON.stringify(venueInfo)}</a></div>
+  </div>
   </div>
 )  
 }
