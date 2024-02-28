@@ -36,7 +36,7 @@ export function getLikedLocations(id){
 
 export function removeLikedLocations(id, location) {
     const likedLocationRef = ref(database, `users/${id}/likedLocations/${location.name}`);
-    remove(likedLocationRef)
+    likedLocationRef.remove()
     .then(() => {
       console.log("Location removed successfully");
     })
