@@ -264,7 +264,7 @@ export default () => {
             <div className="cloud-header">
               <h2 className="folder-path">
                 <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
-                {"/" + currentFolder}
+                {currentFolder.indexOf("/") != -1 ? currentFolder.substring(currentFolder.indexOf("/")) : "/"}
               </h2>
               <div className="button-container">
                 {

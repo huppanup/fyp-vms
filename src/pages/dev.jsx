@@ -16,8 +16,8 @@ export default () => {
     checkVenueExists,
     dataHandler
   } = useVenue();
-  const [curVenueID, setCurVenueID] = useState('HKUST_fusion');
-  const [curFloor, setCurFloor] = useState('LSK1');
+  const [curVenueID, setCurVenueID] = useState('-NrisipFr0yx32oaNHQz');
+  const [curFloor, setCurFloor] = useState('GF');
   const [testing, setTesting] = useState('');
   const {currentUser} = useAuth();
 
@@ -37,14 +37,14 @@ export default () => {
   return (
   <div style={{display: "flex", position: "relative", height:"100%"}}>
     <Sidebar collapsed={false} width={"300px"} />
-    <div className="bodyTemp" style={{zIndex: "-20",position:"relative", backgroundColor:"#000000", }}>
+    <div className="bodyTemp" style={{zIndex: "10",position:"relative", backgroundColor:"#FFFFFF", }}>
         
         <button onClick={() => setCurFloor("LSK3")}>HI CLICK ME TO CHANGE THE FLOOR</button>
         <button onClick={() => addVenue("WKCD_xiqu")}>Add Venue</button>
         <button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>
         <button onClick={() => venueHandler.getAllConstraints().then((data) => {setVenueInfo(data);})}>Get Constraint</button>
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
-        <button onClick={() => venueHandler.getVenueInfo().then((data) => {setVenueInfo(data);})}>Get Venue Information</button>
+        <button onClick={() => venueHandler.getVenueInfo().then((data) => { setVenueInfo(data);})}>Get Venue Information</button>
         <button onClick={() => venueHandler.getMagData().then((data) => {setVenueInfo(data);})}>Get Magnetic Data Information</button>
         <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
         <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
@@ -54,7 +54,7 @@ export default () => {
         <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
         
         <div><a>{JSON.stringify(venueInfo)}</a></div>
-  </div>
+    </div>
   </div>
 )  
 }

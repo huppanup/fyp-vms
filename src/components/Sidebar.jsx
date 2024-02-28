@@ -13,7 +13,7 @@ export default (props) => {
             Sidebar
         </div>
         <div className="sidebar-tab">
-            <ReactSVG id="tab" src='./tab.svg' style={{width:"50px"}} onClick={()=>setCollapse(!collapse)}>왜</ReactSVG>
+            <ReactSVG id="tab" src='../tab.svg' style={{width:"50px"}} onClick={()=>setCollapse(!collapse)}>왜</ReactSVG>
         </div>
     </div>
     );
