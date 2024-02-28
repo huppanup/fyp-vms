@@ -1,40 +1,36 @@
-.sidebar-container{
+.sb-container{
     display: flex;
     flex-direction: row;
     height: 100%;
+    transition: width 1s ease;
 }
 
-.collapse{
-    animation: slideout 1s forwards;
+.sb.collapse{
+    width: 0px !important;
+    transition: width 1s ease;
+
 }
 
-.expand{
-    animation: slidein 1s forwards;
+.bodyTemp{
+    margin-left: -50px;
 }
 
-@keyframes slidein {
-    from{ transform: translateX(-100%);}
-    to{transform: translateX(0%);}
-    
-}
-
-@keyframes slideout {
-    from{transform: translateX(0%);}
-    to{ transform: translateX(-100%);}   
-}
-
-.sidebar{
-    width: 300px;
+.sb{
+    width: 350px;
     box-shadow: 0 0 10px #00000043;
+    transition: width 1s ease;
+    overflow: hidden;
+    padding: 5%;
+    box-sizing: border-box;
 }
 
-.sidebar-tab{
-    position: absolute;
+.sb-tab{
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 50px;
-    left: 299px;
     height: 100%;
+    left: -1px;
     z-index: 20;
     transform-style:preserve-3d;
     align-items: center;
@@ -44,3 +40,39 @@
 #tab{
     align-self: center;
 }
+
+/* Header */
+.sb-header{
+    height: 10%;
+}
+
+.sb-floor{
+    height: 70%;
+    font-size: larger;
+}
+
+/* Tab Navigation */
+
+.sb-subheading{
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+.sb-subheading ul {
+    margin:auto;
+    padding: 0;
+    
+}
+
+.sb-subheading ul.selected{
+    border-bottom: 2px solid #003366;
+}
+
+.sb-subheading ul:hover{
+    cursor: pointer;
+    border-bottom: 2px solid #5492cf;
+    color:#5e5e5e
+}
+/* Tab Navigation End*/

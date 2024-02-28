@@ -32,6 +32,7 @@ function downloadData(path, type){
 // STRUCTURE
 // { venueName : string, venueID : venueID, floors : [string]}
 function getVenueInfo(venueID){
+    console.log("HELLO");
     console.log("Fetching venue info for " + venueID);
     return downloadData(venueID + "/info.json", "json").then((data) => {
         const venueInfo = {

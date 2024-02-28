@@ -2,18 +2,30 @@ import React from "react";
 import { useState } from "react";
 import { ReactSVG } from "react-svg";
 import '../stylesheets/sidebar.css'
-
+import Dropdown from "react-dropdown";
 
 export default (props) => {
-    const [collapse, setCollapse] = useState(false);
+    const [curTab, setCurTab] = useState(true);
+    const [selFloor, setSelFloor] = useState();
 
     return (
-    <div className={"sidebar-container " + (collapse ? "collapse" : "expand")}>
-        <div className="sidebar">
-            Sidebar
+    <div className={"sb-container"}>
+        <div className={"sb " + (props.collapse ? "collapse" : "")}>
+            <div className="sb-header">
+            <Dropdown className="floor-name" options={["A","B","C"]}
+                onChange={(option) => setSelFloor(option.value)}
+                placeholder="Floors"
+                controlClassName="myControl"
+                arrowClassName="myArrow"/>
+                <nav className="sb-subheading">
+                    <ul className={curTab ? "selected" : ""} onClick={() => setCurTab(!curTab)}><a>Constraints</a></ul>
+                    <ul className={!curTab ? "selected" : ""} onClick={() => setCurTab(!curTab)}><a>Floor Plan</a></ul>
+                </nav>
+            </div>
+            <div className="sb-body"></div>
         </div>
-        <div className="sidebar-tab">
-            <ReactSVG id="tab" src='./tab.svg' style={{width:"50px"}} onClick={()=>setCollapse(!collapse)}>왜</ReactSVG>
+        <div className="sb-tab">
+            <ReactSVG id="tab" src='../tab.svg' style={{width:"50px"}} onClick={() => props.setCollapse(!props.collapse)}></ReactSVG>
         </div>
     </div>
     );

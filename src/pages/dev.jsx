@@ -16,14 +16,16 @@ export default () => {
     checkVenueExists,
     dataHandler
   } = useVenue();
-  const [curVenueID, setCurVenueID] = useState('HKUST_fusion');
+  const [curVenueID, setCurVenueID] = useState('-NrisipFr0yx32oaNHQz');
   const [curFloor, setCurFloor] = useState('LSK1');
   const [testing, setTesting] = useState('');
   const {currentUser} = useAuth();
 
+  const styles = { display: "flex", position: "relative", height:"100%", transition: "margin-left 1s ease"};
   const venueHandler = new VenueData(curVenueID, curFloor);
 
   const [venueInfo, setVenueInfo] = useState();
+  const [collapse, setCollapse] = useState(false);
 
   function getLikedLocationsNames(){
       const locations = getLikedLocations(currentUser.uid);
@@ -35,9 +37,9 @@ export default () => {
   }
   
   return (
-  <div style={{display: "flex", position: "relative", height:"100%"}}>
-    <Sidebar collapsed={false} width={"300px"} />
-    <div className="bodyTemp" style={{zIndex: "-20",position:"relative", backgroundColor:"#000000", }}>
+  <div style={styles}>
+    <Sidebar collapse={collapse} setCollapse={setCollapse}/>
+    <div className={"bodyTemp " + (collapse ? "collapse" : "")} style={{zIndex: "0", position:"relative"}}>
         
         <button onClick={() => setCurFloor("LSK3")}>HI CLICK ME TO CHANGE THE FLOOR</button>
         <button onClick={() => addVenue("WKCD_xiqu")}>Add Venue</button>
