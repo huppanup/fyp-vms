@@ -17,7 +17,7 @@ export default () => {
     dataHandler
   } = useVenue();
   const [curVenueID, setCurVenueID] = useState('-NrisipFr0yx32oaNHQz');
-  const [curFloor, setCurFloor] = useState('LSK1');
+  const [curFloor, setCurFloor] = useState('GF');
   const [testing, setTesting] = useState('');
   const {currentUser} = useAuth();
 
@@ -46,7 +46,7 @@ export default () => {
         <button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>
         <button onClick={() => venueHandler.getAllConstraints().then((data) => {setVenueInfo(data);})}>Get Constraint</button>
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
-        <button onClick={() => venueHandler.getVenueInfo().then((data) => {setVenueInfo(data);})}>Get Venue Information</button>
+        <button onClick={() => venueHandler.getVenueInfo().then((data) => { setVenueInfo(data);})}>Get Venue Information</button>
         <button onClick={() => venueHandler.getMagData().then((data) => {setVenueInfo(data);})}>Get Magnetic Data Information</button>
         <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
         <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
@@ -56,7 +56,7 @@ export default () => {
         <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
         
         <div><a>{JSON.stringify(venueInfo)}</a></div>
-  </div>
+    </div>
   </div>
 )  
 }

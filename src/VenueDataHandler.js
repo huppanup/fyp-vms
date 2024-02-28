@@ -60,7 +60,7 @@ async function getFloorInfo(venueID, floorNo){
 
 // Retrieves constraint info from given storage reference as an array of JSON.
 // [{ id : int, x : string, y : string }]
-async function getConstraints(storRef){
+/*async function getConstraints(storRef){
     const res = await listAll(storRef);
     let id = 0;
     const constraintList = [];
@@ -80,11 +80,12 @@ async function getConstraints(storRef){
         }
     }
     return constraintList;
-}
+}*/
+
 
 // Retrieves all constraint information for floorNo as JSON.
 // { venueID : string, floorNo : string, in : [JSON], out : [JSON]}}
-async function getAllConstraints(venueID, floorNo){
+/*async function getAllConstraints(venueID, floorNo){
     const inConstraintsRef = ref(storage, venueID + "/Constraint/inConstraints/" + floorNo);
     const outConstraintsRef = ref(storage, venueID + "/Constraint/outConstraints/" + floorNo);
     const inConstraintsInfo = await getConstraints(inConstraintsRef);
@@ -96,6 +97,47 @@ async function getAllConstraints(venueID, floorNo){
                 in: inConstraintsInfo,
                 out: outConstraintsInfo,
             };
+}*/
+
+async function getAllConstraints(venueID, floorNo) {
+    const constraintData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
+    if (!constraintData) return;
+    const inConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("inConstraint"));
+    const outConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("outConstraint"));
+    const inConstraints = [];
+    const outConstraints = [];
+    let id = 0;
+    inConstraintsData.forEach(data => {
+        for (let i = 0; i < data["points"].length; i++) {
+            const constraint = {
+                id: id,
+                label: data["label"],
+                x: data["points"][i][0],
+                y: data["points"][i][1]
+            };
+            id++;
+            inConstraints.push(constraint);
+        }
+    });
+    id = 0;
+    outConstraintsData.forEach(data => {
+        for (let i = 0; i < data["points"].length; i++) {
+            const constraint = {
+                id: id,
+                label: data["label"],
+                x: data["points"][i][0],
+                y: data["points"][i][1]
+            };
+            id++;
+            outConstraints.push(constraint);
+        }
+    });
+    return {
+        venueID: venueID,
+        floorNo: floorNo,
+        in: inConstraints,
+        out: outConstraints,
+    };
 }
 
 // Retrieves magnetic series information for floorNo as JSON.

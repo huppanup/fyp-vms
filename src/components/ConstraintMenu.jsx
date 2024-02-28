@@ -38,7 +38,7 @@ export default (props) => {
     const [constraintsInfo, setConstraintsInfo] = React.useState({});
 
     const location = useLocation();
-    const currentVenue = new VenueData(location.pathname.split('/').pop(), props.curFloor);
+    const currentVenue = new VenueData(location.pathname.split('/').pop(), props.currentFloor);
     React.useEffect(() => {
         currentVenue.getAllConstraints().then((data) => setConstraintsInfo(data))
     },[]);
@@ -57,7 +57,7 @@ export default (props) => {
     return (
         <div className="scrollable-list" style={customStyles}>
             {
-            constraintsInfo.in &&
+            constraintsInfo && constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (
                         <MenuItem key={"in" + item.id} style={constraintsStyles}>
                             <div style={menuItemContainerStyles}>
@@ -69,7 +69,7 @@ export default (props) => {
                 ))
             }
             {
-            constraintsInfo.out &&
+            constraintsInfo && constraintsInfo.out &&
                 constraintsInfo.out.map((item) => (
                     <MenuItem key={"out" + item.id} style={constraintsStyles}>
                         <div style={menuItemContainerStyles}>
