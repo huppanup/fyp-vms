@@ -33,3 +33,29 @@ export function getLikedLocations(id){
     });
     return result;
 }
+
+export function removeLikedLocations(id, location) {
+    const likedLocationRef = ref(database, `users/${id}/likedLocations/${location.name}`);
+    likedLocationRef.remove()
+    .then(() => {
+      console.log("Location removed successfully");
+    })
+    .catch((error) => {
+      console.error("Error removing location:", error);
+    });
+}
+
+export function updateLikedLocations(id, locations) {
+    const likedLocationRef = ref(database, `users/${id}/likedLocations`);
+    const updatedLikedLocationsObject = locations.reduce((acc, location) => {
+      acc[location.locationId] = location;
+      return acc;
+    }, {});
+    update(likedLocationRef, updatedLikedLocationsObject)
+    .then(() => {
+      return("Data updated successfully");
+    })
+    .catch((error) => {
+      console.error("Error updating data:", error);
+    });
+}

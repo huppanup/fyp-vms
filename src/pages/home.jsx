@@ -4,83 +4,51 @@ import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
 import Popup from "../components/popup"
-import { addVenue } from "../DBHandler";
+import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations } from "../DBHandler";
 import { LargeButton } from "../components/LargeButton";
+import { useAuth } from '../AuthContext';
 
 
 export default () => {
   const database = getDatabase();
-  const auth = getAuth();
   const [likedLocations, setLikedLocations] = useState([]);
-  const [userId, setUserId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const {currentUser} = useAuth();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = await auth.currentUser;
-      if (user) {
-        setUserId(user.uid);
+    if (currentUser.uid) {
+      const likedLocations = getLikedLocations(currentUser.uid);
+      if (likedLocations) {
+        const likedLocationsList = Object.values(likedLocations);
+        setLikedLocations(likedLocationsList);
       }
-    };
-    fetchUser();
-  }, [auth]);
-
-  useEffect(() => {
-    if (userId) {
-      const likedLocationsRef = ref(database, `users/${userId}/likedLocations`);
-      onValue(likedLocationsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          const likedLocationsList = Object.values(data);
-          setLikedLocations(likedLocationsList);
-        }
-      });
     }
-  }, [userId, database]);
+  }, [currentUser]);
 
   const toggleLike = (location) => {
     const isLiked = likedLocations.some((likedLocation) => likedLocation.name === location.name);
-    
     if (isLiked) {
       // Remove the location from likedLocations
       //const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-      removeLikedLocations(location);
+      removeLikedLocations(currentUser.uid, location).then(() => {
+        const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
+        setLikedLocations(updatedLikedLocations);
+      })
+      .catch((error) => {
+        console.error("Error removing location:", error);
+      });
     } else {
       // Add the location to likedLocations
       const updatedLikedLocations = [...likedLocations, location];
-      updateLikedLocations(updatedLikedLocations);
+      updateLikedLocations(currentUser.uid, updatedLikedLocations).then(() => {
+        setLikedLocations(updatedLikedLocations);
+      })
+      .catch((error) => {
+        console.error("Error updating location:", error);
+      });
     }
   }
 
-  const removeLikedLocations = (location) => {
-    const likedLocationRef = ref(database, `users/${userId}/likedLocations/${location.name}`);
-    remove(likedLocationRef)
-    .then(() => {
-      const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-      setLikedLocations(updatedLikedLocations);
-      console.log("Location removed successfully");
-    })
-    .catch((error) => {
-      console.error("Error removing location:", error);
-    });
-  }
-
-  const updateLikedLocations = (updatedLikedLocations) => {
-    console.log(updatedLikedLocations);
-    const likedLocationRef = ref(database, `users/${userId}/likedLocations`);
-    const updatedLikedLocationsObject = updatedLikedLocations.reduce((acc, location) => {
-      acc[location.locationId] = location;
-      return acc;
-    }, {});
-  
-    update(likedLocationRef, updatedLikedLocationsObject)
-      .then(() => {
-        console.log("Data updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating data:", error);
-      });
-  };
   
   const message = <div><div>Venue Name</div><input type="text" name="text"></input></div>;
   return (

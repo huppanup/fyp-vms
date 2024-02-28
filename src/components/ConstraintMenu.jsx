@@ -34,14 +34,9 @@ const menuItemContainerStyles = {
     alignItems: "center"
 };
 
-const handleConstraintEdit = (currentVenue, type, id, x, y) => {
-    currentVenue.editConstraint(type, id, x, y).then(() => {
-        console.log("returned!");
-    })
-}
-
 export default (props) => {
     const [constraintsInfo, setConstraintsInfo] = React.useState({});
+
     const location = useLocation();
     const currentVenue = new VenueData(location.pathname.split('/').pop(), props.curFloor);
     React.useEffect(() => {
@@ -51,6 +46,14 @@ export default (props) => {
         currentVenue.floor = props.currentFloor;
         currentVenue.getAllConstraints().then((data) => setConstraintsInfo(data))
     },[props.currentFloor]);
+
+    const handleConstraintEdit = (currentVenue, floor, type, id, x, y) => {
+        currentVenue.floor = floor;
+        currentVenue.editConstraint(type, id, x, y).then((data) => {
+            console.log(data);
+        })
+    };
+    
     return (
         <div className="scrollable-list" style={customStyles}>
             {
@@ -59,7 +62,7 @@ export default (props) => {
                         <MenuItem key={"in" + item.id} style={constraintsStyles}>
                             <div style={menuItemContainerStyles}>
                                 <h4 style={constraintsH4Styles}>In-constraint</h4>
-                                <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, "in", item.id, item.x, item.y)}/></span>
+                                <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, props.currentFloor, "in", item.id, item.x, item.y)}/></span>
                             </div>
                             {item.x} {item.y}
                         </MenuItem>
@@ -67,15 +70,18 @@ export default (props) => {
             }
             {
             constraintsInfo.out &&
-                constraintsInfo.in.map((item) => (
+                constraintsInfo.out.map((item) => (
                     <MenuItem key={"out" + item.id} style={constraintsStyles}>
                         <div style={menuItemContainerStyles}>
                             <h4 style={constraintsH4Styles}>Out-constraint</h4>
-                            <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, "out", item.id, item.x, item.y)}/></span>
+                            <span><FaEllipsisV size={15} style={{ color: '#003366' }} onClick={() => handleConstraintEdit(currentVenue, props.currentFloor, "out", item.id, item.x, item.y)}/></span>
                         </div>
                         {item.x} {item.y}
                     </MenuItem>
                 ))
+            }
+            {
+
             }
         </div>
     );

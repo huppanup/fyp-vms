@@ -16,6 +16,7 @@ import { update } from "firebase/database";
 export default () => {
     const {currentUser} = useAuth();
     const [venues, setVenues] = useState([]);
+    const [likedLocations, setLikedLocations] = useState([]);
     const [selectedVenue, setSelectedVenue] = useState("");
     const nav = useNavigate();
     const location = useLocation();

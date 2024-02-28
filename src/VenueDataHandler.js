@@ -186,7 +186,7 @@ export default function VenueData(id, f = null) {
     this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
     this.getMagData = () => getMagData(this.venueID, this.floor);
     this.getWifiData = () => getWifiData(this.venueID, this.floor);
-    this.editConstraint = (type, id, x, y) => editConstraint(this.venueID, this.floorNo, type, id, x, y);
+    this.editConstraint = (type, id, x, y) => editConstraint(this.venueID, this.floor, type, id, x, y);
 }
 
 async function editConstraint(locationID, floorNo, type, id, x, y){
@@ -195,23 +195,38 @@ async function editConstraint(locationID, floorNo, type, id, x, y){
         const res = await listAll(inConstraintsRef);
         let idLeft = id;
         for (const item of res.items) {
-            console.log(item);
             const data = await downloadData(item.fullPath, "text");
             const coordinates = data.split(" ");
             if (coordinates.length / 2 <= idLeft) {
                 idLeft = idLeft - coordinates.length / 2;
                 continue;
-            } 
+            }
+            console.log(coordinates);
             if (coordinates[2 * idLeft] === x && coordinates[2 * idLeft + 1] === y) {
-                console.log("found");
+                return {"found" : true};
             } else {
-                console.log(coordinates[2 * idLeft]);
+                return {"not found" : coordinates[2 * idLeft]};
+            }
+        }
+    } else {
+        const outConstraintsRef = ref(storage, locationID + "/Constraint/outConstraints/" + floorNo);
+        const res = await listAll(outConstraintsRef);
+        let idLeft = id;
+        for (const item of res.items) {
+            const data = await downloadData(item.fullPath, "text");
+            const coordinates = data.split(" ");
+            if (coordinates.length / 2 <= idLeft) {
+                idLeft = idLeft - coordinates.length / 2;
+                continue;
+            }
+            console.log(coordinates);
+            if (coordinates[2 * idLeft] === x && coordinates[2 * idLeft + 1] === y) {
+                return {"found" : true};
+            } else {
+                return {"not found" : coordinates[2 * idLeft]};
             }
         }
     }
-
-    const result = {"success":true}
-    return result
 }
 
 function editAlignment(locationID, floorNo, latitude, longitude, angle, scale){
