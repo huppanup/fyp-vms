@@ -14,6 +14,7 @@ import './App.css';
 import React, {useState, useEffect} from "react";
 import {app, auth, db} from './firebase';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { VenueProvider } from './LocationContext';
 
 function App() {
   return (
@@ -32,15 +33,18 @@ function App() {
         )}>
           <Route path="home" element={<Home />} />
           <Route element={(
+            <VenueProvider>
             <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", maxHeight:"100vh", maxWidth:"100%"}}>
             <Header />
             <Outlet />
             </div>
+            </VenueProvider>
         )}>
           <Route path="cloud/:location?" element={<Cloud />} />
           <Route path="map/:location?" element={<Map />} />
+          <Route path="dev/:location?" element={<Dev />} />
           </Route>
-          <Route path="dev" element={<Dev />} />
+          
         </Route>
         </Route>
         <Route path="signup" element={<Signup />} />
