@@ -1,31 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { ReactSVG } from "react-svg";
 import '../stylesheets/sidebar.css'
-import Dropdown from "react-dropdown";
+//import Dropdown from "react-dropdown";
+import Dropdown from "../components/Dropdown"
+import ConstraintMenu from "./ConstraintMenu";
 
 export default (props) => {
     const [curTab, setCurTab] = useState(true);
-    const [selFloor, setSelFloor] = useState();
+    const [curFloor, setCurFloor] = useState();
+    const floors = ["L1", "L2", "L3"];
 
     return (
     <div className={"sb-container"}>
         <div className={"sb " + (props.collapse ? "collapse" : "")}>
+            <div style={{width:"320px"}}>
             <div className="sb-header">
-            <Dropdown className="floor-name" options={["A","B","C"]}
-                onChange={(option) => setSelFloor(option.value)}
-                placeholder="Floors"
-                controlClassName="myControl"
-                arrowClassName="myArrow"/>
-                <nav className="sb-subheading">
-                    <ul className={curTab ? "selected" : ""} onClick={() => setCurTab(!curTab)}><a>Constraints</a></ul>
-                    <ul className={!curTab ? "selected" : ""} onClick={() => setCurTab(!curTab)}><a>Floor Plan</a></ul>
-                </nav>
+                <Dropdown options={floors}
+                    onChange={(floor) => setCurFloor(floor)}
+                    placeholder={"Select a floor"}
+                />
+                <div className="sb-tabs">
+                    <div className={"sb-tab" + (curTab ? " selected" : "")} onClick={() => setCurTab(true)}><div style={{padding: "10px 0px"}}>Constraints</div></div>
+                    <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>
+                </div>
             </div>
-            <div className="sb-body"></div>
+            </div>
+            <div className="sb-body">
+                <ConstraintMenu currentFloor={curFloor}/>
+            </div>
         </div>
-        <div className="sb-tab">
-            <ReactSVG id="tab" src='../tab.svg' style={{width:"50px"}} onClick={() => props.setCollapse(!props.collapse)}></ReactSVG>
+        <div className="sb-collapse">
+            <ReactSVG id="collapse" src='../tab.svg' style={{width:"50px"}} onClick={() => props.setCollapse(!props.collapse)}></ReactSVG>
         </div>
     </div>
     );

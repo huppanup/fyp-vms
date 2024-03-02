@@ -1,7 +1,7 @@
 import React from "react";
 import "../stylesheets/navbar.css";
 import logo from "./logo.jpeg";
-import { FaHouseChimney } from "react-icons/fa6";
+import * as icons from "react-icons/fa6";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { FaCloud, FaCode } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -28,7 +28,7 @@ export default () => {
             <div className={`nav-box ${isCurrentLink('/home') ? 'active' : ''}`}>
                 <Link to="/home" className={"nav-item"}>
                     <div style={{ margin: '0 10px', alignItems: 'center'}}>
-                        <FaHouseChimney size={25} color="white" />
+                        <icons.FaHouseChimney size={25} color="white" />
                     </div>
                 </Link>
             </div>
