@@ -14,7 +14,6 @@ export default (props) => {
     return (
     <div className={"sb-container"}>
         <div className={"sb " + (props.collapse ? "collapse" : "")}>
-            <div style={{width:"320px"}}>
             <div className="sb-header">
                 <Dropdown options={floors}
                     onChange={(floor) => setCurFloor(floor)}
@@ -25,8 +24,7 @@ export default (props) => {
                     <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>
                 </div>
             </div>
-            </div>
-            <div className="sb-body">
+            <div className="sb-body" style={{flex: "1", whiteSpace:"normal", wordBreak:"break-all", overflow:"scroll"}}>
                 <ConstraintMenu currentFloor={curFloor}/>
             </div>
         </div>

@@ -21,7 +21,7 @@ export default () => {
   const [testing, setTesting] = useState('');
   const {currentUser} = useAuth();
 
-  const styles = { display: "flex", position: "relative", height:"100%", transition: "margin-left 1s ease"};
+  const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
   const venueHandler = new VenueData(curVenueID, curFloor);
 
   const [venueInfo, setVenueInfo] = useState();

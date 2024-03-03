@@ -5,34 +5,70 @@ import { FaEllipsisV } from "react-icons/fa";
 
 import VenueData from '../VenueDataHandler';
 
-const customStyles = {
-    width: "100%",
-    height: "100%",
-    overflow: "scroll",
-};
-
-const constraintsStyles = {
-    height: "60px",
-    backgroundColor: "rgba(0, 90, 180, 0.05)",
-    borderRadius: "15px",
-    width: "95%",
-    margin: "auto",
-    marginTop: "5px",
-    marginBottom: "5px"
-};
-
-const constraintsH4Styles = {
-    marginTop: "0px",
-    marginBottom: "5px",
-    color:"#003366",
-    marginRight: "auto"
-};
-
-const menuItemContainerStyles = {
+const constraintItemStyle = {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
+    padding: "10px",
+    height: "50px",
+    gap: "15px",
+    borderRadius : "10px",
+    boxShadow: "0 2px 3px #5f5f5f43"
+}
+
+const optionStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent:"center",
+    flex: "1",
+    flexGrow: "0",
+    flexShrink:"0"
+}
+
+const circle = {
+    height:"100%",
+    aspectRatio:"1/1",
+    boxShadow: "0 2px 3px #5f5f5f43",
+    borderRadius: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent:"center",
+    fontWeight: "bolder",
+}
+
+const listContainerStyle = {
+    display: "flex",
+    gap: "10px",
+    flexDirection:"column",
+    width: "100%",
+    padding: "10px 5px",
+    overflow: "scroll",
+    flex: "1",
+    boxSizing:"border-box"
 };
+
+const constraintStyle = {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+    width: "200px",
+    overflow: "hidden"
+}
+
+const constraintTextStyle = {
+    flex: "1",
+    whiteSpace:"nowrap",
+    overflow: "hidden",
+    textOverflow:"ellipsis",
+    fontSize: "14px"
+}
+
+function ConstraintItem({type, id, x, y}){
+    return (
+        <div style={constraintItemStyle}>
+        { type === "in" ? <div style={Object.assign({}, circle, {color:"#003366", backgroundColor:"white"})}>IN</div> : <div style={Object.assign({}, circle, {color:"white", backgroundColor:"#003366"})}>OUT</div> 
+        } <div style={constraintStyle}><div style={constraintTextStyle}>{x}</div><div style={constraintTextStyle}>{y}</div></div><div  style={optionStyle} ><FaEllipsisV/></div>
+        </div>
+    )
+}
 
 export default (props) => {
     const [constraintsInfo, setConstraintsInfo] = React.useState({});
@@ -55,8 +91,18 @@ export default (props) => {
     };
     
     return (
-        <div className="scrollable-list" style={customStyles}>
-            {
+        <div id="listContainer" style={listContainerStyle}>
+            <ConstraintItem type="in" x="14.3382923428" y="23.4813849"></ConstraintItem>
+            <ConstraintItem type="out" x="14.338" y="23.481"></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            <ConstraintItem></ConstraintItem>
+            
+            {/* {
+            {/* {
             constraintsInfo && constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (
                         <MenuItem key={"in" + item.id} style={constraintsStyles}>
@@ -82,7 +128,7 @@ export default (props) => {
             }
             {
 
-            }
+            } */}
         </div>
     );
 }

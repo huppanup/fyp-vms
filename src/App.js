@@ -34,7 +34,7 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route element={(
             <VenueProvider>
-            <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", maxHeight:"100vh", maxWidth:"100%"}}>
+            <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", height:"100vh", maxHeight:"100vh", maxWidth:"100%"}}>
             <Header />
             <Outlet />
             </div>
