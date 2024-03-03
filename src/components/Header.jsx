@@ -30,7 +30,6 @@ export default () => {
     }
 
     const handleLocationSelect = (venue) => {
-        console.log("OPTION: " + JSON.stringify(venue));
         setSelectedVenue(venue);
         updatePath(venue.value);
     }
@@ -43,7 +42,6 @@ export default () => {
               result.push({ value : key, label : likedLocation[key]["name"]});
           }
           setVenues(result);
-          console.log(result);
           if (selectedVenue === "" || selectedVenue === null){
               handleLocationSelect(result[0]);    
           }
@@ -55,7 +53,6 @@ export default () => {
               res.prefixes.map((prefix) => {
                 const formattedName = prefix.name.replace(/_/g, " ");
                 fetchedVenueNames.push({ value : prefix.name, label : formattedName });
-                console.log(fetchedVenueNames);
               });
               setVenues(fetchedVenueNames);
               if (selectedVenue === "" || selectedVenue === null){

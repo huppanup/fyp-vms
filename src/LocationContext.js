@@ -12,28 +12,23 @@ export function useVenue() {
 export function VenueProvider({ children }) {
   const [venueID, setVenueID] = useState(null);
   const [floor, setFloor] = useState(null);
-  const dataHandler = new VenueData(venueID, floor);
+  const [venueInfo, setVenueInfo] = useState(null);
+  const dataHandler = new VenueData(null);
 
-  function checkVenueExists(id){
-    checkVenueExists.then((result) => {
-        console.log("Exists? " + result);
-    });
-  }
-
-  function setSelectedVenue(id) {
+  async function setVenue(id){
+    if (!id) return;
     setVenueID(id);
-  }
-
-  function setSelectedFloor(floor) {
-    setFloor(floor);
+    dataHandler.venueID = id;
+    setVenueInfo(await dataHandler.getVenueInfo())
+    console.log(venueInfo);
   }
 
   const value = {
     venueID,
     floor,
-    setSelectedVenue,
-    setSelectedFloor,
-    checkVenueExists,
+    setVenue,
+    setFloor,
+    venueInfo,
     dataHandler
   }
 

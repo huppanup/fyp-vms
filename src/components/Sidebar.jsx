@@ -5,18 +5,21 @@ import '../stylesheets/sidebar.css'
 //import Dropdown from "react-dropdown";
 import Dropdown from "../components/Dropdown"
 import ConstraintMenu from "./ConstraintMenu";
+import FloorplanMenu from "./FloorplanMenu";
+import { useVenue } from '../LocationContext';
+
 
 export default (props) => {
+    const { venueID, floor, setFloor, venueInfo, dataHandler } = useVenue();
+
     const [curTab, setCurTab] = useState(true);
-    const [curFloor, setCurFloor] = useState();
-    const floors = ["L1", "L2", "L3"];
 
     return (
     <div className={"sb-container"}>
         <div className={"sb " + (props.collapse ? "collapse" : "")}>
             <div className="sb-header">
-                <Dropdown options={floors}
-                    onChange={(floor) => setCurFloor(floor)}
+                <Dropdown options={venueInfo ? venueInfo["floors"] : []}
+                    onChange={(f) => setFloor(f)}
                     placeholder={"Select a floor"}
                 />
                 <div className="sb-tabs">
@@ -25,7 +28,7 @@ export default (props) => {
                 </div>
             </div>
             <div className="sb-body" style={{flex: "1", whiteSpace:"normal", wordBreak:"break-all", overflow:"scroll"}}>
-                <ConstraintMenu currentFloor={curFloor}/>
+                { curTab ? (<ConstraintMenu currentFloor={floor}/>) : (<FloorplanMenu></FloorplanMenu>)}
             </div>
         </div>
         <div className="sb-collapse">

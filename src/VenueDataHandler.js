@@ -31,17 +31,15 @@ function downloadData(path, type){
 // Retrieves venue info as JSON.
 // STRUCTURE
 // { venueName : string, venueID : venueID, floors : [string]}
-function getVenueInfo(venueID){
-    console.log("HELLO");
+async function getVenueInfo(venueID){
     console.log("Fetching venue info for " + venueID);
-    return downloadData(venueID + "/info.json", "json").then((data) => {
-        const venueInfo = {
-            "venueName" : data["site_name"],
-            "venueID" : venueID,
-            "floors" : data["floors"]
-        }
-        return venueInfo;
-    });
+    const data = await downloadData(venueID + "/info.json", "json");
+    const venueInfo = {
+        "venueName": data["site_name"],
+        "venueID": venueID,
+        "floors": data["floors"]
+    };
+    return venueInfo;
 }
 
 // Retrieves floor info as JSON.
