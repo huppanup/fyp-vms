@@ -29,7 +29,7 @@ export default ({options, placeholder, selected}) => {
 
     const list = (
         <ul className={"dropdown-list"}>
-            {options.map((option) => (<li className="dropdown-item" onClick={()=>selectOption(option)}>{option}</li>))}
+            {options.map((option) => (<li className="dropdown-item" key={option} onClick={()=>selectOption(option)}>{option}</li>))}
         </ul>
     ); 
 

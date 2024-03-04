@@ -25,11 +25,6 @@ export default () => {
   useEffect(() => {
     setVenue("-NrisipFr0yx32oaNHQz");
   }, [venueID]);
-
-  useEffect(() => {
-    console.log("VENUE INFO");
-    console.log(venueInfo);
-  }, [venueInfo]);
   
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
