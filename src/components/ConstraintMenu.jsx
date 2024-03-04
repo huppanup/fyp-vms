@@ -40,7 +40,6 @@ const listContainerStyle = {
     flexDirection:"column",
     width: "100%",
     padding: "10px 5px",
-    overflow: "scroll",
     flex: "1",
     boxSizing:"border-box"
 };

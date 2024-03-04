@@ -34,11 +34,15 @@ function downloadData(path, type){
 async function getVenueInfo(venueID){
     console.log("Fetching venue info for " + venueID);
     const data = await downloadData(venueID + "/info.json", "json");
-    if (!data) return;
+    let transformationData = await downloadData(venueID + "/map/geodata.csv", "text");
+    transformationData = transformationData.trim().split(",\r\n").map(item => item.split(" "));
+    if (!data || !transformationData) return;
     const venueInfo = {
         "venueName": data["site_name"],
         "venueID": venueID,
-        "floors": data["floors"]
+        "floors": data["floors"],
+        "settings" : data["settings"],
+        "transformation" : transformationData
     };
     return venueInfo;
 }
