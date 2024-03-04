@@ -91,13 +91,13 @@ export default (props) => {
             {
             constraintsInfo && constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (
-                    <ConstraintItem type="in" id={"in" + item.id} x={item.x} y={item.y} />
+                    <ConstraintItem type="in" key={"in" + item.id} x={item.x} y={item.y} />
                 ))
             }
             {
             constraintsInfo && constraintsInfo.out &&
                 constraintsInfo.out.map((item) => (
-                    <ConstraintItem type="out" id={"out" + item.id} x={item.x} y={item.y} />
+                    <ConstraintItem type="out" key={"out" + item.id} x={item.x} y={item.y} />
                 ))
             }
         </div>
