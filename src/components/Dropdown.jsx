@@ -4,7 +4,7 @@ import { ReactSVG } from "react-svg";
 import * as icons from "react-icons/fa6";
 import "../stylesheets/dropdown.css"
 
-export default ({options, placeholder, selected}) => {
+export default ({id, options, placeholder, selected}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSelected, setIsSelected] = useState();
 
@@ -17,7 +17,7 @@ export default ({options, placeholder, selected}) => {
     useEffect(() =>{
         if(isOpen){
             const handleClickOutside = (event) => {
-                if (!document.querySelector(".dropdown").contains(event.target))setIsOpen(false);
+                if (!document.querySelector("#" + id).contains(event.target))setIsOpen(false);
             };
             
             document.addEventListener('click', handleClickOutside);
@@ -29,14 +29,14 @@ export default ({options, placeholder, selected}) => {
 
     const list = (
         <ul className={"dropdown-list"}>
-            {options.map((option) => (<li className="dropdown-item" key={option} onClick={()=>selectOption(option)}>{option}</li>))}
+            {Object.entries(options).map(([key,value]) => (<li className="dropdown-item" key={key} onClick={()=>selectOption(key)}>{value}</li>))}
         </ul>
     ); 
 
     return (
-    <div className={"dropdown"}>
+    <div id= {id} className={"dropdown"}>
         <div className={"dropdown-title" + (isOpen ? " active" : "")} onClick={()=>setIsOpen(!isOpen)}>
-        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{isSelected || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
+        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{options[isSelected] || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
         </div>
         { isOpen && list }
     </div>

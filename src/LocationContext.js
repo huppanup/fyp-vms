@@ -18,7 +18,8 @@ export function VenueProvider({ children }) {
   async function setVenue(id){
     if (!id) return;
     setVenueID(id);
-    setVenueInfo(await dataHandler.getVenueInfo(venueID));
+    const vin = await dataHandler.getVenueInfo(id);
+    setVenueInfo(vin);
   }
 
   const value = {

@@ -24,14 +24,11 @@ export function deleteVenue(id){
     .catch((e) => {console.log("Failed to remove venue.")});
 }
 
-export function getLikedLocations(id){
+export async function getLikedLocations(id){
     const likedVenues = ref(database, 'users/' + id + '/likedLocations');
-    var result;
-    onValue(likedVenues, (snapshot) => {
-        const data = snapshot.val();
-        result = data;
-    });
-    return result;
+    const result = await get(likedVenues);
+    return result.val();
+ 
 }
 
 export function removeLikedLocations(id, location) {

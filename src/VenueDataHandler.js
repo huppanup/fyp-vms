@@ -35,8 +35,8 @@ async function getVenueInfo(venueID){
     console.log("Fetching venue info for " + venueID);
     const data = await downloadData(venueID + "/info.json", "json");
     let transformationData = await downloadData(venueID + "/map/geodata.csv", "text");
-    transformationData = transformationData.trim().split(",\r\n").map(item => item.split(" "));
-    if (!data || !transformationData) return;
+    if (transformationData) transformationData = transformationData.trim().split(",\r\n").map(item => item.split(" "));
+    if (!data){ console.log("Failed to retrieve venue info"); return;};
     const venueInfo = {
         "venueName": data["site_name"],
         "venueID": venueID,
@@ -44,6 +44,7 @@ async function getVenueInfo(venueID){
         "settings" : data["settings"],
         "transformation" : transformationData
     };
+    console.log("Retrieved venue info");
     return venueInfo;
 }
 

@@ -10,15 +10,26 @@ import { useVenue } from '../LocationContext';
 
 
 export default (props) => {
-    const { floor, setFloor, venueInfo } = useVenue();
+    const { venueID, floor, setFloor, venueInfo, dataHandler } = useVenue();
 
     const [curTab, setCurTab] = useState(true);
+    const [floorList, setFloorList] = useState([]);
+
+    useEffect(() => {
+        if (!venueInfo) { console.log("No venue info"); return;}
+        const floors = {}
+        dataHandler.getVenueInfo(venueID).then((data) => {data["floors"].map((floor, i) => {floors[floor] = floor}); 
+        setFloorList(floors);});
+        
+    }, [venueInfo])
 
     return (
     <div className={"sb-container"}>
         <div className={"sb " + (props.collapse ? "collapse" : "")}>
             <div className="sb-header">
-                <Dropdown options={venueInfo ? venueInfo["floors"] : []}
+                <Dropdown 
+                    id="floorList"
+                    options={floorList}
                     selected={(f) => setFloor(f)}
                     placeholder={"Select a floor"}
                 />

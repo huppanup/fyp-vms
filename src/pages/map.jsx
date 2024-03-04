@@ -21,10 +21,6 @@ export default () => {
   const imageStyle = {
     transform: 'rotate(90deg)'
   };
-
-  useEffect(() => {
-    setVenue("-NrisipFr0yx32oaNHQz");
-  }, [venueID]);
   
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
