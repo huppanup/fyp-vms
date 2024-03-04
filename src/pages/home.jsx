@@ -7,16 +7,40 @@ import Popup from "../components/popup"
 import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations } from "../DBHandler";
 import { LargeButton } from "../components/LargeButton";
 import { useAuth } from '../AuthContext';
+import FuzzySearch from "react-fuzzy";
 
+const inputWrapperStyle = {
+  width: "50vw",
+  border: "1px solid #ccc",
+  borderRadius: "30px",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.25)"
+}
+
+const inputStyle = {
+  width: "50vw",
+  border: "none",
+  borderRadius: "30px",
+}
 
 export default () => {
   const database = getDatabase();
   const [likedLocations, setLikedLocations] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const {currentUser} = useAuth();
+  const [venues, setVenues] = useState([]);
 
   useEffect(() => {
     if (currentUser.uid) {
+      const venuesRef = ref(database, 'venues');
+      onValue(venuesRef, (snapshot) => {
+        const data = snapshot.val();
+        const fetchedVenueNames = [];
+        for (const key in data) {
+          fetchedVenueNames.push({ author : key, title : data[key]});
+        }
+        setVenues(fetchedVenueNames);
+        console.log(fetchedVenueNames);
+      });
       const likedLocations = getLikedLocations(currentUser.uid);
       if (likedLocations) {
         const likedLocationsList = Object.values(likedLocations);
@@ -57,14 +81,21 @@ export default () => {
       <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={false}/>
         <div className="main-panel">
           <div className="search-bar">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search Venue..."
+            <FuzzySearch
+              list={venues}
+              keys={["author", "title"]}
+              width={"50vw"}
+              onSelect={s => console.log(s)}
+              inputWrapperStyle={inputWrapperStyle}
+              inputStyle={inputStyle}
+              placeholder={"Search Venue..."}
+              listWrapperStyle={{
+                position: "absolute",
+                zIndex: 1,
+                width:"50vw"
+              }}
+              verbose={false}
             />
-            <button className="search-button">
-              <FaSearch size={18} />
-            </button>
           </div>
           <h1 className="favorites"> My Favorites </h1>
           <table className="table">
