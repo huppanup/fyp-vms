@@ -10,7 +10,7 @@ import { useVenue } from '../LocationContext';
 
 
 export default (props) => {
-    const { venueID, floor, setFloor, venueInfo, dataHandler } = useVenue();
+    const { floor, setFloor, venueInfo } = useVenue();
 
     const [curTab, setCurTab] = useState(true);
 
@@ -19,7 +19,7 @@ export default (props) => {
         <div className={"sb " + (props.collapse ? "collapse" : "")}>
             <div className="sb-header">
                 <Dropdown options={venueInfo ? venueInfo["floors"] : []}
-                    onChange={(f) => setFloor(f)}
+                    selected={(f) => setFloor(f)}
                     placeholder={"Select a floor"}
                 />
                 <div className="sb-tabs">

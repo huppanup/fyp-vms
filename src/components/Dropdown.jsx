@@ -4,14 +4,14 @@ import { ReactSVG } from "react-svg";
 import * as icons from "react-icons/fa6";
 import "../stylesheets/dropdown.css"
 
-export default ({options, placeholder, onChange}) => {
+export default ({options, placeholder, selected}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState();
+    const [isSelected, setIsSelected] = useState();
 
     function selectOption(option){
-        setSelected(option);
+        setIsSelected(option);
         setIsOpen(false);
-        onChange(option);
+        selected(option);
     }
 
     useEffect(() =>{
@@ -36,7 +36,7 @@ export default ({options, placeholder, onChange}) => {
     return (
     <div className={"dropdown"}>
         <div className={"dropdown-title" + (isOpen ? " active" : "")} onClick={()=>setIsOpen(!isOpen)}>
-        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{selected || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
+        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{isSelected || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
         </div>
         { isOpen && list }
     </div>

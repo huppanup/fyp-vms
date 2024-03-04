@@ -13,14 +13,12 @@ export function VenueProvider({ children }) {
   const [venueID, setVenueID] = useState(null);
   const [floor, setFloor] = useState(null);
   const [venueInfo, setVenueInfo] = useState(null);
-  const dataHandler = new VenueData(null);
+  const dataHandler = new VenueData();
 
   async function setVenue(id){
     if (!id) return;
     setVenueID(id);
-    dataHandler.venueID = id;
-    setVenueInfo(await dataHandler.getVenueInfo())
-    console.log(venueInfo);
+    setVenueInfo(await dataHandler.getVenueInfo(venueID));
   }
 
   const value = {

@@ -23,7 +23,7 @@ export default () => {
   };
 
   useEffect(() => {
-    setVenue("HKUST_fusion");
+    setVenue("-NrisipFr0yx32oaNHQz");
   }, [venueID]);
 
   useEffect(() => {

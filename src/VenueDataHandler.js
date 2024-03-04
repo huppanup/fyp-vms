@@ -34,6 +34,7 @@ function downloadData(path, type){
 async function getVenueInfo(venueID){
     console.log("Fetching venue info for " + venueID);
     const data = await downloadData(venueID + "/info.json", "json");
+    if (!data) return;
     const venueInfo = {
         "venueName": data["site_name"],
         "venueID": venueID,
@@ -58,7 +59,7 @@ async function getFloorInfo(venueID, floorNo){
 
 // Retrieves constraint info from given storage reference as an array of JSON.
 // [{ id : int, x : string, y : string }]
-/*async function getConstraints(storRef){
+async function getConstraints(storRef){
     const res = await listAll(storRef);
     let id = 0;
     const constraintList = [];
@@ -78,12 +79,12 @@ async function getFloorInfo(venueID, floorNo){
         }
     }
     return constraintList;
-}*/
+}
 
 
 // Retrieves all constraint information for floorNo as JSON.
 // { venueID : string, floorNo : string, in : [JSON], out : [JSON]}}
-/*async function getAllConstraints(venueID, floorNo){
+async function getAllConstraints(venueID, floorNo){
     const inConstraintsRef = ref(storage, venueID + "/Constraint/inConstraints/" + floorNo);
     const outConstraintsRef = ref(storage, venueID + "/Constraint/outConstraints/" + floorNo);
     const inConstraintsInfo = await getConstraints(inConstraintsRef);
@@ -95,48 +96,48 @@ async function getFloorInfo(venueID, floorNo){
                 in: inConstraintsInfo,
                 out: outConstraintsInfo,
             };
-}*/
-
-async function getAllConstraints(venueID, floorNo) {
-    const constraintData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
-    if (!constraintData) return;
-    const inConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("inConstraint"));
-    const outConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("outConstraint"));
-    const inConstraints = [];
-    const outConstraints = [];
-    let id = 0;
-    inConstraintsData.forEach(data => {
-        for (let i = 0; i < data["points"].length; i++) {
-            const constraint = {
-                id: id,
-                label: data["label"],
-                x: data["points"][i][0],
-                y: data["points"][i][1]
-            };
-            id++;
-            inConstraints.push(constraint);
-        }
-    });
-    id = 0;
-    outConstraintsData.forEach(data => {
-        for (let i = 0; i < data["points"].length; i++) {
-            const constraint = {
-                id: id,
-                label: data["label"],
-                x: data["points"][i][0],
-                y: data["points"][i][1]
-            };
-            id++;
-            outConstraints.push(constraint);
-        }
-    });
-    return {
-        venueID: venueID,
-        floorNo: floorNo,
-        in: inConstraints,
-        out: outConstraints,
-    };
 }
+
+// async function getAllConstraints(venueID, floorNo) {
+//     const constraintData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
+//     if (!constraintData) return;
+//     const inConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("inConstraint"));
+//     const outConstraintsData = constraintData["shapes"].filter(shape => shape["label"].includes("outConstraint"));
+//     const inConstraints = [];
+//     const outConstraints = [];
+//     let id = 0;
+//     inConstraintsData.forEach(data => {
+//         for (let i = 0; i < data["points"].length; i++) {
+//             const constraint = {
+//                 id: id,
+//                 label: data["label"],
+//                 x: data["points"][i][0],
+//                 y: data["points"][i][1]
+//             };
+//             id++;
+//             inConstraints.push(constraint);
+//         }
+//     });
+//     id = 0;
+//     outConstraintsData.forEach(data => {
+//         for (let i = 0; i < data["points"].length; i++) {
+//             const constraint = {
+//                 id: id,
+//                 label: data["label"],
+//                 x: data["points"][i][0],
+//                 y: data["points"][i][1]
+//             };
+//             id++;
+//             outConstraints.push(constraint);
+//         }
+//     });
+//     return {
+//         venueID: venueID,
+//         floorNo: floorNo,
+//         in: inConstraints,
+//         out: outConstraints,
+//     };
+// }
 
 // Retrieves magnetic series information for floorNo as JSON.
 // { venueID : string, floorNo : string, magnetic : [JSON] } 
@@ -213,20 +214,12 @@ async function getWifiData(venueID, floorNo) {
     };
 }
 
-function test(text){
-    console.log(text); 
-    return "BYE";
-}
-
-export default function VenueData(id, f = null) {
-    this.venueID = id;
-    this.floor = f;
-    this.printHI = (txt) => test(txt);
-    this.getVenueInfo = () => getVenueInfo(this.venueID);
-    this.getFloorInfo = () => getFloorInfo(this.venueID, this.floor);
-    this.getAllConstraints = () => getAllConstraints(this.venueID, this.floor);
-    this.getMagData = () => getMagData(this.venueID, this.floor);
-    this.getWifiData = () => getWifiData(this.venueID, this.floor);
+export default function VenueData() {
+    this.getVenueInfo = (id) => getVenueInfo(id);
+    this.getFloorInfo = (id, floor) => getFloorInfo(id, floor);
+    this.getAllConstraints = (id, floor) => getAllConstraints(id, floor);
+    this.getMagData = (id, floor) => getMagData(id, floor);
+    this.getWifiData = (id, floor) => getWifiData(id, floor);
     this.editConstraint = (type, id, x, y) => editConstraint(this.venueID, this.floor, type, id, x, y);
 }
 
