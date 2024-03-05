@@ -1,12 +1,14 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-let map;
-let imageOverlay;
-
 export function initializeMap() {
-    if (map) return;
-    map = L.map('mapContainer').setView([22.3015, 114.1668], 19);
+    const mapContainer = document.getElementById("mapContainer");
+    if (mapContainer) {
+        if (mapContainer._leaflet_id) {
+            mapContainer._leaflet_id = null;
+        }
+    }
+    let map = L.map('mapContainer').setView([22.3015, 114.1668], 19);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 25,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -15,16 +17,20 @@ export function initializeMap() {
     map.on('click', function(e) {
         alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
     });
+
+    return map;
 }
 
-export function addFloorPlanImage(url, transformation, matrix, height, width) {
+export function addFloorPlanImage(map, url, transformation, matrix, height, width) {
     let imageUrl = url;
     let bounds = calculateBounds(transformation, matrix, height, width);
     let latLngBounds = L.latLngBounds([bounds]);
-    if (imageOverlay) {
-        map.removeLayer(imageOverlay);
-    }
-    imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.ImageOverlay) {
+            map.removeLayer(layer);
+        }
+    });
+    let imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
         opacity: 0.9,
         interactive: true
     }).addTo(map);

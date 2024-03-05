@@ -1,6 +1,5 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, ImageOverlay } from 'react-leaflet'
 import { ReactSVG } from "react-svg";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../components/Sidebar"
@@ -8,11 +7,11 @@ import 'leaflet/dist/leaflet.css'
 import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
-import { addFloorPlanImage, initializeMap } from '../leaflet';
+import { addFloorPlanImage, initializeMap, removeMap } from '../leaflet';
 
 export default () => {
 
-  const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler } = useVenue();
+  const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler, map, setMap } = useVenue();
 
   const [collapse, setCollapse] = React.useState(false);
   const [floorInfo, setFloorInfo] = React.useState();
@@ -24,8 +23,10 @@ export default () => {
   };
 
   useEffect(() => {
-    initializeMap();
-  })
+    setVenue("-NrisipFr0yx32oaNHQz");
+    setMap(initializeMap());
+    console.log(map);
+  }, [venueID]);
 
   useEffect(() => {
     if (floor) {
@@ -33,7 +34,7 @@ export default () => {
         setFloorInfo(data);
         console.log(venueInfo["transformation"]);
         console.log(data["trans"]);
-        addFloorPlanImage(data["floorplan"], venueInfo["transformation"], data["trans"], data["imageHeight"], data["imageWidth"]);
+        addFloorPlanImage(map, data["floorplan"], venueInfo["transformation"], data["trans"], data["imageHeight"], data["imageWidth"]);
       });
     }
   }, [venueID, floor])

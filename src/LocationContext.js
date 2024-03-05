@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import VenueData from "./VenueDataHandler";
 import { checkVenueExists } from "./DBHandler";
+import { initializeMap } from "./leaflet";
 
 const VenueContext = React.createContext()
 
@@ -14,6 +15,7 @@ export function VenueProvider({ children }) {
   const [floor, setFloor] = useState(null);
   const [venueInfo, setVenueInfo] = useState(null);
   const dataHandler = new VenueData();
+  const [map, setMap] = useState(null);
 
   async function setVenue(id){
     if (!id) return;
@@ -22,6 +24,7 @@ export function VenueProvider({ children }) {
     const vin = await dataHandler.getVenueInfo(id);
     setVenueInfo(vin);
     console.log("Completed setVenue for " + id);
+    setMap(initializeMap(id));
   }
 
   const value = {
@@ -30,7 +33,9 @@ export function VenueProvider({ children }) {
     setVenue,
     setFloor,
     venueInfo,
-    dataHandler
+    dataHandler,
+    map,
+    setMap
   }
 
   return (
