@@ -40,11 +40,11 @@ export default () => {
             const storageRef = ref(storage);
             listAll(storageRef)
               .then((res) => {
-                const fetchedVenueNames = [];
+                const result = {};
                 res.prefixes.map((prefix) => {
-                  fetchedVenueNames.push({ key : prefix.name, name : prefix.name });
+                  result[prefix.name] = prefix.name;
                 });
-                setVenueList(fetchedVenueNames);
+                setVenueList(result);
               })
               .catch((error) => {
                 console.error("Error fetching venue names:", error);
