@@ -41,7 +41,6 @@ async function getVenueInfo(venueID){
         "venueName": data["site_name"],
         "venueID": venueID,
         "floors": data["floors"],
-        "settings" : data["settings"],
         "transformation" : transformationData
     };
     return venueInfo;
@@ -52,12 +51,17 @@ async function getVenueInfo(venueID){
 // { venueID : string, floorNo : string, floorplan : string, settings : JSON{ scale : float, deviation : int, transformation : [float]}}
 async function getFloorInfo(venueID, floorNo){
     const mapFile = await getFileURL(venueID + "/map/" + floorNo + "/map.jpg");
+    const mapData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
     const floorData = await downloadData(venueID + "/info.json", "json");
+    let transData = mapData["shapes"].filter(shape => shape["label"].includes("trans"));
     return {
         "venueID" : venueID,
         "floorNo" : floorNo,
         "floorplan" : mapFile,
-        "settings" : floorData["settings"][floorNo]
+        "imageHeight" : mapData["imageHeight"],
+        "imageWidth" : mapData["imageWidth"],
+        "settings" : floorData["settings"][floorNo],
+        "trans" : transData[0]["points"]
     };
 }
 
