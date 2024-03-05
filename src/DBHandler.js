@@ -1,8 +1,12 @@
 import {database} from "./firebase"
-import { get, ref, push, update, onValue } from "firebase/database";
+import { get, ref, push, update, set } from "firebase/database";
 
 export function addVenue(name) {
     return push(ref(database,'venues/'), name).key; // Returns key value of added venue
+}
+
+export function addUser(id) {
+  return set(ref(database, 'users/' + id), {type: 0});
 }
 
 export async function checkVenueExists(id) {

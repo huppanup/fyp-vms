@@ -3,6 +3,7 @@ import React from "react";
 import validator from 'validator';
 import Popup from "../components/popup";
 import {useAuth} from '../AuthContext'
+import { addUser } from "../DBHandler";
 
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
@@ -33,6 +34,7 @@ export default () => {
         e.preventDefault();
         try{
             const user = await signup(email, password);
+            addUser(user.user.uid);
             await verify(user.user);
             setModalOpen(true);
             setLink('/login');
