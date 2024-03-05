@@ -39,7 +39,6 @@ export default () => {
           fetchedVenueNames.push({ author : key, title : data[key]});
         }
         setVenues(fetchedVenueNames);
-        console.log(fetchedVenueNames);
       });
       const likedLocations = getLikedLocations(currentUser.uid);
       if (likedLocations) {
@@ -85,7 +84,7 @@ export default () => {
               list={venues}
               keys={["author", "title"]}
               width={"50vw"}
-              onSelect={s => console.log(s)}
+              onSelect={(s) => {}}
               inputWrapperStyle={inputWrapperStyle}
               inputStyle={inputStyle}
               placeholder={"Search Venue..."}

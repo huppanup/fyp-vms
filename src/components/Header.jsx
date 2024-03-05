@@ -2,7 +2,7 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useLocation} from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ref, listAll, getDownloadURL, getMetadata, uploadBytes } from "firebase/storage";
+import { ref, listAll } from "firebase/storage";
 import {storage} from "../firebase"
 import Dropdown from "../components/Dropdown"
 import { getLikedLocations, checkVenueExists } from "../DBHandler";
@@ -18,7 +18,7 @@ export default () => {
     const nav = useNavigate();
     const location = useLocation();
 
-    const {venueID, setVenue, venueInfo} = useVenue();
+    const {venueID, setVenue} = useVenue();
 
 
     const updatePath = (venue) => {
@@ -69,6 +69,7 @@ export default () => {
               placeholder={"Select a venue"}
               style={{fontSize:"30px"}}
               curSelected={venueID}
+              active={true}
             />
             </div>
       </div>

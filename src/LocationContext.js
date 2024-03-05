@@ -11,6 +11,7 @@ export function useVenue() {
 }
 
 export function VenueProvider({ children }) {
+  const [loading, setLoading] = useState(false);
   const [venueID, setVenueID] = useState(null);
   const [floor, setFloor] = useState(null);
   const [venueInfo, setVenueInfo] = useState(null);
@@ -19,11 +20,16 @@ export function VenueProvider({ children }) {
 
   async function setVenue(id){
     if (!id) return;
-    console.log("NEW ID " + id);
+    setLoading(true);
+    console.log("In set venue")
     setVenueID(id);
+    console.log("Set id")
     const vin = await dataHandler.getVenueInfo(id);
+    console.log("Retrieved venue info")
     setVenueInfo(vin);
-    console.log("Completed setVenue for " + id);
+    console.log("Set venue info")
+
+    setLoading(false);
     setMap(initializeMap());
   }
 
@@ -34,6 +40,7 @@ export function VenueProvider({ children }) {
     setFloor,
     venueInfo,
     dataHandler,
+    loading,
     map,
     setMap
   }

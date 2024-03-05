@@ -10,15 +10,14 @@ import { useVenue } from '../LocationContext';
 
 
 export default (props) => {
-    const { venueID, floor, setFloor, venueInfo, dataHandler } = useVenue();
+    const { floor, setFloor, venueInfo, loading } = useVenue();
 
     const [curTab, setCurTab] = useState(true);
     const [floorList, setFloorList] = useState([]);
 
     useEffect(() => {
-        if (!venueInfo) { console.log("No venue info"); return;}
-        const floors = {}
-        // dataHandler.getVenueInfo(venueID).then((data) => {data["floors"].map((floor, i) => {floors[floor] = floor}); 
+        if (!venueInfo) return;
+        const floors = {};
         venueInfo["floors"].map((floor) => {floors[floor] = floor});
         setFloorList(floors);
         
@@ -34,6 +33,7 @@ export default (props) => {
                     onSelected={(f) => setFloor(f)}
                     placeholder={"Select a floor"}
                     curSelected={floor}
+                    active={!loading}
                 />
                 <div className="sb-tabs">
                     <div className={"sb-tab" + (curTab ? " selected" : "")} onClick={() => setCurTab(true)}><div style={{padding: "10px 0px"}}>Constraints</div></div>
