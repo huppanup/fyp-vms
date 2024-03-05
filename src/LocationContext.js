@@ -19,7 +19,7 @@ export function VenueProvider({ children }) {
   const [map, setMap] = useState(null);
 
   async function setVenue(id){
-    if (!id) return;
+    if (!id || venueID === id) return;
     setLoading(true);
     console.log("In set venue")
     setVenueID(id);
