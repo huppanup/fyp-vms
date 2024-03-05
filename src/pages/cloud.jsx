@@ -5,7 +5,7 @@ import { getStorage, ref, listAll, getDownloadURL, getMetadata, uploadBytes, del
 import "../stylesheets/cloud.css";
 import "react-dropdown/style.css";
 import Popup from "../components/popup";
-import Dropdown from "react-dropdown";
+import { useVenue } from "../LocationContext";
 import Modal from "react-modal";
 import { useLocation } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export default () => {
   const [currentFolder, setCurrentFolder] = useState("");
   const [checkedItems, setCheckedItems] = useState({});
   const [selectAll, setSelectAll] = useState(false);
- 
+  const {venueID} = useVenue();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
@@ -117,10 +117,8 @@ export default () => {
 
   useEffect(() => {
     if (venues.length > 0) {
-      if (!selectedVenue) setSelectedVenue(location.pathname.split("/").pop());
-      const reformattedName = location.pathname.split("/").pop();
-      const listRef = ref(storage, reformattedName);
-      setCurrentFolder(reformattedName);
+      const listRef = ref(storage, venueID);
+      setCurrentFolder(venueID);
       fetchFiles(listRef)
         .then((formattedFiles) => {
           setFiles(formattedFiles);
@@ -264,7 +262,7 @@ export default () => {
             <div className="cloud-header">
               <h2 className="folder-path">
                 <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
-                {currentFolder.indexOf("/") != -1 ? currentFolder.substring(currentFolder.indexOf("/")) : "/"}
+                {venueID && currentFolder && (currentFolder.indexOf("/") != -1 ? currentFolder.substring(currentFolder.indexOf("/")) : "/")}
               </h2>
               <div className="button-container">
                 {
