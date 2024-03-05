@@ -21,14 +21,9 @@ export function VenueProvider({ children }) {
   async function setVenue(id){
     if (!id || venueID === id) return;
     setLoading(true);
-    console.log("In set venue")
     setVenueID(id);
-    console.log("Set id")
-    const vin = await dataHandler.getVenueInfo(id);
-    console.log("Retrieved venue info")
+    const vin = await dataHandler.getVenueInfo(id); // 시간 좀 걸림
     setVenueInfo(vin);
-    console.log("Set venue info")
-
     setLoading(false);
     setMap(initializeMap());
   }
