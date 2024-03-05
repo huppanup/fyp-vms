@@ -24,8 +24,6 @@ export default () => {
 
   useEffect(() => {
     setVenue("-NrisipFr0yx32oaNHQz");
-    setMap(initializeMap());
-    console.log(map);
   }, [venueID]);
 
   useEffect(() => {
