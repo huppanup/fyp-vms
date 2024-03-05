@@ -24,7 +24,7 @@ export function VenueProvider({ children }) {
     const vin = await dataHandler.getVenueInfo(id);
     setVenueInfo(vin);
     console.log("Completed setVenue for " + id);
-    setMap(initializeMap(id));
+    setMap(initializeMap());
   }
 
   const value = {
