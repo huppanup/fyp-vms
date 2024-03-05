@@ -24,7 +24,7 @@ export default () => {
     const updatePath = (venue) => {
         var curPath = location.pathname.split('/');
         if (curPath.length > 2) {curPath = curPath.slice(1, -1);}
-        const newPath = `${curPath.join('/')}/${venue}`;
+        const newPath = `${curPath.join('/')}/${venueID}`;
         nav(newPath);
     }
 
@@ -56,17 +56,19 @@ export default () => {
 
     useEffect(() => {
         updatePath(venueID);
-      }, [venueID]);
+      }, []);
 
     return (
         <div className="header">
             <div className="header-left">
-            <FaStar className="star-icon active" size={40} />
+            <FaStar className="star-icon active" size={30} />
             <Dropdown 
               id="venueList"
               options={venueList}
-              selected={(v) => setVenue(v)}
+              onSelected={(v) => setVenue(v)}
               placeholder={"Select a venue"}
+              style={{fontSize:"30px"}}
+              curSelected={venueID}
             />
             </div>
       </div>

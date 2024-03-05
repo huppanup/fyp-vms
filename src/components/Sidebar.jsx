@@ -18,8 +18,9 @@ export default (props) => {
     useEffect(() => {
         if (!venueInfo) { console.log("No venue info"); return;}
         const floors = {}
-        dataHandler.getVenueInfo(venueID).then((data) => {data["floors"].map((floor, i) => {floors[floor] = floor}); 
-        setFloorList(floors);});
+        // dataHandler.getVenueInfo(venueID).then((data) => {data["floors"].map((floor, i) => {floors[floor] = floor}); 
+        venueInfo["floors"].map((floor) => {floors[floor] = floor});
+        setFloorList(floors);
         
     }, [venueInfo])
 
@@ -30,8 +31,9 @@ export default (props) => {
                 <Dropdown 
                     id="floorList"
                     options={floorList}
-                    selected={(f) => setFloor(f)}
+                    onSelected={(f) => setFloor(f)}
                     placeholder={"Select a floor"}
+                    curSelected={floor}
                 />
                 <div className="sb-tabs">
                     <div className={"sb-tab" + (curTab ? " selected" : "")} onClick={() => setCurTab(true)}><div style={{padding: "10px 0px"}}>Constraints</div></div>

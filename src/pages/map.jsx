@@ -28,10 +28,6 @@ export default () => {
   })
 
   useEffect(() => {
-    setVenue("-NrisipFr0yx32oaNHQz");
-  }, [venueID]);
-
-  useEffect(() => {
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);

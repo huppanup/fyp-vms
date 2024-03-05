@@ -54,7 +54,7 @@ async function getFloorInfo(venueID, floorNo){
     const mapFile = await getFileURL(venueID + "/map/" + floorNo + "/map.jpg");
     const mapData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
     const floorData = await downloadData(venueID + "/info.json", "json");
-    let transData = mapData["shapes"].filter(shape => shape["label"].includes("trans"));
+    let transData = mapData?.shapes?.filter(shape => shape["label"].includes("trans"));
     return {
         "venueID" : venueID,
         "floorNo" : floorNo,

@@ -4,14 +4,15 @@ import { ReactSVG } from "react-svg";
 import * as icons from "react-icons/fa6";
 import "../stylesheets/dropdown.css"
 
-export default ({id, options, placeholder, selected}) => {
+export default ({id, options, placeholder, onSelected, style, curSelected}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isSelected, setIsSelected] = useState();
 
     function selectOption(option){
-        setIsSelected(option);
         setIsOpen(false);
-        selected(option);
+        console.log("Callback to locationcontext setVenue");
+        onSelected(option);
+        console.log("Completed selectOption");
+
     }
 
     useEffect(() =>{
@@ -35,8 +36,8 @@ export default ({id, options, placeholder, selected}) => {
 
     return (
     <div id= {id} className={"dropdown"}>
-        <div className={"dropdown-title" + (isOpen ? " active" : "")} onClick={()=>setIsOpen(!isOpen)}>
-        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{options[isSelected] || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
+        <div className={"dropdown-title" + (isOpen ? " active" : "")} style={style} onClick={()=>setIsOpen(!isOpen)}>
+        <div style={{flexGrow: "5", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", marginRight:"10px"}}>{options[curSelected] || placeholder}</div><icons.FaCaretDown className="dropdown-icon" size={15} />
         </div>
         { isOpen && list }
     </div>

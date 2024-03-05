@@ -17,9 +17,11 @@ export function VenueProvider({ children }) {
 
   async function setVenue(id){
     if (!id) return;
+    console.log("NEW ID " + id);
     setVenueID(id);
     const vin = await dataHandler.getVenueInfo(id);
     setVenueInfo(vin);
+    console.log("Completed setVenue for " + id);
   }
 
   const value = {
