@@ -5,7 +5,9 @@ export function initializeMap() {
     const mapContainer = document.getElementById("mapContainer");
     if (mapContainer) {
         if (mapContainer._leaflet_id) {
-            mapContainer._leaflet_id = null;
+            let parentElement = mapContainer.parentElement;
+            parentElement.removeChild(mapContainer);
+            parentElement.innerHTML = '<div id="mapContainer"></div>';
         }
     }
     let map = L.map('mapContainer').setView([22.3015, 114.1668], 19);
@@ -22,6 +24,8 @@ export function initializeMap() {
 }
 
 export function addFloorPlanImage(map, url, transformation, matrix, height, width) {
+    console.log(map);
+    if (!map) return;
     let imageUrl = url;
     let bounds = calculateBounds(transformation, matrix, height, width);
     let latLngBounds = L.latLngBounds([bounds]);

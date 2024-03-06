@@ -22,14 +22,13 @@ export default () => {
   const imageStyle = {
     transform: 'rotate(90deg)'
   };
-  
+
   useEffect(() => {
-    setMap(initializeMap());
+    let map = initializeMap();
+    setMap(map);
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);
-        console.log(venueInfo["transformation"]);
-        console.log(data["trans"]);
         addFloorPlanImage(map, data["floorplan"], venueInfo["transformation"], data["trans"], data["imageHeight"], data["imageWidth"]);
       });
     }
