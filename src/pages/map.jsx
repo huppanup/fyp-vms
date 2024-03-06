@@ -21,7 +21,7 @@ export default () => {
   const imageStyle = {
     transform: 'rotate(90deg)'
   };
-
+  
   useEffect(() => {
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {

@@ -86,7 +86,7 @@ export default (props) => {
     };
     
     return (
-        <div id="listContainer" style={listContainerStyle}>
+        <div style={listContainerStyle}>
             {
             constraintsInfo && constraintsInfo.in &&
                 constraintsInfo.in.map((item) => (

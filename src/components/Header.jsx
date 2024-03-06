@@ -20,14 +20,6 @@ export default () => {
 
     const {venueID, setVenue} = useVenue();
 
-
-    const updatePath = (venue) => {
-        var curPath = location.pathname.split('/');
-        if (curPath.length > 2) {curPath = curPath.slice(1, -1);}
-        const newPath = `${curPath.join('/')}/${venueID}`;
-        nav(newPath);
-    }
-
     useEffect(() => {
         getLikedLocations(currentUser.uid).then((likedLocation) => {
           if (likedLocation != null) {
@@ -49,10 +41,6 @@ export default () => {
           }
       });
         
-      }, []);
-
-    useEffect(() => {
-        updatePath(venueID);
       }, []);
 
     return (

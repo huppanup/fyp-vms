@@ -12,7 +12,8 @@ const listContainerStyle = {
 
 export default () => {
     return (
-      <div id="listContainer" style={listContainerStyle}>
+      <div style={listContainerStyle}>
+      FloorPlanList
         
       </div>
     );

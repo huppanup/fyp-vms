@@ -17,6 +17,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-
 import { VenueProvider } from './LocationContext';
 
 function App() {
+
   return (
     <Router>
       <AuthProvider>
@@ -40,9 +41,9 @@ function App() {
             </div>
             </VenueProvider>
         )}>
-          <Route path="cloud/:location?" element={<Cloud />} />
-          <Route path="map/:location?" element={<Map />} />
-          <Route path="dev/:location?" element={<Dev />} />
+          <Route path="cloud" element={<Cloud />} />
+          <Route path="map" element={<Map />} />
+          <Route path="dev" element={<Dev />} />
           </Route>
           
         </Route>
