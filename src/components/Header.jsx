@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ref, listAll } from "firebase/storage";
 import {storage} from "../firebase"
 import Dropdown from "../components/Dropdown"
-import { getLikedLocations, checkVenueExists } from "../DBHandler";
+import { getLikedLocations, checkVenueExists, getVenues } from "../DBHandler";
 import { useAuth } from "../AuthContext";
 import "../stylesheets/header.css"
 import { update } from "firebase/database";
@@ -37,18 +37,15 @@ export default () => {
             }
             setVenueList(result);
           } else {
-            const storageRef = ref(storage);
-            listAll(storageRef)
-              .then((res) => {
+            getVenues().then((venues) => {
+              if (venues != null){
                 const result = {};
-                res.prefixes.map((prefix) => {
-                  result[prefix.name] = prefix.name;
-                });
+                for (var key in venues){
+                    result[key] = venues[key];
+                }
                 setVenueList(result);
-              })
-              .catch((error) => {
-                console.error("Error fetching venue names:", error);
-              });
+              }
+            })
           }
       });
         

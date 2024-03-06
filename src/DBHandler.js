@@ -35,6 +35,12 @@ export async function getLikedLocations(id){
  
 }
 
+export async function getVenues() {
+  const venues = ref(database, 'venues');
+  const result = await get(venues);
+  return result.val();
+}
+
 export function removeLikedLocations(id, location) {
     const likedLocationRef = ref(database, `users/${id}/likedLocations/${location.name}`);
     likedLocationRef.remove()
