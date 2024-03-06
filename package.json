@@ -9,6 +9,7 @@
     "firebase": "^10.5.0",
     "firebaseui": "^6.1.0",
     "leaflet": "^1.9.4",
+    "leaflet-imageoverlay-rotated": "^0.2.1",
     "mathjs": "^12.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
