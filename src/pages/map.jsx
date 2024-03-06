@@ -11,10 +11,11 @@ import { addFloorPlanImage, initializeMap, removeMap } from '../leaflet';
 
 export default () => {
 
-  const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler, map, setMap } = useVenue();
+  const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler } = useVenue();
 
   const [collapse, setCollapse] = React.useState(false);
   const [floorInfo, setFloorInfo] = React.useState();
+  const [map, setMap] = React.useState(null);
 
   const location = useLocation();
 
@@ -23,6 +24,7 @@ export default () => {
   };
 
   useEffect(() => {
+    setMap(initializeMap());
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);
