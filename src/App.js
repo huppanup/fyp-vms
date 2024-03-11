@@ -28,18 +28,18 @@ function App() {
         <Route element={<PrivateRoute/> }>
         <Route element={(
           <div style={{display:"flex", maxHeight:"100vh", maxWidth:"100vw"}}>
+            <VenueProvider>
             <NavBar />
             <Outlet />
+            </VenueProvider>
           </div>
         )}>
           <Route path="home" element={<Home />} />
           <Route element={(
-            <VenueProvider>
             <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", height:"100vh", maxHeight:"100vh", maxWidth:"100%"}}>
             <Header />
             <Outlet />
             </div>
-            </VenueProvider>
         )}>
           <Route path="cloud" element={<Cloud />} />
           <Route path="map" element={<Map />} />

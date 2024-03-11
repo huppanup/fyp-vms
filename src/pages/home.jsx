@@ -8,6 +8,8 @@ import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations
 import { LargeButton } from "../components/LargeButton";
 import { useAuth } from '../AuthContext';
 import FuzzySearch from "react-fuzzy";
+import {useVenue} from '../LocationContext';
+import { useNavigate } from "react-router-dom";
 
 const inputWrapperStyle = {
   width: "50vw",
@@ -24,10 +26,12 @@ const inputStyle = {
 
 export default () => {
   const database = getDatabase();
+  const { setVenue, loading } = useVenue();
   const [likedLocations, setLikedLocations] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const {currentUser} = useAuth();
   const [venues, setVenues] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser.uid) {
@@ -40,43 +44,42 @@ export default () => {
         }
         setVenues(fetchedVenueNames);
       });
-      const likedLocations = getLikedLocations(currentUser.uid);
-      if (likedLocations) {
-        const likedLocationsList = Object.values(likedLocations);
-        setLikedLocations(likedLocationsList);
-      }
+      getLikedLocations(currentUser.uid).then((liked) => {
+        setLikedLocations(liked);
+      });
     }
   }, [currentUser]);
 
   const toggleLike = (location) => {
-    const isLiked = likedLocations.some((likedLocation) => likedLocation.name === location.name);
-    if (isLiked) {
-      // Remove the location from likedLocations
-      //const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-      removeLikedLocations(currentUser.uid, location).then(() => {
-        const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-        setLikedLocations(updatedLikedLocations);
-      })
-      .catch((error) => {
-        console.error("Error removing location:", error);
-      });
-    } else {
-      // Add the location to likedLocations
-      const updatedLikedLocations = [...likedLocations, location];
-      updateLikedLocations(currentUser.uid, updatedLikedLocations).then(() => {
-        setLikedLocations(updatedLikedLocations);
-      })
-      .catch((error) => {
-        console.error("Error updating location:", error);
-      });
-    }
+    console.log(location);
+    // const isLiked = likedLocations.some((likedLocation) => likedLocation.name === location.name);
+    // if (isLiked) {
+    //   // Remove the location from likedLocations
+    //   //const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
+    //   removeLikedLocations(currentUser.uid, location).then(() => {
+    //     const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
+    //     setLikedLocations(updatedLikedLocations);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error removing location:", error);
+    //   });
+    // } else {
+    //   // Add the location to likedLocations
+    //   const updatedLikedLocations = [...likedLocations, location];
+    //   updateLikedLocations(currentUser.uid, updatedLikedLocations).then(() => {
+    //     setLikedLocations(updatedLikedLocations);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error updating location:", error);
+    //   });
+    // }
   }
 
   
   const message = <div><div>Venue Name</div><input type="text" name="text"></input></div>;
   return (
     <>
-      <div className="home-container">
+      <div className="home-container" style={{userSelect: "none"}}>
       <Popup modalOpen={modalOpen} setModalOpen={setModalOpen} message={message} navigateTo={false}/>
         <div className="main-panel">
           <div className="search-bar">
@@ -106,21 +109,17 @@ export default () => {
               </tr>
             </thead>
             <tbody>
-            {likedLocations.map((location) => (
+            {likedLocations && Object.entries(likedLocations).map(([id,location]) => (
                 <tr key={location.name}>
                   <td className="star-cell">
                     <button
                       onClick={() => toggleLike(location)}
-                      className={`favorite-button ${likedLocations.some(
-                        (likedLocation) => likedLocation.name === location.name
-                      ) && "active"}`}
+                      className={`favorite-button active`}
                     >
-                      {likedLocations.some((likedLocation) => likedLocation.name === location.name)
-                        ? <FaStar className="star-icon active" size={20} />
-                        : <FaStar className="star-icon" size={20} />}
+                    <FaStar className="star-icon active" size={20} />
                     </button>
                   </td>
-                  <td>{location.name}</td>
+                  <td onClick={() => {setVenue(id); navigate('/map');}}>{location.name}</td>
                   <td>{location.dateAdded}</td>
                 </tr>
               ))}
