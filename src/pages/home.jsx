@@ -15,13 +15,23 @@ const inputWrapperStyle = {
   width: "50vw",
   border: "1px solid #ccc",
   borderRadius: "30px",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.25)"
+  boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
+  paddingLeft: "10px"
 }
 
 const inputStyle = {
   width: "50vw",
   border: "none",
   borderRadius: "30px",
+}
+
+const resultStyle = {
+  display: "flex",
+  width: "100%",
+  borderBottom: "solid 1px #5a5a5a3e",
+  boxSizing: "border-box",
+  padding: "10px",
+  backgroundColor: "white"
 }
 
 export default () => {
@@ -50,29 +60,21 @@ export default () => {
     }
   }, [currentUser]);
 
-  const toggleLike = (location) => {
-    console.log(location);
-    // const isLiked = likedLocations.some((likedLocation) => likedLocation.name === location.name);
-    // if (isLiked) {
-    //   // Remove the location from likedLocations
-    //   //const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-    //   removeLikedLocations(currentUser.uid, location).then(() => {
-    //     const updatedLikedLocations = likedLocations.filter((likedLocation) => likedLocation.name !== location.name);
-    //     setLikedLocations(updatedLikedLocations);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error removing location:", error);
-    //   });
-    // } else {
-    //   // Add the location to likedLocations
-    //   const updatedLikedLocations = [...likedLocations, location];
-    //   updateLikedLocations(currentUser.uid, updatedLikedLocations).then(() => {
-    //     setLikedLocations(updatedLikedLocations);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error updating location:", error);
-    //   });
-    // }
+  const toggleLike = (id, location) => {
+    const isLiked = Object.keys(likedLocations).some((locationId) => locationId === id);
+    if (isLiked) {
+      removeLikedLocations(currentUser.uid, id);
+      getLikedLocations(currentUser.uid).then((liked) => {
+        setLikedLocations(liked);
+      });
+    } else {
+      let updatedLikedLocations = likedLocations;
+      updatedLikedLocations[id] = location;
+      updateLikedLocations(currentUser.uid, updatedLikedLocations);
+      getLikedLocations(currentUser.uid).then((liked) => {
+        setLikedLocations(liked);
+      });
+    }
   }
 
   
@@ -94,7 +96,31 @@ export default () => {
               listWrapperStyle={{
                 position: "absolute",
                 zIndex: 1,
-                width:"50vw"
+                width:"50vw",
+                maxHeight: "400px",
+                overflowY: "scroll",
+                border: "solid 0.5px #5a5a5a3e",
+                borderRadius: "15px",
+                boxSizing: "border-box",
+                padding: "0",
+                backgroundColor: "white",
+              }}
+              resultsTemplate={(props, state) => {
+                return state.results.map((val, i) => {
+                  return (
+                    <div
+                      key={i}
+                      style={resultStyle}
+                    >
+                      {Object.keys(likedLocations).some((locationId) => locationId === val.author) ? 
+                      <FaStar className="star-icon active" size={20} style={{marginLeft: "5px", marginRight: "15px"}} onClick={() => toggleLike(val.author, val.title)}/> 
+                      : <FaStar className="star-icon" size={20} style={{marginLeft: "5px", marginRight: "15px"}} onClick={() => toggleLike(val.author, {"name" : val.title, "dateAdded" : new Date().toISOString().split('T')[0]})}/>}
+                      <div onClick={() => {setVenue(val.author); navigate('/map');}}>
+                        {val.title}
+                      </div>
+                    </div>
+                  );
+                });
               }}
               verbose={false}
             />
@@ -109,11 +135,11 @@ export default () => {
               </tr>
             </thead>
             <tbody>
-            {likedLocations && Object.entries(likedLocations).map(([id,location]) => (
+            {likedLocations && Object.entries(likedLocations).map(([id, location]) => (
                 <tr key={location.name}>
                   <td className="star-cell">
                     <button
-                      onClick={() => toggleLike(location)}
+                      onClick={() => toggleLike(id, location)}
                       className={`favorite-button active`}
                     >
                     <FaStar className="star-icon active" size={20} />

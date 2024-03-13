@@ -79,7 +79,8 @@
 }
 
 .star-icon {
-    color: gray;
+    color: lightgray;
+
 }
   
 .star-icon.active {

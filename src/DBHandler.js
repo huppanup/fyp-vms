@@ -1,5 +1,5 @@
 import {database} from "./firebase"
-import { get, ref, push, update, set } from "firebase/database";
+import { get, ref, push, update, set, remove } from "firebase/database";
 
 export function addVenue(name) {
     return push(ref(database,'venues/'), name).key; // Returns key value of added venue
@@ -41,9 +41,9 @@ export async function getVenues() {
   return result.val();
 }
 
-export function removeLikedLocations(id, location) {
-    const likedLocationRef = ref(database, `users/${id}/likedLocations/${location.name}`);
-    likedLocationRef.remove()
+export function removeLikedLocations(uid, id) {
+    const likedLocationRef = ref(database, `users/${uid}/likedLocations/${id}`);
+    remove(likedLocationRef)
     .then(() => {
       console.log("Location removed successfully");
     })
@@ -52,13 +52,9 @@ export function removeLikedLocations(id, location) {
     });
 }
 
-export function updateLikedLocations(id, locations) {
-    const likedLocationRef = ref(database, `users/${id}/likedLocations`);
-    const updatedLikedLocationsObject = locations.reduce((acc, location) => {
-      acc[location.locationId] = location;
-      return acc;
-    }, {});
-    update(likedLocationRef, updatedLikedLocationsObject)
+export function updateLikedLocations(uid, locations) {
+    const likedLocationRef = ref(database, `users/${uid}/likedLocations`);
+    update(likedLocationRef, locations)
     .then(() => {
       return("Data updated successfully");
     })
