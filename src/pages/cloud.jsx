@@ -12,8 +12,6 @@ import { useLocation } from "react-router-dom";
 export default () => {
   const storage = getStorage();
   const [files, setFiles] = useState([]);
-  const [venues, setVenues] = useState([]);
-  const [selectedVenue, setSelectedVenue] = useState("");
   const [currentFolder, setCurrentFolder] = useState("");
   const [checkedItems, setCheckedItems] = useState({});
   const [selectAll, setSelectAll] = useState(false);
@@ -100,23 +98,7 @@ export default () => {
   };
 
   useEffect(() => {
-    const storageRef = ref(storage);
-
-    listAll(storageRef)
-      .then((res) => {
-        const fetchedVenueNames = res.prefixes.map((prefix) => {
-          const formattedName = prefix.name.replace(/_/g, " ");
-          return formattedName;
-        });
-        setVenues(fetchedVenueNames);
-      })
-      .catch((error) => {
-        console.error("Error fetching venue names:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (venues.length > 0) {
+    if (venueID) {
       const listRef = ref(storage, venueID);
       setCurrentFolder(venueID);
       fetchFiles(listRef)
@@ -127,7 +109,7 @@ export default () => {
           console.error("Error fetching files:", error);
         });
     }
-  }, [venues, location.pathname]);
+  }, [venueID]);
 
   const changeBytes = (bytes, decimals = 2) => {
     if (bytes === 0) return "0 Bytes";
