@@ -229,10 +229,10 @@ export default function VenueData() {
     this.getAllConstraints = (id, floor) => getAllConstraints(id, floor);
     this.getMagData = (id, floor) => getMagData(id, floor);
     this.getWifiData = (id, floor) => getWifiData(id, floor);
-    this.editConstraint = (type, id, x, y) => editConstraint(this.venueID, this.floor, type, id, x, y);
+    this.editConstraint = (venueID, floor, type, id, x, y) => editConstraint(venueID, floor, type, id, x, y);
 }
 
-async function editConstraint(locationID, floorNo, type, id, x, y){
+async function editConstraint(locationID, floorNo, type, id, x, y) {
     if (type === "in") {
         const inConstraintsRef = ref(storage, locationID + "/Constraint/inConstraints/" + floorNo);
         const res = await listAll(inConstraintsRef);

@@ -34,6 +34,19 @@ const resultStyle = {
   backgroundColor: "white"
 }
 
+const listWrapperStyle = {
+  position: "absolute",
+  zIndex: 1,
+  width:"50vw",
+  maxHeight: "400px",
+  overflowY: "scroll",
+  border: "solid 0.5px #5a5a5a3e",
+  borderRadius: "15px",
+  boxSizing: "border-box",
+  padding: "0",
+  backgroundColor: "white",
+}
+
 export default () => {
   const database = getDatabase();
   const { setVenue, loading } = useVenue();
@@ -93,18 +106,7 @@ export default () => {
               inputWrapperStyle={inputWrapperStyle}
               inputStyle={inputStyle}
               placeholder={"Search Venue..."}
-              listWrapperStyle={{
-                position: "absolute",
-                zIndex: 1,
-                width:"50vw",
-                maxHeight: "400px",
-                overflowY: "scroll",
-                border: "solid 0.5px #5a5a5a3e",
-                borderRadius: "15px",
-                boxSizing: "border-box",
-                padding: "0",
-                backgroundColor: "white",
-              }}
+              listWrapperStyle={listWrapperStyle}
               resultsTemplate={(props, state) => {
                 return state.results.map((val, i) => {
                   return (

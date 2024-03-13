@@ -156,7 +156,7 @@ export default () => {
       uploadBytes(storageRef, file)
         .then((snapshot) => {
           console.log("Uploaded a blob or file!");
-          closeModal();
+          setIsModalOpen(false);
           setMessage("Uploaded successfully!");
           setPopupOpen(true);
           const folderRef = ref(storage, currentFolder);
@@ -169,7 +169,7 @@ export default () => {
         })
         .catch((error) => {
           console.error("Error uploading files:", error);
-          closeModal();
+          setIsModalOpen(false);
           setMessage("Error uploading files: " + error);
           setPopupOpen(true);
         });
@@ -178,14 +178,6 @@ export default () => {
 
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0]);
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   const deleteFile = () => {
@@ -252,10 +244,10 @@ export default () => {
                     <button className="upload-button" onClick={deleteFile}> <FaTrash size={15} className="upload" /> Delete Files </button>
                   )
                 }
-                <button className="upload-button" onClick={openModal}> <FaUpload size={15} className="upload" /> Upload Files </button>
+                <button className="upload-button" onClick={() => setIsModalOpen(true)}> <FaUpload size={15} className="upload" /> Upload Files </button>
                 <Modal
                   isOpen={isModalOpen}
-                  onRequestClose={() => setIsModalOpen(false)}
+                  setModalOpen={setIsModalOpen}
                   ariaHideApp={false}
                   style={customModalStyles}
                   contentLabel="Cloud Upload Form"
@@ -264,7 +256,7 @@ export default () => {
                   <h2>Upload Files</h2>
                   <input type="file" className="upload-file" onChange={handleFileSelect} />
                   <div className="upload-buttons">
-                    <button className="upload-close" onClick={closeModal}>Close</button>
+                    <button className="upload-close" onClick={() => setIsModalOpen(false)}>Close</button>
                     <button className="upload" onClick={uploadFile}>Upload</button>
                   </div>
                 </Modal>
