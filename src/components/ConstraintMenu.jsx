@@ -97,9 +97,9 @@ export default (props) => {
     const [selectedConstraint, setSelectedConstraint] = React.useState({ type: '', id: '', x: '', y: '', fullPath: '' });
     const [inputX, setInputX] = React.useState('');
     const [inputY, setInputY] = React.useState('');
-    const [errorMessage, setErrorMessage] = React.useState("");
+    const [errorMessage, setErrorMessage] = React.useState('');
     const [popupOpen, setPopupOpen] = React.useState(false);
-    const [message, setMessage] = React.useState("");
+    const [message, setMessage] = React.useState('');
 
     React.useEffect(() => {
         if (venueID === null || floor === null) return;
@@ -125,10 +125,15 @@ export default (props) => {
         const { type, id, x, y, fullPath } = selectedConstraint;
         dataHandler.editConstraint(venueID, floor, type, id, fullPath, x, y, inputX, inputY).then((data) => {
             setMessage(data);
-            console.log(message);
+            setIsModalOpen(false);
+            setPopupOpen(true);
+            dataHandler.getAllConstraints(venueID, floor).then((data) => setConstraintsInfo(data));
         })
         .catch((error) => {
             console.error(error);
+            setMessage(error);
+            setIsModalOpen(false);
+            setPopupOpen(true);
         });
     };
 

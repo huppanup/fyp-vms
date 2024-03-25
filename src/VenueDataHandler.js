@@ -248,7 +248,7 @@ async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, ne
             return updateMetadata(updateRef, metadata)
             .then((metadata) => {
                 console.log('Metadata is added!');  
-                return "Uploaded Successfully";
+                return "Uploaded Successfully!";
             });
         }).catch((e) => console.error(e));
     } else {
@@ -263,7 +263,7 @@ async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, ne
             return updateMetadata(updateRef, metadata)
             .then((metadata) => {
                 console.log('Metadata is added!');  
-                return "Uploaded Successfully";
+                return "Uploaded Successfully!";
             });
         }).catch((e) => console.error(e));
     }
