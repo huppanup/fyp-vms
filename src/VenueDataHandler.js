@@ -1,5 +1,5 @@
 import { storage } from './firebase';
-import { ref, getDownloadURL, listAll } from "firebase/storage";
+import { ref, getDownloadURL, listAll, uploadBytes, uploadString, updateMetadata } from "firebase/storage";
 // NOTE: All functions here return a promise.
 
 // Retrieves file URL from storage path
@@ -80,6 +80,7 @@ async function getConstraints(storRef){
         for (let i = 0; i < coordinates.length; i += 2) {
         const constraint = {
             id: id,
+            fullPath: item.fullPath,
             x: coordinates[i],
             y: coordinates[i + 1],
         };
@@ -223,52 +224,48 @@ async function getWifiData(venueID, floorNo) {
     };
 }
 
-export default function VenueData() {
-    this.getVenueInfo = (id) => getVenueInfo(id);
-    this.getFloorInfo = (id, floor) => getFloorInfo(id, floor);
-    this.getAllConstraints = (id, floor) => getAllConstraints(id, floor);
-    this.getMagData = (id, floor) => getMagData(id, floor);
-    this.getWifiData = (id, floor) => getWifiData(id, floor);
-    this.editConstraint = (venueID, floor, type, id, x, y) => editConstraint(venueID, floor, type, id, x, y);
-}
-
-async function editConstraint(locationID, floorNo, type, id, x, y) {
+async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, newY) {
+    const data = await downloadData(fullPath, "text");
+    let coordinates = data.split(" ");
+    let message = "";
+    for (let i = 0; i < coordinates.length; i += 2) {
+        if (coordinates[i] === x && coordinates[i + 1] === y) {
+            coordinates[i] = newX;
+            coordinates[i + 1] = newY;
+            break;
+        }
+    }
+    const updatedData = coordinates.join(" ");
     if (type === "in") {
-        const inConstraintsRef = ref(storage, locationID + "/Constraint/inConstraints/" + floorNo);
-        const res = await listAll(inConstraintsRef);
-        let idLeft = id;
-        for (const item of res.items) {
-            const data = await downloadData(item.fullPath, "text");
-            const coordinates = data.split(" ");
-            if (coordinates.length / 2 <= idLeft) {
-                idLeft = idLeft - coordinates.length / 2;
-                continue;
-            }
-            console.log(coordinates);
-            if (coordinates[2 * idLeft] === x && coordinates[2 * idLeft + 1] === y) {
-                return {"found" : true};
-            } else {
-                return {"not found" : coordinates[2 * idLeft]};
-            }
-        }
+        const fileName = fullPath.substring(fullPath.lastIndexOf("/") + 1);
+        const updateRef = ref(storage, venueID + "/Constraint/inConstraints/" + floor + "/" + fileName);
+        const metadata = {
+            contentType: 'text/plain',
+        };
+        return uploadString(updateRef, updatedData)
+        .then((snapshot) => {
+            console.log('Uploaded a string!');
+            return updateMetadata(updateRef, metadata)
+            .then((metadata) => {
+                console.log('Metadata is added!');  
+                return "Uploaded Successfully";
+            });
+        }).catch((e) => console.error(e));
     } else {
-        const outConstraintsRef = ref(storage, locationID + "/Constraint/outConstraints/" + floorNo);
-        const res = await listAll(outConstraintsRef);
-        let idLeft = id;
-        for (const item of res.items) {
-            const data = await downloadData(item.fullPath, "text");
-            const coordinates = data.split(" ");
-            if (coordinates.length / 2 <= idLeft) {
-                idLeft = idLeft - coordinates.length / 2;
-                continue;
-            }
-            console.log(coordinates);
-            if (coordinates[2 * idLeft] === x && coordinates[2 * idLeft + 1] === y) {
-                return {"found" : true};
-            } else {
-                return {"not found" : coordinates[2 * idLeft]};
-            }
-        }
+        const fileName = fullPath.substring(fullPath.lastIndexOf("/") + 1);
+        const updateRef = ref(storage, venueID + "/Constraint/outConstraints/" + floor + "/" + fileName);
+        const metadata = {
+            contentType: 'text/plain',
+        };
+        return uploadString(updateRef, updatedData)
+        .then((snapshot) => {
+            console.log('Uploaded a string!');
+            return updateMetadata(updateRef, metadata)
+            .then((metadata) => {
+                console.log('Metadata is added!');  
+                return "Uploaded Successfully";
+            });
+        }).catch((e) => console.error(e));
     }
 }
 
@@ -280,4 +277,13 @@ function editAlignment(locationID, floorNo, latitude, longitude, angle, scale){
 function editFloorplan(locationID, floorNo, name, number, altitude, image){
     const result = {"success":true}
     return result
+}
+
+export default function VenueData() {
+    this.getVenueInfo = (id) => getVenueInfo(id);
+    this.getFloorInfo = (id, floor) => getFloorInfo(id, floor);
+    this.getAllConstraints = (id, floor) => getAllConstraints(id, floor);
+    this.getMagData = (id, floor) => getMagData(id, floor);
+    this.getWifiData = (id, floor) => getWifiData(id, floor);
+    this.editConstraint = (venueID, floor, type, id, fullPath, x, y, newX, newY) => editConstraint(venueID, floor, type, id, fullPath, x, y, newX, newY);
 }
