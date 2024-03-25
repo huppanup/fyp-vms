@@ -29,7 +29,7 @@ export default () => {
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);
-        addFloorPlanImage(map, data["floorplan"], venueInfo["transformation"], data["trans"], data["imageHeight"], data["imageWidth"]);
+        addFloorPlanImage(map, data["floorplan"], data["settings"]["transformation"], data["imageHeight"], data["imageWidth"]);
       });
     }
   }, [venueID, floor])
