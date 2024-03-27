@@ -62,3 +62,14 @@ export function updateLikedLocations(uid, locations) {
       console.error("Error updating data:", error);
     });
 }
+
+export function createLikedLocations(uid, locations) {
+  const likedLocationRef = ref(database, `users/${uid}/likedLocations`);
+    set(likedLocationRef, locations)
+    .then(() => {
+      return("Data updated successfully");
+    })
+    .catch((error) => {
+      console.error("Error updating data:", error);
+    });
+}

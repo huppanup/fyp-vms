@@ -4,7 +4,7 @@ import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
 import Popup from "../components/popup"
-import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations } from "../DBHandler";
+import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations, createLikedLocations } from "../DBHandler";
 import { LargeButton } from "../components/LargeButton";
 import { useAuth } from '../AuthContext';
 import FuzzySearch from "react-fuzzy";
@@ -74,16 +74,22 @@ export default () => {
   }, [currentUser]);
 
   const toggleLike = (id, location) => {
-    const isLiked = Object.keys(likedLocations).some((locationId) => locationId === id);
+    const isLiked = likedLocations && Object.keys(likedLocations).some((locationId) => locationId === id);
     if (isLiked) {
       removeLikedLocations(currentUser.uid, id);
       getLikedLocations(currentUser.uid).then((liked) => {
         setLikedLocations(liked);
       });
     } else {
-      let updatedLikedLocations = likedLocations;
-      updatedLikedLocations[id] = location;
-      updateLikedLocations(currentUser.uid, updatedLikedLocations);
+      if (likedLocations) {
+        let updatedLikedLocations = likedLocations;
+        updatedLikedLocations[id] = location;
+        updateLikedLocations(currentUser.uid, updatedLikedLocations);
+      } else {
+        let updatedLikedLocations = [];
+        updatedLikedLocations[id] = location;
+        createLikedLocations(currentUser.uid, updatedLikedLocations);
+      }
       getLikedLocations(currentUser.uid).then((liked) => {
         setLikedLocations(liked);
       });
@@ -108,13 +114,10 @@ export default () => {
               placeholder={"Search Venue..."}
               listWrapperStyle={listWrapperStyle}
               resultsTemplate={(props, state) => {
-                return state.results.map((val, i) => {
+                return state?.results?.map((val, i) => {
                   return (
-                    <div
-                      key={i}
-                      style={resultStyle}
-                    >
-                      {Object.keys(likedLocations).some((locationId) => locationId === val.author) ? 
+                    <div key={i} style={resultStyle}>
+                      {likedLocations && Object.keys(likedLocations).some((locationId) => locationId === val.author) ? 
                       <FaStar className="star-icon active" size={20} style={{marginLeft: "5px", marginRight: "15px"}} onClick={() => toggleLike(val.author, val.title)}/> 
                       : <FaStar className="star-icon" size={20} style={{marginLeft: "5px", marginRight: "15px"}} onClick={() => toggleLike(val.author, {"name" : val.title, "dateAdded" : new Date().toISOString().split('T')[0]})}/>}
                       <div onClick={() => {setVenue(val.author); navigate('/map');}}>
