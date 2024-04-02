@@ -7,7 +7,8 @@ import 'leaflet/dist/leaflet.css'
 import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
-import { addFloorPlanImage, initializeMap, removeMap } from '../leaflet';
+import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers } from '../leaflet';
+import { getAlignment, setAlignmentBounds } from "../DBHandler";
 
 export default () => {
 
@@ -16,7 +17,8 @@ export default () => {
   const [collapse, setCollapse] = React.useState(false);
   const [floorInfo, setFloorInfo] = React.useState();
   const [map, setMap] = React.useState(null);
-
+  const [imageOverlay, setImageOverlay] = React.useState(null);
+  const [markers, setMarkers] = React.useState([]);
   const location = useLocation();
 
   const imageStyle = {
@@ -29,10 +31,27 @@ export default () => {
     if (floor) {
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);
-        addFloorPlanImage(map, data["floorplan"], data["settings"]["transformation"], data["imageHeight"], data["imageWidth"]);
+        getAlignment(venueID, floor).then((result) => {
+          if (result == null) {
+            let {imageOverlay, bottomLeft, upperRight, upperLeft} = calculateFloorPlanImage(map, data["floorplan"], data["settings"]["transformation"], data["imageHeight"], data["imageWidth"]);
+            setImageOverlay(imageOverlay);
+            setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
+            
+            addAlignmentMarkers(map, imageOverlay, bottomLeft, upperRight, upperLeft);
+          } else {
+            let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
+            setImageOverlay(imageOverlay);
+            addAlignmentMarkers(map, imageOverlay, result["bottomLeft"], result["upperRight"], result["upperLeft"]);
+          }
+        });
       });
     }
-  }, [venueID, floor])
+  }, [venueID, floor]);
+
+  const addMarkers = () => {
+    //let markers = addAlignmentMarkers(map, imageOverlay, imageBounds.bottomLeft, imageBounds.upperRight, imageBounds.upperLeft);
+    //setMarkers(markers);
+  }
   
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};

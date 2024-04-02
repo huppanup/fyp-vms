@@ -73,3 +73,43 @@ export function createLikedLocations(uid, locations) {
       console.error("Error updating data:", error);
     });
 }
+
+export async function getAlignment(venueID, floor) {
+  const alignmentReft = ref(database, 'locations/' + venueID + "/" + floor);
+  const result = await get(alignmentReft);
+  return result.val();
+}
+
+export async function checkBoundsExists(venueID, floor) {
+  const snapshot = await get(ref(database, 'locations/' + venueID + "/" + floor));
+  return snapshot.exists;
+}
+
+export function setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, transformationMatrix) {
+  const alignmentReft = ref(database, 'locations/' + venueID + "/" + floor);
+  const data = {
+    bottomLeft : bottomLeft,
+    upperRight : upperRight,
+    upperLeft : upperLeft,
+    transformation : transformationMatrix
+  };
+  checkBoundsExists(venueID, floor).then((snapshot) => {
+    if (!snapshot) {
+      set(alignmentReft, data)
+      .then(() => {
+        return("Data updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+      });
+    } else {
+      update(alignmentReft, data)
+      .then(() => {
+        return("Data updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+      });
+    }
+  });
+}

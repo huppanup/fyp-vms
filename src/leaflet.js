@@ -1,4 +1,4 @@
-import L from 'leaflet';
+import L, { imageOverlay } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-imageoverlay-rotated';
 
@@ -24,7 +24,7 @@ export function initializeMap() {
     return map;
 }
 
-export function addFloorPlanImage(map, url, transformationMatrix, height, width) {
+export function calculateFloorPlanImage(map, url, transformationMatrix, height, width) {
     if (!map) return;
     let imageUrl = url;
 
@@ -47,10 +47,47 @@ export function addFloorPlanImage(map, url, transformationMatrix, height, width)
         interactive: true
     }).addTo(map);
 
+    return {imageOverlay, bottomLeft, upperRight, upperLeft};
+}
+
+export function loadFloorPlanImage(map, url, bottomLeftMatrix, upperRightMatrix, upperLeftMatrix) {
+    if (!map) return;
+    let imageUrl = url;
+
+    let bottomLeft = L.latLng(bottomLeftMatrix["lat"], bottomLeftMatrix["lng"]);
+	let upperRight = L.latLng(upperRightMatrix["lat"], upperRightMatrix["lng"]);
+	let upperLeft = L.latLng(upperLeftMatrix["lat"], upperLeftMatrix["lng"]);
+
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.ImageOverlay) {
+            map.removeLayer(layer);
+        }
+    });
+
+    let imageOverlay = L.imageOverlay.rotated(imageUrl, upperLeft, upperRight, bottomLeft, {
+        opacity: 0.8,
+        interactive: true
+    }).addTo(map);
+
+    return imageOverlay;
+
+}
+
+export function addAlignmentMarkers(map, imageOverlay, bottomLeftMatrix, upperRightMatrix, upperLeftMatrix) {
+
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Marker) {
+            map.removeLayer(layer);
+        }
+    });
+
+    let bottomLeft = L.latLng(bottomLeftMatrix["lat"], bottomLeftMatrix["lng"]);
+	let upperRight = L.latLng(upperRightMatrix["lat"], upperRightMatrix["lng"]);
+	let upperLeft = L.latLng(upperLeftMatrix["lat"], upperLeftMatrix["lng"]);
+
     let marker1 = L.marker(upperLeft, {draggable: true} ).addTo(map);
 	let marker2 = L.marker(upperRight, {draggable: true} ).addTo(map);
 	let marker3 = L.marker(bottomLeft, {draggable: true} ).addTo(map);
-    //marker1.bindPopup(marker1.getLatLng()).openPopup();
     marker1.on('drag dragend', function () {
         repositionImage(imageOverlay, marker1, marker2, marker3)
     });
@@ -60,6 +97,8 @@ export function addFloorPlanImage(map, url, transformationMatrix, height, width)
     marker3.on('drag dragend', function () {
         repositionImage(imageOverlay, marker1, marker2, marker3)
     });
+
+    return [marker1, marker2, marker3];
 }
 
 function calculateBoundsMatrix(transformationMatrix, x, y) {
