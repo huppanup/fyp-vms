@@ -9,6 +9,7 @@ import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
 import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers } from '../leaflet';
 import { getAlignment, setAlignmentBounds } from "../DBHandler";
+import { set } from 'firebase/database';
 
 export default () => {
 
@@ -18,7 +19,14 @@ export default () => {
   const [floorInfo, setFloorInfo] = React.useState();
   const [map, setMap] = React.useState(null);
   const [imageOverlay, setImageOverlay] = React.useState(null);
-  const [markers, setMarkers] = React.useState([]);
+  const [imageBounds, setImageBounds] = React.useState({
+      bottomLeft: null,
+      upperRight: null,
+      upperLeft: null,
+      transformation: null,
+      height: null,
+      width: null
+  });
   const location = useLocation();
 
   const imageStyle = {
@@ -36,22 +44,16 @@ export default () => {
             let {imageOverlay, bottomLeft, upperRight, upperLeft} = calculateFloorPlanImage(map, data["floorplan"], data["settings"]["transformation"], data["imageHeight"], data["imageWidth"]);
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
-            
-            addAlignmentMarkers(map, imageOverlay, bottomLeft, upperRight, upperLeft);
+            setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
-            addAlignmentMarkers(map, imageOverlay, result["bottomLeft"], result["upperRight"], result["upperLeft"]);
+            setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
           }
         });
       });
     }
   }, [venueID, floor]);
-
-  const addMarkers = () => {
-    //let markers = addAlignmentMarkers(map, imageOverlay, imageBounds.bottomLeft, imageBounds.upperRight, imageBounds.upperLeft);
-    //setMarkers(markers);
-  }
   
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
@@ -66,7 +68,13 @@ export default () => {
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossOrigin=""></script>
     <div className="main-container">
-    <Sidebar collapse={collapse} setCollapse={setCollapse} />
+    <Sidebar 
+      collapse={collapse} 
+      setCollapse={setCollapse} 
+      map={map}
+      imageOverlay={imageOverlay}
+      imageBounds={imageBounds}
+    />
         <div className="map-main-panel" style={{zIndex:"0"}}>
           <div id="mapWrap">
             <div id="mapContainer"></div>

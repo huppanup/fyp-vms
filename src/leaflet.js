@@ -1,6 +1,7 @@
 import L, { imageOverlay } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-imageoverlay-rotated';
+import numeric from 'numeric';
 
 export function initializeMap() {
     const mapContainer = document.getElementById("mapContainer");
@@ -112,3 +113,34 @@ function calculateBoundsMatrix(transformationMatrix, x, y) {
 function repositionImage(imageOverlay, marker1, marker2, marker3) {
     imageOverlay.reposition(marker1.getLatLng(), marker2.getLatLng(), marker3.getLatLng());
 };
+
+export function calculateTransformationMatrix(bottomLeft, upperRight, upperLeft, height, width) {
+    
+    const A = [
+        [parseFloat(bottomLeft["lng"]), parseFloat(bottomLeft["lat"]), 1, 0, 0, 0],
+        [0, 0, 0, parseFloat(bottomLeft["lng"]), parseFloat(bottomLeft["lat"]), 1],
+        [parseFloat(upperRight["lng"]), parseFloat(upperRight["lat"]), 1, 0, 0, 0],
+        [0, 0, 0, parseFloat(upperRight["lng"]), parseFloat(upperRight["lat"]), 1],
+        [parseFloat(upperLeft["lng"]), parseFloat(upperLeft["lat"]), 1, 0, 0, 0],
+        [0, 0, 0, parseFloat(upperLeft["lng"]), parseFloat(upperLeft["lat"]), 1]
+    ];
+
+    const B = [0, height, width, 0, 0, 0];
+
+    const x = numeric.solve(A, B);
+    const transformationMatrix = [
+        [x[0], x[3]],
+        [x[1], x[4]],
+        [x[2], x[5]]
+    ];
+    return transformationMatrix;
+    
+}
+
+export function removeMarkers(map) {
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Marker) {
+            map.removeLayer(layer);
+        }
+    });
+}

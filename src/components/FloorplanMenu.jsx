@@ -1,8 +1,8 @@
 import React from "react";
 import "../stylesheets/components.css"
-import { addAlignmentMarkers } from "../leaflet";
+import { addAlignmentMarkers, calculateTransformationMatrix, removeMarkers } from "../leaflet";
 import { useVenue } from "../LocationContext";
-import { addMarkers } from "../pages/map";
+import { setAlignmentBounds } from "../DBHandler";
 
 const listContainerStyle = {
   display: "flex",
@@ -41,12 +41,25 @@ const saveButtonStyle = {
   border: "none"
 }
 
-export default () => {
+export default (props) => {
   const [isManual, setIsManual] = React.useState(false);
+  const [markers, setMarkers] = React.useState([]);
   const { venueID, floor, dataHandler } = useVenue();
 
   const addMarker = () => {
+    let alignMarkers = addAlignmentMarkers(props.map, props.imageOverlay, props.imageBounds["bottomLeft"], props.imageBounds["upperRight"], props.imageBounds["upperLeft"]);
+    setMarkers(alignMarkers);
     setIsManual(true);
+  }
+
+  const saveAlignment = () => {
+    let bottomLeftMarker = markers[2].getLatLng();
+    let upperRightMarker = markers[1].getLatLng();
+    let upperLeftMarker = markers[0].getLatLng();
+    let transformationMatrix = calculateTransformationMatrix(bottomLeftMarker, upperRightMarker, upperLeftMarker, props.imageBounds["height"], props.imageBounds["width"]);
+    setAlignmentBounds(venueID, floor, bottomLeftMarker, upperRightMarker, upperLeftMarker, transformationMatrix);
+    removeMarkers(props.map);
+    setIsManual(false);
   }
 
   return (
@@ -56,7 +69,7 @@ export default () => {
         ? isManual ? 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <button style={cancelButtonStyle} onClick={() => setIsManual(false)}>Cancel</button>
-          <button style={saveButtonStyle}>Save</button>
+          <button style={saveButtonStyle} onClick={saveAlignment}>Save</button>
         </div> :
         <button style={alignmentButtonStyle} onClick={addMarker}>Manual Alignment</button>
         : <div></div>
