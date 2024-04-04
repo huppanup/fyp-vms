@@ -144,3 +144,35 @@ export function removeMarkers(map) {
         }
     });
 }
+
+export function removeCircles(map) {
+    if (map == null) return;
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Circle) {
+            map.removeLayer(layer);
+        }
+    });
+}
+
+export function addConstraintsCricles(map, transformation, x, y, type) {
+    if (map == null || transformation == null) return;
+
+    let points = calculateBoundsMatrix(transformation, x, y);
+    if (type == "in") {
+        var circle = L.circle([points[1], points[0]], {
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.5,
+            radius: 1
+        }).addTo(map);
+        return circle;
+    } else {
+        var circle = L.circle([points[1], points[0]], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 1
+        }).addTo(map);
+        return circle;
+    }
+}

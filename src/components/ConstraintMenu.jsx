@@ -6,6 +6,8 @@ import Modal from "react-modal";
 import Popup from "../components/popup";
 
 import VenueData from '../VenueDataHandler';
+import { addConstraintsCricles, removeCircles } from "../leaflet";
+import { remove } from "firebase/database";
 
 const customModalStyles = {
     overlay: {
@@ -100,10 +102,16 @@ export default (props) => {
     const [errorMessage, setErrorMessage] = React.useState('');
     const [popupOpen, setPopupOpen] = React.useState(false);
     const [message, setMessage] = React.useState('');
+    const [inCircles, setInCircles] = React.useState([]);
+    const [outCircles, setoutCircles] = React.useState([]);
 
     React.useEffect(() => {
         if (venueID === null || floor === null) return;
-        dataHandler.getAllConstraints(venueID, floor).then((data) => setConstraintsInfo(data));
+        dataHandler.getAllConstraints(venueID, floor).then((data) => {
+            setConstraintsInfo(data);
+            removeCircles(props.map);
+            addCircles(data);
+        });
     },[venueID, floor]);
     
     const handleModalOpen = (type, id, x, y, fullPath) => {
@@ -113,6 +121,25 @@ export default (props) => {
         setErrorMessage("");
         setIsModalOpen(true);
     }
+
+    const addCircles = (data) => {
+        let inCirclesArray = [];
+        let outCirclesArray = [];
+        if (data["in"]) {
+            data["in"].map((item) => {
+            let circle = addConstraintsCricles(props.map, props.imageBounds.transformation, item.x, item.y, "in");
+            inCirclesArray.push(circle);
+            });
+        };
+        if (data["out"]) {
+            data["out"].map((item) => {
+            let circle = addConstraintsCricles(props.map, props.imageBounds.transformation, item.x, item.y, "out");
+            outCirclesArray.push(circle);
+            });
+        };
+        setInCircles(inCirclesArray);
+        setoutCircles(outCirclesArray);
+    };
 
     const handleConstraintEdit = () => {
         if (isNaN(parseFloat(inputX)) || isNaN(parseFloat(inputY))) {
@@ -127,7 +154,11 @@ export default (props) => {
             setMessage(data);
             setIsModalOpen(false);
             setPopupOpen(true);
-            dataHandler.getAllConstraints(venueID, floor).then((data) => setConstraintsInfo(data));
+            dataHandler.getAllConstraints(venueID, floor).then((data) => {
+                setConstraintsInfo(data);
+                removeCircles(props.map);
+                addCircles(data);
+            });
         })
         .catch((error) => {
             console.error(error);

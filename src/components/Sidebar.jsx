@@ -41,7 +41,7 @@ export default (props) => {
                 </div>
             </div>
             <div className="sb-body" style={{flex: "1", whiteSpace:"normal", wordBreak:"break-all", overflow:"scroll"}}>
-                { curTab ? (<ConstraintMenu currentFloor={floor}/>) : (<FloorplanMenu map={props.map} imageOverlay={props.imageOverlay} imageBounds={props.imageBounds} onUpdateImageBounds={props.onUpdateImageBounds}></FloorplanMenu>)}
+                { curTab ? (<ConstraintMenu map={props.map} imageBounds={props.imageBounds} currentFloor={floor}></ConstraintMenu>) : (<FloorplanMenu map={props.map} imageOverlay={props.imageOverlay} imageBounds={props.imageBounds} onUpdateImageBounds={props.onUpdateImageBounds}></FloorplanMenu>)}
             </div>
         </div>
         <div className="sb-collapse">

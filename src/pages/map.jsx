@@ -14,7 +14,8 @@ import { set } from 'firebase/database';
 export default () => {
 
   const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler } = useVenue();
-
+  
+  const [loadingMap, setLoadingMap] = React.useState(false);
   const [collapse, setCollapse] = React.useState(false);
   const [floorInfo, setFloorInfo] = React.useState();
   const [map, setMap] = React.useState(null);
@@ -37,6 +38,7 @@ export default () => {
     let map = initializeMap();
     setMap(map);
     if (floor) {
+      setLoadingMap(true);
       dataHandler.getFloorInfo(venueID, floor).then(data => {
         setFloorInfo(data);
         getAlignment(venueID, floor).then((result) => {
@@ -45,10 +47,12 @@ export default () => {
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
             setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
+            setLoadingMap(false);
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
             setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
+            setLoadingMap(false);
           }
         });
       });
@@ -72,14 +76,14 @@ export default () => {
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossOrigin=""></script>
     <div className="main-container">
-    <Sidebar 
-      collapse={collapse} 
-      setCollapse={setCollapse} 
-      map={map}
-      imageOverlay={imageOverlay}
-      imageBounds={imageBounds}
-      onUpdateImageBounds={updateImageBounds}
-    />
+      {!loadingMap && <Sidebar 
+        collapse={collapse} 
+        setCollapse={setCollapse} 
+        map={map}
+        imageOverlay={imageOverlay}
+        imageBounds={imageBounds}
+        onUpdateImageBounds={updateImageBounds}
+      />}
         <div className="map-main-panel" style={{zIndex:"0"}}>
           <div id="mapWrap">
             <div id="mapContainer"></div>
