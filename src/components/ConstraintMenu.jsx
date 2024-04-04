@@ -127,13 +127,13 @@ export default (props) => {
         let outCirclesArray = [];
         if (data["in"]) {
             data["in"].map((item) => {
-            let circle = addConstraintsCricles(props.map, props.imageBounds.transformation, item.x, item.y, "in");
+            let circle = addConstraintsCricles(props.map, props.imageBounds?.transformation, item.x, item.y, "in");
             inCirclesArray.push(circle);
             });
         };
         if (data["out"]) {
             data["out"].map((item) => {
-            let circle = addConstraintsCricles(props.map, props.imageBounds.transformation, item.x, item.y, "out");
+            let circle = addConstraintsCricles(props.map, props.imageBounds?.transformation, item.x, item.y, "out");
             outCirclesArray.push(circle);
             });
         };
