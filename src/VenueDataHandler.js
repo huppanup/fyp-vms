@@ -1,5 +1,5 @@
 import { storage } from './firebase';
-import { ref, getDownloadURL, listAll, uploadBytes, uploadString, updateMetadata } from "firebase/storage";
+import { ref, getDownloadURL, listAll, uploadBytes, uploadString, updateMetadata, deleteObject } from "firebase/storage";
 // NOTE: All functions here return a promise.
 
 // Retrieves file URL from storage path
@@ -265,18 +265,27 @@ async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, ne
                 console.log('Metadata is added!');  
                 return "Uploaded Successfully!";
             });
-        }).catch((e) => console.error(e));
+        }).catch((e) => {
+            console.error(e);
+            return e;
+        });
     }
 }
 
-function editAlignment(locationID, floorNo, latitude, longitude, angle, scale){
-    const result = {"success":true}
-    return result
-}
-
-function editFloorplan(locationID, floorNo, name, number, altitude, image){
-    const result = {"success":true}
-    return result
+async function editFloorplan(venueID, floor, image) {
+    const deleteRef = ref(storage, venueID + "/map/" + floor + "/map.jpg");
+    return deleteObject(deleteRef)
+    .then(() => {
+        console.log("Deleted Successfully!");
+        return uploadBytes(deleteRef, image)
+        .then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+            return "Uploaded Successfully!";
+        });      
+    }).catch((error) => {
+        console.error(error);
+        return error;
+    });
 }
 
 export default function VenueData() {
@@ -286,4 +295,5 @@ export default function VenueData() {
     this.getMagData = (id, floor) => getMagData(id, floor);
     this.getWifiData = (id, floor) => getWifiData(id, floor);
     this.editConstraint = (venueID, floor, type, id, fullPath, x, y, newX, newY) => editConstraint(venueID, floor, type, id, fullPath, x, y, newX, newY);
+    this.editFloorplan = (venueID, floor, image) => editFloorplan(venueID, floor, image);
 }

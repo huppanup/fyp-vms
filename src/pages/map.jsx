@@ -62,7 +62,7 @@ export default () => {
   const updateImageBounds = (newBounds) => {
     setImageBounds(newBounds);
   };
-  
+
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
 

@@ -42,7 +42,14 @@ export default ({modalOpen, setModalOpen, message, navigateTo}) => {
         <div className="popup-body" style={{display: "flex", height: "140px",margin:"auto", color: "#434343", fontSize: "14px", verticalAlign:"middle", textAlign:"center", alignItems: "center", justifyContent:"center"}}>
             {message}
         </div>
-        <div className="popup-footer" style={{height: "35px", textAlign:"center", verticalAlign:"center"}}><button className="login-button" onClick={ () => navigateTo ? navigate(navigateTo):setModalOpen(false)} style={{width: "100px", textAlign:"center", marginTop: "0"}}>CLOSE</button></div>
+        <div className="popup-footer" style={{height: "35px", textAlign:"center", verticalAlign:"center"}}><button className="login-button" onClick={ () => {
+          if (navigateTo) {
+            navigate(navigateTo);
+            setModalOpen(false);
+          } else {
+            setModalOpen(false);
+          }
+        }} style={{width: "100px", textAlign:"center", marginTop: "0"}}>CLOSE</button></div>
         </Modal>
     );
 }
