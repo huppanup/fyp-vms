@@ -19,7 +19,9 @@ export default () => {
   const [curVenueID, setCurVenueID] = useState('-NrisipFr0yx32oaNHQz');
   const [curFloor, setCurFloor] = useState('GF');
   const [testing, setTesting] = useState('');
-  const {currentUser} = useAuth();
+  const {currentUser, deleteAccount,
+    resetPassword,
+    resetEmail,} = useAuth();
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
   const venueHandler = new VenueData(curVenueID, curFloor);
@@ -54,6 +56,12 @@ export default () => {
         <button onClick={() => setSelectedVenue("HKUST_fusion")}>Select venue</button>
         <button onClick={() => setSelectedFloor("GF")}>Select GF</button>
         <button onClick={() => setSelectedFloor("LG1")}>Select LG1</button>
+        <button onClick={() => resetPassword("clover107!", "huppanup107!").then((r) => {if (r.success){ console.log(r.result)} else { console.log(r.error)}})}>Reset password to "hello"</button>
+        <button onClick={() => resetEmail("huppanup107!", "huppanup@naver.com")}>Change email to huppanup@naver.com</button>
+        <button onClick={() => deleteAccount()}>Delete and sign out account</button>
+
+
+
         
         <div><a>{JSON.stringify(venueInfo)}</a></div>
     </div>

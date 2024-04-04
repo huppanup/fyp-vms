@@ -56,3 +56,37 @@
 .active {
     background-color: rgba(255, 255, 255, 0.5);
 }
+
+.settings-list{
+    width: 200px;
+    max-height: 200px;
+    overflow-y: scroll;
+    font-size: small;
+    left:65px;
+    position: absolute;
+    border: solid 0.5px #5a5a5a3e;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 0;
+    list-style-type: none;
+    background-color: white;
+    margin-top: 10px;
+    user-select: none;
+    color: #003366;
+    bottom: 3vh
+}
+
+.settings-item{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 13px 20px
+}
+
+.settings-item:hover{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 13px 20px;
+    background-color: #00336632;
+}

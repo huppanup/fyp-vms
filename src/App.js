@@ -1,9 +1,10 @@
-import logo from './logo.svg';
 import Signup from './pages/signup'
 import Login from './pages/login'
 import Home from './pages/home'
 import Cloud from './pages/cloud'
 import Map from './pages/map'
+import PersonalInfo from "./pages/PersonalInfo"
+
 import NavBar from "./components/navbar";
 import Header from "./components/Header"
 import Dev from './pages/dev'
@@ -45,6 +46,7 @@ function App() {
           <Route path="map" element={<Map />} />
           <Route path="dev" element={<Dev />} />
           </Route>
+          <Route path="personal-info" element={<PersonalInfo />} />
           
         </Route>
         </Route>

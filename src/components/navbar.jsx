@@ -4,20 +4,35 @@ import logo from "./logo.jpeg";
 import * as icons from "react-icons/fa6";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { FaCloud, FaCode } from "react-icons/fa";
-import { IoSettingsSharp } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import firebase from 'firebase/compat/app';
 import {app, auth, db} from '../firebase';
 import {useAuth} from '../AuthContext'
+import Dropdown from "./Dropdown";
 
 export default () => {
     const {logout} = useAuth();
     const location = useLocation();
+    const [isSettings, setIsSettings] = useState(false);
+    const navigate = useNavigate();
     const isCurrentLink = (link) => {
         return location.pathname.includes(link);
     }
+
+    useEffect(() => {
+        if (isSettings){
+            const handleClickOutside = (event) => {
+                if (!document.querySelector("#settings").contains(event.target))setIsSettings(false);
+            }; 
+            document.addEventListener('click', handleClickOutside);
+            return () => {
+                document.removeEventListener('click', handleClickOutside);
+            }
+        }
+    },[isSettings]);
 
     return (
         <div className="nav">
@@ -55,18 +70,20 @@ export default () => {
             </div>
             </div>
             <div className="bottom-bar">
-            <div className={`nav-item ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
-                <Link to="/personal-info" className="personal-info">
+            <div className={`nav-box ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
+                <div className="nav-item" id="settings" onClick={() => setIsSettings(!isSettings)}>
                     <div style={{ margin: '0 10px' }}>
                         <IoPersonCircle size={25} color="white" />
                     </div>
-                </Link>
+                    {isSettings && 
+                    <ul className={"settings-list"}>
+                        <li className="settings-item" key="0" onClick={()=>{navigate('/personal-info'); setIsSettings(false);}}>Personal Info</li>
+                        <li className="settings-item" key="1" onClick={logout}>Log Out</li>
+                    </ul>
+                    }
+                </div>
             </div>
-
-            {/* TEMPORARY!! */}
-            <button onClick={logout}>
-                SIGN OUT
-            </button>
+            
             </div>
         </div>
     );

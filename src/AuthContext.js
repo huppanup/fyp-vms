@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "./firebase"
-import { sendEmailVerification } from "firebase/auth";
+import { sendEmailVerification, deleteUser, reauthenticateWithCredential, EmailAuthProvider, verifyBeforeUpdateEmail, updatePassword } from "firebase/auth";
 
 const AuthContext = React.createContext()
 
@@ -23,6 +23,51 @@ export function AuthProvider({ children }) {
     return sendEmailVerification(user)
   }
 
+  function deleteAccount(){
+    return deleteUser(currentUser)
+  }
+
+  async function resetPassword(oldpw, newpw){
+    const credential = EmailAuthProvider.credential(currentUser.email,oldpw)
+    try{
+      await reauthenticateWithCredential(
+        currentUser, 
+        credential
+      )
+      if (oldpw === newpw) return { success:false, error:"You used this password recently. Please choose a different one." };
+      updatePassword(currentUser, newpw);
+    return {success : true, result: "Your password has been changed successfully."}
+    }catch(e){
+      let error;
+      switch (e.code) {
+        case 'auth/invalid-login-credentials':
+          error = "Your current password is incorrect.";
+          break;
+        case 'auth/too-many-requests':
+          error = "Too many requests. Please try again later";
+          break;
+        default :
+          console.log(e);
+          error = "An unknown error has occurred. Please try again later";
+      }
+      return {success: false, error : error};
+    }
+
+  }
+
+  async function resetEmail(pw, newEmail){
+    try{
+      const credential = EmailAuthProvider.credential(currentUser.email,pw);
+      const result = await reauthenticateWithCredential(currentUser, credential);
+      console.log(result);
+      const ver = await currentUser.verifyBeforeUpdateEmail(newEmail);
+      console.log(ver);
+
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password)
   }
@@ -31,18 +76,6 @@ export function AuthProvider({ children }) {
     return auth.signOut()
   }
 
-  /* Not implemented in UI yet */
-//   function resetPassword(email) {
-//     return auth.sendPasswordResetEmail(email)
-//   }
-
-//   function updateEmail(email) {
-//     return currentUser.updateEmail(email)
-//   }
-
-//   function updatePassword(password) {
-//     return currentUser.updatePassword(password)
-//   }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -58,8 +91,9 @@ export function AuthProvider({ children }) {
     signup,
     verify,
     logout,
-    // resetPassword,
-    // updateEmail,
+    deleteAccount,
+    resetPassword,
+    resetEmail,
     // updatePassword
   }
 
