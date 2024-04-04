@@ -58,6 +58,7 @@ export default (props) => {
     let upperLeftMarker = markers[0].getLatLng();
     let transformationMatrix = calculateTransformationMatrix(bottomLeftMarker, upperRightMarker, upperLeftMarker, props.imageBounds["height"], props.imageBounds["width"]);
     setAlignmentBounds(venueID, floor, bottomLeftMarker, upperRightMarker, upperLeftMarker, transformationMatrix);
+    props.onUpdateImageBounds({bottomLeft: bottomLeftMarker, upperRight: upperRightMarker, upperLeft: upperLeftMarker, transformation: transformationMatrix, height: props.imageBounds["height"], width: props.imageBounds["width"]})
     removeMarkers(props.map);
     setIsManual(false);
   }

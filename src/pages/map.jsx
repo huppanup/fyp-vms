@@ -54,6 +54,10 @@ export default () => {
       });
     }
   }, [venueID, floor]);
+
+  const updateImageBounds = (newBounds) => {
+    setImageBounds(newBounds);
+  };
   
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
@@ -74,6 +78,7 @@ export default () => {
       map={map}
       imageOverlay={imageOverlay}
       imageBounds={imageBounds}
+      onUpdateImageBounds={updateImageBounds}
     />
         <div className="map-main-panel" style={{zIndex:"0"}}>
           <div id="mapWrap">
