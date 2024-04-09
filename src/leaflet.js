@@ -12,10 +12,16 @@ export function initializeMap() {
             parentElement.innerHTML = '<div id="mapContainer"></div>';
         }
     }
-    let map = L.map('mapContainer').setView([22.3021, 114.1675], 19);
+    let map = L.map('mapContainer', {
+        zoomControl: false
+    }).setView([22.3021, 114.1675], 19);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 25,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    L.control.zoom({
+        position:'topright'
     }).addTo(map);
 
     map.on('click', function(e) {
