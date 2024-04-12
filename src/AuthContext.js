@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "./firebase"
-import { sendEmailVerification, deleteUser, reauthenticateWithCredential, EmailAuthProvider, verifyBeforeUpdateEmail, updatePassword } from "firebase/auth";
+import { sendEmailVerification, deleteUser, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
 
 const AuthContext = React.createContext()
 
@@ -59,12 +59,22 @@ export function AuthProvider({ children }) {
     try{
       const credential = EmailAuthProvider.credential(currentUser.email,pw);
       const result = await reauthenticateWithCredential(currentUser, credential);
-      console.log(result);
       const ver = await currentUser.verifyBeforeUpdateEmail(newEmail);
-      console.log(ver);
-
+      return {success: true, message: "A verification link has been sent to your new email address confirm the changes. If you don't see any email from us, your new email address may already be in use."}
     } catch(e) {
-      console.log(e);
+      let error;
+      switch (e.code) {
+        case 'auth/invalid-login-credentials':
+          error = "Your current password is incorrect.";
+          break;
+        case 'auth/too-many-requests':
+          error = "Too many requests. Please try again later";
+          break;
+        default :
+          console.log(e);
+          error = "An unknown error has occurred. Please try again later";
+      }
+      return {success: false, error : error};
     }
   }
 
