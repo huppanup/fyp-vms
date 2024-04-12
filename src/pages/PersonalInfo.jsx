@@ -44,7 +44,8 @@ export default () => {
         }else{
             alert("Please recheck the input fields.");
         }
-        setPasswordInput(false)
+        setPasswordInput(false);
+        setOldpassword('');
         setPassword('');
         setValidPw('');
         setpwStrength('');
