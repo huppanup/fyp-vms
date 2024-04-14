@@ -4,6 +4,7 @@ import Home from './pages/home'
 import Cloud from './pages/cloud'
 import Map from './pages/map'
 import PersonalInfo from "./pages/PersonalInfo"
+import AddVenue from "./pages/addvenue"
 
 import NavBar from "./components/navbar";
 import Header from "./components/Header"
@@ -36,6 +37,7 @@ function App() {
           </div>
         )}>
           <Route path="home" element={<Home />} />
+          <Route path="home/add" element={<AddVenue />} />
           <Route element={(
             <div id="content" style={{display:"flex", flexDirection:"column", width: "100%", height:"100vh", maxHeight:"100vh", maxWidth:"100%"}}>
             <Header />

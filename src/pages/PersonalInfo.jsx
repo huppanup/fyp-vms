@@ -92,31 +92,31 @@ export default () => {
 
     return (
         <>
-            <div className="personalinfo-container">
-            <div id="personal-overview" className="personal-body">
-                <div className="personal-items" id="personal-heading">Account Overview</div>
-                <div className="personal-items">
-                    <table id="personal-table">
-                        <tbody>
-                            <tr><td className="personal-table-label">Email</td><td className="personal-table-value">{auth.currentUser.email}</td></tr>
-                            { emailInput && emailField }
-                            { passwordInput && passwordField}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="personal-items" style={{display:"flex"}}>
-                    {!emailInput && !passwordInput && 
-                    (<><div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaEnvelope/>} value="Change Email" width="190px" onClick={changeEmail}/></div>
-                    <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaKey/>} value="Edit Password" width="190px" onClick={changePassword}/></div></>)}
-                    {emailInput && <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaEnvelope/>} value="Verify Email" width="190px" onClick={submitEmail}/></div>}
-                    {passwordInput && <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaKey/>} value="Apply Changes" width="190px" onClick={submitPassword} active={!(pwStrength === 1 && validPw === 2)}/></div>}
+        <div className="personalinfo-container">
+        <div id="personal-overview" className="personal-body">
+            <div className="personal-items" id="personal-heading">Account Overview</div>
+            <div className="personal-items">
+                <table id="personal-table">
+                    <tbody>
+                        <tr><td className="personal-table-label">Email</td><td className="personal-table-value">{auth.currentUser.email}</td></tr>
+                        { emailInput && emailField }
+                        { passwordInput && passwordField}
+                    </tbody>
+                </table>
+            </div>
+            <div className="personal-items" style={{display:"flex"}}>
+                {!emailInput && !passwordInput && 
+                (<><div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaEnvelope/>} value="Change Email" width="190px" onClick={changeEmail}/></div>
+                <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaKey/>} value="Edit Password" width="190px" onClick={changePassword}/></div></>)}
+                {emailInput && <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaEnvelope/>} value="Verify Email" width="190px" onClick={submitEmail}/></div>}
+                {passwordInput && <div style={{height:"50px", width:"190px"}}><LargeButton icon={<icons.FaKey/>} value="Apply Changes" width="190px" onClick={submitPassword} active={!(pwStrength === 1 && validPw === 2)}/></div>}
 
-                </div>
             </div>
-            <div id="personal-role" className="personal-body">
-                Temp
-            </div>
-            </div>
-        </>
+        </div>
+        <div id="personal-role" className="personal-body">
+            Temp
+        </div>
+        </div>
+    </>
     )
 }
