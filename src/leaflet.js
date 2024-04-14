@@ -1,7 +1,9 @@
 import L, { imageOverlay } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-imageoverlay-rotated';
+import 'leaflet-easybutton';
 import numeric from 'numeric';
+import 'leaflet.heat';
 
 export function initializeMap() {
     const mapContainer = document.getElementById("mapContainer");
@@ -24,11 +26,30 @@ export function initializeMap() {
         position:'topright'
     }).addTo(map);
 
-    map.on('click', function(e) {
-        alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+    return map;
+}
+
+export function setHeatmap(map, data, transformation) {
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.easyButton) {
+            map.removeLayer(layer);
+        }
     });
 
-    return map;
+    let buttonInstance = L.easyButton('fa-wifi', function(btn, map) {
+        displayHeatmap(map, data, transformation);
+    }).setPosition('topright').addTo(map);
+
+    buttonInstance.button.style.width = '50px';
+    buttonInstance.button.style.height = '50px';
+    buttonInstance.button.style.borderRadius = "100%";
+    buttonInstance.button.style.border = "none";
+    buttonInstance.button.style.backgroundColor = "white";
+    buttonInstance.button.style.boxShadow = "1px 1px gray";
+    buttonInstance._container.style.border = "none";
+    buttonInstance.button.children["0"].children["0"].style.width = '30px';
+    buttonInstance.button.children["0"].children["0"].style.height = '30px';
+
 }
 
 export function calculateFloorPlanImage(map, url, transformationMatrix, height, width) {
@@ -181,4 +202,36 @@ export function addConstraintsCricles(map, transformation, x, y, type) {
         }).addTo(map);
         return circle;
     }
+}
+
+function normalizeStrength(strength) {
+   if (strength < -90) return 0;
+   if (strength < -80) return 0.25;
+   if (strength < -70) return 0.5;
+   if (strength < -60) return 0.75;
+   return 1;
+}
+
+function displayHeatmap(map, data, transformation) {
+    if (map == null || data == null) return;
+
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.HeatLayer) {
+            map.removeLayer(layer);
+        }
+    });
+
+    let heatmap = [];
+
+
+    data.map((element) => {
+        let point = calculateBoundsMatrix(transformation, parseFloat(element["x"]), parseFloat(element["y"]));
+        let strength = element["data"]["0"]["threshold"];
+        let normalizedStrength = normalizeStrength(strength);
+        heatmap.push([point[1], point[0], normalizedStrength]);
+    });
+
+    console.log(heatmap);
+
+    var heat = L.heatLayer(heatmap, {radius: 10, blur: 0, minOpacity: 0, max: 0.001, gradient: {"0.25": 'red', "0.5": 'orange', "0.75": 'yellow', "1": 'lime'}}).addTo(map);
 }

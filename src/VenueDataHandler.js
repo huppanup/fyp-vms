@@ -193,7 +193,8 @@ async function getMagData(venueID, floorNo) {
 // { venueID : string, floorNo : string, wifi : [JSON] } 
 async function getWifiData(venueID, floorNo) {
     const wifiData = await downloadData(venueID + "/WifiData/FingerprintData/" + floorNo + "/fingerprint.txt", "text");
-    const wifiSeriesData = wifiData.split("\n");
+    const trimmedWifiData = wifiData.replace(/\s+$/, '');
+    const wifiSeriesData = trimmedWifiData.split("\n");
     let WifiList = [];
     wifiSeriesData.forEach(array => {
         const wifiSeriesArray = array.split(" ");

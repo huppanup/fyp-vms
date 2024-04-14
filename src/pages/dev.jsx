@@ -24,7 +24,7 @@ export default () => {
     resetEmail,} = useAuth();
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
-  const venueHandler = new VenueData(curVenueID, curFloor);
+  const venueHandler = new VenueData('-NrisipFr0yx32oaNHQz', 'GF');
 
   const [venueInfo, setVenueInfo] = useState();
   const [collapse, setCollapse] = useState(false);
@@ -50,7 +50,7 @@ export default () => {
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
         <button onClick={() => venueHandler.getVenueInfo().then((data) => { setVenueInfo(data);})}>Get Venue Information</button>
         <button onClick={() => venueHandler.getMagData().then((data) => {setVenueInfo(data);})}>Get Magnetic Data Information</button>
-        <button onClick={() => venueHandler.getWifiData().then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
+        <button onClick={() => venueHandler.getWifiData('-NrisipFr0yx32oaNHQz', 'GF').then((data) => {setVenueInfo(data);})}>Get Wifi Data Information</button>
         <button onClick={() => setVenueInfo(currentUser.uid)}>Get User ID Token</button>
         <button onClick={() => setVenueInfo(getLikedLocationsNames())}>Get Liked Locations</button>
         <button onClick={() => setSelectedVenue("HKUST_fusion")}>Select venue</button>

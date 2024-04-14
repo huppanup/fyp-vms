@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
-import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers } from '../leaflet';
+import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers, setHeatmap } from '../leaflet';
 import { getAlignment, setAlignmentBounds } from "../DBHandler";
 import { set } from 'firebase/database';
 import { LargeButton } from '../components/LargeButton';
@@ -31,6 +31,8 @@ export default () => {
       height: null,
       width: null
   });
+  const [switchChecked, setSwitchChecked] = React.useState(false);
+
   const location = useLocation();
 
   const imageStyle = {
@@ -50,12 +52,18 @@ export default () => {
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
             setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
-            setLoadingMap(false);
+            dataHandler.getWifiData(venueID, floor).then((wifiData) => {
+              setHeatmap(map, wifiData["wifi"], data["settings"]["transformation"]);
+              setLoadingMap(false);
+            });
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
             setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
-            setLoadingMap(false);
+            dataHandler.getWifiData(venueID, floor).then((wifiData) => {
+              setHeatmap(map, wifiData["wifi"], result["transformation"]);
+              setLoadingMap(false);
+            });
           }
         });
       });
@@ -75,6 +83,7 @@ export default () => {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossOrigin=""/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossOrigin=""></script>
