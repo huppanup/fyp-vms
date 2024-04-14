@@ -231,7 +231,5 @@ function displayHeatmap(map, data, transformation) {
         heatmap.push([point[1], point[0], normalizedStrength]);
     });
 
-    console.log(heatmap);
-
     var heat = L.heatLayer(heatmap, {radius: 10, blur: 0, minOpacity: 0, max: 0.001, gradient: {"0.25": 'red', "0.5": 'orange', "0.75": 'yellow', "1": 'lime'}}).addTo(map);
 }
