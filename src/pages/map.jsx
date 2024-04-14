@@ -10,6 +10,9 @@ import { useVenue } from '../LocationContext';
 import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers } from '../leaflet';
 import { getAlignment, setAlignmentBounds } from "../DBHandler";
 import { set } from 'firebase/database';
+import { LargeButton } from '../components/LargeButton';
+import * as icons from "react-icons/fa6";
+
 
 export default () => {
 
@@ -89,6 +92,9 @@ export default () => {
             <div id="mapContainer"></div>
           </div>
         </div>
+        <button className="button-heatmap" style={{position:'absolute', right:'5px', top:'200px', width:'50px', height: '50px', borderRadius:'100%'}}>
+        <span id="icon"><icons.FaWifi /></span>
+        </button>
   </div>
     </>
 )  
