@@ -29,29 +29,6 @@ export function initializeMap() {
     return map;
 }
 
-export function setHeatmap(map, data, transformation) {
-    map.eachLayer(function(layer) {
-        if (layer instanceof L.easyButton) {
-            map.removeLayer(layer);
-        }
-    });
-
-    let buttonInstance = L.easyButton('fa-wifi', function(btn, map) {
-        displayHeatmap(map, data, transformation);
-    }).setPosition('topright').addTo(map);
-
-    buttonInstance.button.style.width = '50px';
-    buttonInstance.button.style.height = '50px';
-    buttonInstance.button.style.borderRadius = "100%";
-    buttonInstance.button.style.border = "none";
-    buttonInstance.button.style.backgroundColor = "white";
-    buttonInstance.button.style.boxShadow = "1px 1px gray";
-    buttonInstance._container.style.border = "none";
-    buttonInstance.button.children["0"].children["0"].style.width = '30px';
-    buttonInstance.button.children["0"].children["0"].style.height = '30px';
-
-}
-
 export function calculateFloorPlanImage(map, url, transformationMatrix, height, width) {
     if (!map) return;
     let imageUrl = url;
@@ -236,8 +213,16 @@ function weightedAverage(group) {
     return weightSum !== 0 ? weightedSum / weightSum : 0;
 }
 
-function displayHeatmap(map, data, transformation) {
-    if (map == null || data == null) return;
+export function removeHeatMap(map) {
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.HeatLayer) {
+            map.removeLayer(layer);
+        }
+    });
+}
+
+export function displayHeatmap(map, data, transformation) {
+    if (map == null || data == null || transformation == null) return;
 
     map.eachLayer(function(layer) {
         if (layer instanceof L.HeatLayer) {

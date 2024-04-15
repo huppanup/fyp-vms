@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
-import { calculateFloorPlanImage, initializeMap, removeMap, loadFloorPlanImage, addAlignmentMarkers, setHeatmap } from '../leaflet';
+import { calculateFloorPlanImage, initializeMap, loadFloorPlanImage, displayHeatmap, removeHeatMap } from '../leaflet';
 import { getAlignment, setAlignmentBounds } from "../DBHandler";
 import { set } from 'firebase/database';
 import { LargeButton } from '../components/LargeButton';
@@ -31,7 +31,7 @@ export default () => {
       height: null,
       width: null
   });
-  const [switchChecked, setSwitchChecked] = React.useState(false);
+  const [heatmapOn, setHeatMapOn] = React.useState(false);
 
   const location = useLocation();
 
@@ -51,19 +51,13 @@ export default () => {
             let {imageOverlay, bottomLeft, upperRight, upperLeft} = calculateFloorPlanImage(map, data["floorplan"], data["settings"]["transformation"], data["imageHeight"], data["imageWidth"]);
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
-            setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
-            dataHandler.getWifiData(venueID, floor).then((wifiData) => {
-              setHeatmap(map, wifiData["wifi"], data["settings"]["transformation"]);
-              setLoadingMap(false);
-            });
+            setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});    
+            setLoadingMap(false);
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
             setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
-            dataHandler.getWifiData(venueID, floor).then((wifiData) => {
-              setHeatmap(map, wifiData["wifi"], result["transformation"]);
-              setLoadingMap(false);
-            });
+            setLoadingMap(false);
           }
         });
       });
@@ -73,6 +67,18 @@ export default () => {
   const updateImageBounds = (newBounds) => {
     setImageBounds(newBounds);
   };
+
+  const handleWifiHeatmap = () => {
+    if (!heatmapOn) {
+      dataHandler.getWifiData(venueID, floor).then(data => {
+        displayHeatmap(map, data["wifi"], imageBounds.transformation);
+      });
+      setHeatMapOn(true);
+    } else {
+      removeHeatMap(map);
+      setHeatMapOn(false);
+    }
+  }
 
 
   const styles = { display: "flex", position: "relative", height: "calc(100vh - 100px)", transition: "margin-left 1s ease"};
@@ -101,9 +107,11 @@ export default () => {
             <div id="mapContainer"></div>
           </div>
         </div>
-        <button className="button-heatmap" style={{position:'absolute', right:'5px', top:'200px', width:'50px', height: '50px', borderRadius:'100%'}}>
-        <span id="icon"><icons.FaWifi /></span>
-        </button>
+        {(!loadingMap && floor) &&
+          <button className="button-heatmap" onClick={handleWifiHeatmap} style={{position:'absolute', right: '10px', top:'190px', width:'50px', height: '50px', borderRadius:'100%', backgroundColor: heatmapOn ? "gold" : "#FFFFFF", border: "none", boxShadow: "1px 1px gray", display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <icons.FaWifi size={30} style={{margin: "auto"}}/>
+          </button>
+        } 
   </div>
     </>
 )  
