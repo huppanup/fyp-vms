@@ -206,7 +206,7 @@ async function getWifiData(venueID, floorNo) {
         data.forEach(item => {
             const dataJSON = {
                 "SSID" : item.split(",")[0],
-                "threshold" : item.split(",")[1].split(".")[0],
+                "RSSI" : item.split(",")[1].split(".")[0],
                 "enabled" : item.split(",")[3]
             }
             dataList.push(dataJSON);

@@ -212,6 +212,30 @@ function normalizeStrength(strength) {
    return 1;
 }
 
+function weightedAverage(group) {
+    const k = 5;
+    const sortedGroup = group.sort((a, b) => a.distance - b.distance);
+    const origin = sortedGroup[0];
+    const kClosest = sortedGroup.slice(1, k + 1);
+
+    const ssidCounts = {};
+    kClosest.map((item) => {
+        item.data.map((e) => {
+            ssidCounts[e["SSID"]] = (ssidCounts[e["SSID"]] || 0) + 1;
+        });
+    });
+
+    let weightedSum = 0;
+    let weightSum = 0;
+
+    origin.data.map((e) => {
+        weightedSum += (ssidCounts[e["SSID"]] + 1 || 1) * e["RSSI"];
+        weightSum +=(ssidCounts[e["SSID"]] + 1 || 1);
+    });
+    
+    return weightSum !== 0 ? weightedSum / weightSum : 0;
+}
+
 function displayHeatmap(map, data, transformation) {
     if (map == null || data == null) return;
 
@@ -223,12 +247,24 @@ function displayHeatmap(map, data, transformation) {
 
     let heatmap = [];
 
+    const parsedData = data.map((item, index) => {
+        let point = calculateBoundsMatrix(transformation, parseFloat(item["x"]), parseFloat(item["y"]));
+        return { x: point[0], y: point[1], index: index, data: item["data"]};
+    });
 
-    data.map((element) => {
-        let point = calculateBoundsMatrix(transformation, parseFloat(element["x"]), parseFloat(element["y"]));
-        let strength = element["data"]["0"]["threshold"];
-        let normalizedStrength = normalizeStrength(strength);
-        heatmap.push([point[1], point[0], normalizedStrength]);
+    parsedData.map((element) => {
+        const distances = parsedData.map((item) => {
+            const distance = Math.sqrt(
+              Math.pow(item.x - element.x, 2) +
+              Math.pow(item.y - element.y, 2)
+            );
+
+            return {...item, distance: distance};
+        });
+        
+        const weightedRSSI = weightedAverage(distances);
+        let normalizedStrength = normalizeStrength(weightedRSSI);
+        heatmap.push([element.y, element.x, normalizedStrength]);
     });
 
     var heat = L.heatLayer(heatmap, {radius: 10, blur: 0, minOpacity: 0, max: 0.001, gradient: {"0.25": 'red', "0.5": 'orange', "0.75": 'yellow', "1": 'lime'}}).addTo(map);
