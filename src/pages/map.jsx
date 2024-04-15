@@ -52,11 +52,13 @@ export default () => {
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
             setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});    
+            setHeatMapOn(false);
             setLoadingMap(false);
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
             setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
+            setHeatMapOn(false);
             setLoadingMap(false);
           }
         });
