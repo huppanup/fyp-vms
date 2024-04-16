@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaStar, FaPlus } from "react-icons/fa";
-import { getAuth } from "firebase/auth";
+import { FaStar, FaPlus } from "react-icons/fa";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
 import Popup from "../components/popup"
-import { addVenue, getLikedLocations, removeLikedLocations, updateLikedLocations, createLikedLocations } from "../DBHandler";
+import { getVenues, getLikedLocations, removeLikedLocations, updateLikedLocations, createLikedLocations } from "../DBHandler";
 import { LargeButton } from "../components/LargeButton";
 import { useAuth } from '../AuthContext';
 import FuzzySearch from "react-fuzzy";
@@ -58,10 +57,8 @@ export default () => {
 
   useEffect(() => {
     if (currentUser.uid) {
-      const venuesRef = ref(database, 'venues');
-      onValue(venuesRef, (snapshot) => {
-        const data = snapshot.val();
-        const fetchedVenueNames = [];
+      const fetchedVenueNames = [];
+      getVenues().then(data => {
         for (const key in data) {
           fetchedVenueNames.push({ author : key, title : data[key]});
         }

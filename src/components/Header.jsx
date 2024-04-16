@@ -28,16 +28,6 @@ export default () => {
                 result[key] = likedLocation[key]["name"];
             }
             setVenueList(result);
-          } else {
-            getVenues().then((venues) => {
-              if (venues != null){
-                const result = {};
-                for (var key in venues){
-                    result[key] = venues[key];
-                }
-                setVenueList(result);
-              }
-            })
           }
       });
         

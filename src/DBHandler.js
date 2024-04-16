@@ -2,7 +2,7 @@ import {database} from "./firebase"
 import { get, ref, push, update, set, remove } from "firebase/database";
 
 export function addVenue(name) {
-    return push(ref(database,'venues/'), name).key; // Returns key value of added venue
+    return push(ref(database,'venues/'), {"name": name}).key; // Returns key value of added venue
 }
 
 export function addUser(id) {
@@ -14,7 +14,7 @@ export async function checkVenueExists(id) {
     return snapshot.exists;
 }
 
-export function renameVenue(id, newName){
+/*export function renameVenue(id, newName){
     const updates = {};
     updates[id] = newName;
     update(ref(database,'venues/'), updates).then()
@@ -26,7 +26,7 @@ export function deleteVenue(id){
     updates[id] = null;
     update(ref(database,'venues/'), updates).then()
     .catch((e) => {console.log("Failed to remove venue.")});
-}
+} */
 
 export async function getLikedLocations(id){
     const likedVenues = ref(database, 'users/' + id + '/likedLocations');
@@ -35,10 +35,16 @@ export async function getLikedLocations(id){
  
 }
 
-export async function getVenues() {
+export function getVenues() {
   const venues = ref(database, 'venues');
-  const result = await get(venues);
-  return result.val();
+  return get(venues)
+  .then(result => {
+    const venueNames = {};
+    Object.entries(result.val()).forEach(([key, value]) => {
+      venueNames[key] = value.name;
+    });
+    return venueNames;
+  }).catch(error => console.error(error));
 }
 
 export function removeLikedLocations(uid, id) {
@@ -75,18 +81,18 @@ export function createLikedLocations(uid, locations) {
 }
 
 export async function getAlignment(venueID, floor) {
-  const alignmentReft = ref(database, 'locations/' + venueID + "/" + floor);
+  const alignmentReft = ref(database, 'venues/' + venueID + "/floors/" + floor);
   const result = await get(alignmentReft);
   return result.val();
 }
 
 export async function checkBoundsExists(venueID, floor) {
-  const snapshot = await get(ref(database, 'locations/' + venueID + "/" + floor));
+  const snapshot = await get(ref(database, 'venues/' + venueID + "/floors/" + floor));
   return snapshot.exists;
 }
 
 export function setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, transformationMatrix) {
-  const alignmentReft = ref(database, 'locations/' + venueID + "/" + floor);
+  const alignmentReft = ref(database, 'venues/' + venueID + "/floors/" + floor);
   const data = {
     bottomLeft : bottomLeft,
     upperRight : upperRight,

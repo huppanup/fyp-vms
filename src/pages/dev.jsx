@@ -44,8 +44,8 @@ export default () => {
     <div className={"bodyTemp " + (collapse ? "collapse" : "")} style={{zIndex: "0", position:"relative"}}>
         
         <button onClick={() => setCurFloor("LSK3")}>HI CLICK ME TO CHANGE THE FLOOR</button>
-        <button onClick={() => addVenue("WKCD_xiqu")}>Add Venue</button>
-        <button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>
+        <button onClick={() => addVenue("ABC")}>Add Venue</button>
+        {/*<button onClick={() => renameVenue("-Nq1DwM8ce08f-LQHvA6","Renamed venue!")}>Rename Venue</button>*/}
         <button onClick={() => venueHandler.getAllConstraints().then((data) => {setVenueInfo(data);})}>Get Constraint</button>
         <button onClick={() => venueHandler.getFloorInfo().then((data) => {setVenueInfo(data);})}>Get Floor Information</button>
         <button onClick={() => venueHandler.getVenueInfo().then((data) => { setVenueInfo(data);})}>Get Venue Information</button>
