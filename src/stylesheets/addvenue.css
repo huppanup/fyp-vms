@@ -21,9 +21,12 @@
 }
 
 .add-right{
+    display:flex;
+
     flex:1;
     width:30%;
-
+    flex-direction: column;
+    gap:20px;
 }
 
 .add-item{
@@ -33,11 +36,15 @@
     gap: 20px;
 }
 
-form{
-    margin-left: 20px;
+.add-body{
+    margin: 0px 20px;
     gap: 10px;
     display: flex;
     flex-direction: column;
+}
+
+form{
+
 }
 
 label{
@@ -58,7 +65,7 @@ input{
     font-weight: bold;
 }
 
-#add-heading{
+.add-heading{
     color: #003366;
     font-size: 30px;
     font-weight: bold;

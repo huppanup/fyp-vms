@@ -9,6 +9,7 @@
     "fa-icon": "^0.0.0",
     "firebase": "^10.5.0",
     "firebaseui": "^6.1.0",
+    "jszip": "^3.10.1",
     "leaflet": "^1.9.4",
     "leaflet-easybutton": "^2.4.0",
     "leaflet-imageoverlay-rotated": "^0.2.1",
