@@ -34,14 +34,11 @@ function downloadData(path, type){
 async function getVenueInfo(venueID){
     console.log("Fetching venue info for " + venueID);
     const data = await downloadData(venueID + "/info.json", "json");
-    let transformationData = await downloadData(venueID + "/map/geodata.csv", "text");
-    if (transformationData) transformationData = transformationData.trim().split(",\r\n").map(item => item.split(" "));
     if (!data){ console.log("Failed to retrieve venue info"); return;};
     const venueInfo = {
         "venueName": data["site_name"],
         "venueID": venueID,
         "floors": data["floors"],
-        "transformation" : transformationData
     };
     console.log("Retrieved venue info");
     return venueInfo;
@@ -54,15 +51,13 @@ async function getFloorInfo(venueID, floorNo){
     const mapFile = await getFileURL(venueID + "/map/" + floorNo + "/map.jpg");
     const mapData = await downloadData(venueID + "/map/" + floorNo + "/map.json", "json");
     const floorData = await downloadData(venueID + "/info.json", "json");
-    let transData = mapData?.shapes?.filter(shape => shape["label"].includes("trans"));
     return {
         "venueID" : venueID,
         "floorNo" : floorNo,
         "floorplan" : mapFile,
         "imageHeight" : mapData["imageHeight"],
         "imageWidth" : mapData["imageWidth"],
-        "settings" : floorData["settings"][floorNo],
-        "trans" : transData[0]["points"]
+        "settings" : floorData["settings"][floorNo]
     };
 }
 
