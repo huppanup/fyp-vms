@@ -35,7 +35,6 @@ export default () => {
         try{
             const user = await signup(email, password);
             console.log(user);
-            addUser(user.user.uid);
             await verify(user.user);
             setModalOpen(true);
             setLink('/login');

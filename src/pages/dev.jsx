@@ -2,8 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import "../stylesheets/cloud.css";
 import VenueData from '../VenueDataHandler';
-import { getLikedLocations } from '../DBHandler';
-import { addVenue, renameVenue } from "../DBHandler";
+import { getLikedLocations, removeLikedLocations, updateLikedLocations} from '../DBHandler';
+import { addVenue, renameVenue, getLikedLocationsFirestore } from "../DBHandler";
 import { useAuth } from '../AuthContext';
 import { useVenue } from '../LocationContext';
 import Sidebar from '../components/Sidebar';
@@ -59,6 +59,12 @@ export default () => {
         <button onClick={() => resetPassword("clover107!", "huppanup107!").then((r) => {if (r.success){ console.log(r.result)} else { console.log(r.error)}})}>Reset password to "hello"</button>
         <button onClick={() => resetEmail("huppanup107!", "huppanup@naver.com")}>Change email to huppanup@naver.com</button>
         <button onClick={() => deleteAccount()}>Delete and sign out account</button>
+        <div>Firestore connnection testing</div>
+        <button onClick={() => getLikedLocations(currentUser.uid)}>Get Liked Locations</button>
+        <button onClick={() => updateLikedLocations(currentUser.uid, {"testID1" : {"name" : "Test Venue1", "dateAdded" : new Date().toISOString().split('T')[0]}})}>Add Liked Locations</button>
+        <button onClick={() => removeLikedLocations(currentUser.uid, "testID1")}>Remove Liked Locations</button>
+
+
 
 
 
