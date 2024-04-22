@@ -61,13 +61,13 @@ export default () => {
                     </div>
                 </Link>
             </div>
-            { <div className={`nav-box ${isCurrentLink('/dev') ? 'active' : ''}`}>
+            { /*<div className={`nav-box ${isCurrentLink('/dev') ? 'active' : ''}`}>
                 <Link to="/dev" className="nav-item">
                     <div style={{ margin: '0 10px' }}>
                         <FaCode size={25} color="white" />
                     </div>
                 </Link>
-            </div>}
+            </div> */}
             </div>
             <div className="bottom-bar">
             <div className={`nav-box ${isCurrentLink('/personal-info') ? 'active' : ''}`}>
