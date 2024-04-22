@@ -162,7 +162,7 @@ export default (props) => {
         })
         .catch((error) => {
             console.error(error);
-            setMessage(error);
+            setMessage(error.message);
             setIsModalOpen(false);
             setPopupOpen(true);
         });

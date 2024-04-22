@@ -96,6 +96,9 @@ export default (props) => {
       dataHandler.editFloorplan(venueID, floor, event.target.files[0]).then((message) => {
         setMessage(message);
         setPopupOpen(true);
+      }).catch((e) => {
+        setMessage(e.message);
+        setPopupOpen(true);
       });
     }
   };

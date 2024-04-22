@@ -246,7 +246,9 @@ async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, ne
                 console.log('Metadata is added!');  
                 return "Uploaded Successfully!";
             });
-        }).catch((e) => console.error(e));
+        }).catch((e) => {
+            throw e;
+        });
     } else {
         const fileName = fullPath.substring(fullPath.lastIndexOf("/") + 1);
         const updateRef = ref(storage, venueID + "/Constraint/outConstraints/" + floor + "/" + fileName);
@@ -262,8 +264,7 @@ async function editConstraint(venueID, floor, type, id, fullPath, x, y, newX, ne
                 return "Uploaded Successfully!";
             });
         }).catch((e) => {
-            console.error(e);
-            return e;
+            throw e;
         });
     }
 }
@@ -280,7 +281,7 @@ async function editFloorplan(venueID, floor, image) {
         });      
     }).catch((error) => {
         console.error(error);
-        return error;
+        throw error;
     });
 }
 
