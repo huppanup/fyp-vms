@@ -21,7 +21,6 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
 const analytics = getAnalytics(app);
 const firestore = getFirestore(app);
-const db = getFirestore(app);
 const database = getDatabase(app);
 const storage = getStorage(app);
 
@@ -35,5 +34,5 @@ const storage = getStorage(app);
 //     }
 // })
 
-export {app, auth, db, database, storage, firestore} ;
+export {app, auth, database, storage, firestore} ;
 

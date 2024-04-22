@@ -3,7 +3,7 @@ import { FaStar, FaPlus } from "react-icons/fa";
 import { getDatabase, ref, onValue, update, remove } from "firebase/database";
 import "../stylesheets/home.css";
 import Popup from "../components/popup"
-import { getVenues, getLikedLocations, removeLikedLocations, updateLikedLocations, createLikedLocations } from "../DBHandler";
+import { getVenues, getLikedLocations, removeLikedLocations, updateLikedLocations, createLikedLocations, getLikedLocationsFirestore } from "../DBHandler";
 import { LargeButton } from "../components/LargeButton";
 import { useAuth } from '../AuthContext';
 import FuzzySearch from "react-fuzzy";
@@ -78,15 +78,7 @@ export default () => {
         setLikedLocations(liked);
       });
     } else {
-      if (likedLocations) {
-        let updatedLikedLocations = likedLocations;
-        updatedLikedLocations[id] = location;
-        updateLikedLocations(currentUser.uid, updatedLikedLocations);
-      } else {
-        let updatedLikedLocations = [];
-        updatedLikedLocations[id] = location;
-        createLikedLocations(currentUser.uid, updatedLikedLocations);
-      }
+      updateLikedLocations(currentUser.uid, {[id] : location});
       getLikedLocations(currentUser.uid).then((liked) => {
         setLikedLocations(liked);
       });
