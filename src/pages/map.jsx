@@ -7,11 +7,13 @@ import 'leaflet/dist/leaflet.css'
 import '../stylesheets/map.css'
 import VenueData from '../VenueDataHandler';
 import { useVenue } from '../LocationContext';
-import { calculateFloorPlanImage, initializeMap, loadFloorPlanImage, displayHeatmap, removeHeatMap } from '../leaflet';
+import { calculateFloorPlanImage, initializeMap, loadFloorPlanImage, displayHeatmap, removeHeatMap, calculateMaxAP } from '../leaflet';
 import { getAlignment, setAlignmentBounds } from "../DBHandler";
 import { set } from 'firebase/database';
 import { LargeButton } from '../components/LargeButton';
 import * as icons from "react-icons/fa6";
+import { connectStorageEmulator } from 'firebase/storage';
+import { maxTransformDependencies } from 'mathjs';
 
 
 export default () => {
@@ -31,13 +33,20 @@ export default () => {
       height: null,
       width: null
   });
-  const [heatmapOn, setHeatMapOn] = React.useState(false);
+  const [rangeBar, setRangeBar] = React.useState(false);
+  const [value, setValue] = useState("0");
+  const [maxAP, setMaxAP] = useState(null);
+  const [handleRangeBarEnabled, setHandleRangeBarEnabled] = useState(false);
 
   const location = useLocation();
 
   const imageStyle = {
     transform: 'rotate(90deg)'
   };
+
+  useEffect(() => {
+    setMaxAP(null);
+  }, [venueID]);
 
   useEffect(() => {
     let map = initializeMap();
@@ -52,13 +61,15 @@ export default () => {
             setImageOverlay(imageOverlay);
             setAlignmentBounds(venueID, floor, bottomLeft, upperRight, upperLeft, data["settings"]["transformation"]);
             setImageBounds({bottomLeft: bottomLeft, upperRight: upperRight, upperLeft: upperLeft, transformation: data["settings"]["transformation"], height: data["imageHeight"], width: data["imageWidth"]});    
-            setHeatMapOn(false);
+            setRangeBar(false);
+            setValue("0");
             setLoadingMap(false);
           } else {
             let imageOverlay = loadFloorPlanImage(map, data["floorplan"], result["bottomLeft"], result["upperRight"], result["upperLeft"]);
             setImageOverlay(imageOverlay);
             setImageBounds({bottomLeft: result["bottomLeft"], upperRight: result["upperRight"], upperLeft: result["upperLeft"], transformation: result["transformation"], height: data["imageHeight"], width: data["imageWidth"]});
-            setHeatMapOn(false);
+            setRangeBar(false);
+            setValue("0");
             setLoadingMap(false);
           }
         });
@@ -70,15 +81,59 @@ export default () => {
     setImageBounds(newBounds);
   };
 
-  const handleWifiHeatmap = () => {
-    if (!heatmapOn) {
-      dataHandler.getWifiData(venueID, floor).then(data => {
-        displayHeatmap(map, data["wifi"], imageBounds.transformation);
-      });
-      setHeatMapOn(true);
-    } else {
+  const handleRangeBar = (e) => {
+    console.log(handleRangeBarEnabled);
+    if (!handleRangeBarEnabled) {
+      return;
+    }
+    console.log(e.target.value);
+    setValue(e.target.value);
+    setHandleRangeBarEnabled(false);
+    dataHandler.getWifiData(venueID, floor)
+    .then(data => {
+      return displayHeatmap(map, data["wifi"], imageBounds.transformation, maxAP, e.target.value);
+    })
+    .then(() => {
+      setHandleRangeBarEnabled(true);
+    });
+  }
+
+  const toggleRangeBar = () => {
+    if (rangeBar) {
       removeHeatMap(map);
-      setHeatMapOn(false);
+      setRangeBar(false);
+      setHandleRangeBarEnabled(false);
+    }
+    else {
+      setRangeBar(true);
+      if (maxAP == null) {
+        let floors = venueInfo["floors"];
+        Promise.all(
+          floors.map(async (f) => {
+            const data = await dataHandler.getWifiData(venueID, f);
+            const numAP = calculateMaxAP(data["wifi"]);
+            return numAP;
+          })
+        ).then((numAPsArray) => {
+          const maxAPs = Math.max(...numAPsArray);
+          setMaxAP(maxAPs);
+          dataHandler.getWifiData(venueID, floor)
+          .then(data => {
+            return displayHeatmap(map, data["wifi"], imageBounds.transformation, maxAPs, value);
+          })
+          .then(() => {
+            setHandleRangeBarEnabled(true);
+          });
+        });
+      } else {
+        dataHandler.getWifiData(venueID, floor)
+        .then(data => {
+          return displayHeatmap(map, data["wifi"], imageBounds.transformation, maxAP, value);
+        })
+        .then(() => {
+          setHandleRangeBarEnabled(true);
+        });
+      }
     }
   }
 
@@ -109,11 +164,46 @@ export default () => {
             <div id="mapContainer"></div>
           </div>
         </div>
-        {(!loadingMap && floor) &&
-          <button className="button-heatmap" onClick={handleWifiHeatmap} style={{position:'absolute', right: '10px', top:'190px', width:'50px', height: '50px', borderRadius:'100%', backgroundColor: heatmapOn ? "gold" : "#FFFFFF", border: "none", boxShadow: "1px 1px gray", display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <icons.FaWifi size={30} style={{margin: "auto"}}/>
-          </button>
-        } 
+        {!loadingMap && floor && (
+  <>
+    <button
+      className="button-heatmap"
+      onClick={toggleRangeBar}
+      style={{
+        position: 'absolute',
+        right: '10px',
+        top: '190px',
+        width: '50px',
+        height: '50px',
+        borderRadius: '100%',
+        backgroundColor: rangeBar ? 'gold' : '#FFFFFF',
+        border: 'none',
+        boxShadow: '1px 1px gray',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <icons.FaWifi size={30} style={{ margin: 'auto' }} />
+    </button>
+    {rangeBar && (
+      <>
+      <input type="range" id="tempB" name="temp" list="values" step="25" value={value} onChange={e => handleRangeBar(e)} style={{
+        position: "absolute",
+        right: '30px',
+        top: '250px'
+      }}/>
+      <datalist id="values">
+        <option value="0" label="-60" />
+        <option value="25" label="-70" />
+        <option value="50" label="-80" />
+        <option value="75" label="-90" />
+        <option value="100" label="All" />
+      </datalist>
+      </>
+    )}
+  </>
+)}
   </div>
     </>
 )  

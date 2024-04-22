@@ -168,3 +168,24 @@ iframe{
 .upload {
     margin-right: 7px;
 }
+
+datalist {
+    position: absolute;
+    right: 10px;
+    top: 246px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    writing-mode: horizontal-tb;
+    height: 205px;
+}
+  
+  option {
+    padding: 0;
+  }
+  
+  input[type="range"] {
+    height: 200px;
+    margin: 0;
+    writing-mode: vertical-lr;
+  }
