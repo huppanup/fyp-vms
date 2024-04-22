@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "users": {
+      "$userId": {
+        "likedLocations": {
+          ".read": true,
+          ".write": true
+        },
+        ".write":true
+      }
+    },
+    "venues": {
+      ".read" : true,
+      ".write" : true
+    },
+    "locations": {
+      ".read" : true,
+      ".write" : true
+    }
+  }
+}
