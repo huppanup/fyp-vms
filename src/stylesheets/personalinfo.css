@@ -19,7 +19,7 @@
     margin: 50px;
     box-sizing: border-box;
     gap: 30px;
-    width: 70%;
+    width: 65%;
 }
 
 .personal-items{
@@ -30,7 +30,7 @@
 }
 
 #personal-role{
-    width: 30%;
+    width: 35%;
 }
 
 #personal-heading{

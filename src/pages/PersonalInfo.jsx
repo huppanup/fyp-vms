@@ -5,6 +5,8 @@ import "../stylesheets/personalinfo.css";
 import { LargeButton } from "../components/LargeButton";
 import * as icons from "react-icons/fa6";
 import Popup from "../components/popup";
+import Waitlist from "../components/Waitlist";
+
 
 import { useAuth } from "../AuthContext";
 
@@ -114,7 +116,9 @@ export default () => {
             </div>
         </div>
         <div id="personal-role" className="personal-body">
-            Temp
+        <div className="personal-items" id="personal-heading" style={{alignItems:"center",justifyContent:"center"}}></div>
+
+            {/*<Waitlist />*/}
         </div>
         </div>
     </>
