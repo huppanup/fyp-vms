@@ -124,28 +124,28 @@ export default () => {
         <form className="add-body" onSubmit={(e) => handleSubmit(e, canSubmit, name)}>
             <div className="input-heading">info.json *</div>
             <div className="add-item">
-            <input type="file" name="info.json" accept=".json" onChange={handleInfoUpload} required/>
+            <input className="add-input" type="file" name="info.json" accept=".json" onChange={handleInfoUpload} required/>
             </div>
             <div className="input-heading">Constraints</div>
             <div className="add-item">
-            <input type="file" name="Constraint" accept=".zip" />
+            <input className="add-input" type="file" name="Constraint" accept=".zip" />
             </div>
             <div className="input-heading">Fingerprints</div>
             <div className="add-item">
-            <label>Wi-Fi</label><input type="file" name="WifiData"  accept=".zip" />
+            <label className="add-label">Wi-Fi</label><input className="add-input" type="file" name="WifiData"  accept=".zip" />
             </div>
             <div className="add-item">
-            <label>Magnetic</label><input type="file" name="MagData" accept=".zip" />
+            <label className="add-label">Magnetic</label><input className="add-input" type="file" name="MagData" accept=".zip" />
             </div>
             <div className="add-item">
-            <label>i-Beacon</label><input type="file" name="iBeaconData"  accept=".zip" />
+            <label className="add-label">i-Beacon</label><input className="add-input" type="file" name="iBeaconData"  accept=".zip" />
             </div>
             <div className="input-heading">Maps</div>
             <div className="add-item">
-            <input type="file" name="map" accept=".zip" />
+            <input className="add-input" type="file" name="map" accept=".zip" />
             </div>
             <div className="add-item">
-            <input type="submit" disabled={!canSubmit}/>
+            <input className="add-input" type="submit" disabled={!canSubmit}/>
             </div>
         </form>
         </div>

@@ -173,7 +173,7 @@ export default (props) => {
         return (
             <div style={constraintItemStyle} id={id}>
             { type === "in" ? <div style={Object.assign({}, circle, {color:"#003366", backgroundColor:"white"})}>IN</div> : <div style={Object.assign({}, circle, {color:"white", backgroundColor:"#003366"})}>OUT</div> 
-            } <div style={constraintStyle}><div style={constraintTextStyle}>{x}</div><div style={constraintTextStyle}>{y}</div></div><div  style={optionStyle} >{isAdmin && <FaEllipsisV onClick={() => handleModalOpen(type, id, x, y, fullPath)}/>}</div>
+            } <div style={constraintStyle}><div style={constraintTextStyle}>{x}</div><div style={constraintTextStyle}>{y}</div></div><div  style={optionStyle} >{isAdmin === 1 && <FaEllipsisV onClick={() => handleModalOpen(type, id, x, y, fullPath)}/>}</div>
             </div>
         )
     }
