@@ -39,7 +39,7 @@ export default (props) => {
                 />
                 <div className="sb-tabs">
                     <div className={"sb-tab" + (curTab ? " selected" : "")} onClick={() => setCurTab(true)}><div style={{padding: "10px 0px"}}>Constraints</div></div>
-                    {isAdmin && <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>}
+                    {isAdmin === 1 && <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>}
                 </div>
             </div>
             <div className="sb-body" style={{flex: "1", whiteSpace:"normal", wordBreak:"break-all", overflow:"scroll"}}>
