@@ -51,7 +51,7 @@ export default () => {
   const { setVenue, loading } = useVenue();
   const [likedLocations, setLikedLocations] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const {currentUser} = useAuth();
+  const {currentUser, isAdmin} = useAuth();
   const [venues, setVenues] = useState([]);
   const navigate = useNavigate();
 
@@ -147,7 +147,7 @@ export default () => {
           </table>
           
         </div>
-        <div style={{position: "fixed", right:"250px", bottom:"100px"}}><LargeButton onClick={() => navigate('add')} icon={<FaPlus size={15} />} value={"Add Venue"} /></div>
+        {isAdmin && <div style={{position: "fixed", right:"250px", bottom:"100px"}}><LargeButton onClick={() => navigate('add')} icon={<FaPlus size={15} />} value={"Add Venue"} /></div>}
       </div>
     </>
   );

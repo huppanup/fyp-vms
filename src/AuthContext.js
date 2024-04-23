@@ -3,7 +3,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth, firestore } from "./firebase"
 import { sendEmailVerification, deleteUser, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
-import {doc, setDoc} from 'firebase/firestore'
+import {doc, setDoc, getDoc} from 'firebase/firestore'
 
 const AuthContext = React.createContext()
 
@@ -15,6 +15,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false);
 
   async function signup(email, password) {
     const user = (await auth.createUserWithEmailAndPassword(email, password));
@@ -93,13 +94,22 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
-      setLoading(false)
+      if (user) { 
+        getDoc(doc(firestore, "users", user.uid)).then((userInfo) => {
+          setIsAdmin(userInfo.get("type"))
+          setLoading(false)
+        });
+      } else {
+        setLoading(false)
+        setIsAdmin(false);
+      }
     })
     return unsubscribe
   }, [])
 
   const value = {
     currentUser,
+    isAdmin,
     login,
     signup,
     verify,

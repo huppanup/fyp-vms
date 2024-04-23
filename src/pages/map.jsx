@@ -12,12 +12,8 @@ import { getAlignment, setAlignmentBounds } from "../DBHandler";
 import { set } from 'firebase/database';
 import { LargeButton } from '../components/LargeButton';
 import * as icons from "react-icons/fa6";
-import { connectStorageEmulator } from 'firebase/storage';
-import { maxTransformDependencies } from 'mathjs';
-
 
 export default () => {
-
   const { venueID, floor, setVenue, setSelectedFloor, venueInfo, dataHandler } = useVenue();
   
   const [loadingMap, setLoadingMap] = React.useState(false);

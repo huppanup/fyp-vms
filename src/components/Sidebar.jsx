@@ -7,10 +7,12 @@ import Dropdown from "../components/Dropdown"
 import ConstraintMenu from "./ConstraintMenu";
 import FloorplanMenu from "./FloorplanMenu";
 import { useVenue } from '../LocationContext';
+import { useAuth } from '../AuthContext';
 
 
 export default (props) => {
     const { floor, setFloor, venueInfo, loading } = useVenue();
+    const  {isAdmin} = useAuth();
 
     const [curTab, setCurTab] = useState(true);
     const [floorList, setFloorList] = useState([]);
@@ -37,7 +39,7 @@ export default (props) => {
                 />
                 <div className="sb-tabs">
                     <div className={"sb-tab" + (curTab ? " selected" : "")} onClick={() => setCurTab(true)}><div style={{padding: "10px 0px"}}>Constraints</div></div>
-                    <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>
+                    {isAdmin && <div className={"sb-tab" + (!curTab ? " selected" : "")} onClick={() => setCurTab(false)}><div style={{padding: "10px 0px"}}>Floor Plan</div></div>}
                 </div>
             </div>
             <div className="sb-body" style={{flex: "1", whiteSpace:"normal", wordBreak:"break-all", overflow:"scroll"}}>
