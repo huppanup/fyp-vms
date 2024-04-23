@@ -101,6 +101,7 @@ export default () => {
                 <table id="personal-table">
                     <tbody>
                         <tr><td className="personal-table-label">Email</td><td className="personal-table-value">{auth.currentUser.email}</td></tr>
+                        <tr><td className="personal-table-label">Role</td><td className="personal-table-value">{auth.isAdmin === 1 ? 'Administrator' : 'Viewer'}</td></tr>
                         { emailInput && emailField }
                         { passwordInput && passwordField}
                     </tbody>
