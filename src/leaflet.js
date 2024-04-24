@@ -110,8 +110,6 @@ function calculateBoundsMatrix(transformationMatrix, x, y) {
     let transMatrix = transformationMatrix.map(row => row.map(e => parseFloat(e)));
     let lon = (y * transMatrix[1][0] - x * transMatrix[1][1] - transMatrix[1][0] * transMatrix[2][1] + transMatrix[2][0] * transMatrix[1][1]) / (transMatrix[1][0] * transMatrix[0][1] - transMatrix[0][0] * transMatrix[1][1]);
     let lat = (y * transMatrix[0][0] - x * transMatrix[0][1] - transMatrix[0][0] * transMatrix[2][1]  + transMatrix[2][0] * transMatrix[0][1]) / (transMatrix[0][0] * transMatrix[1][1] - transMatrix[1][0] * transMatrix[0][1]);
-
-    let a = (x * transMatrix[0][0] + y * transMatrix[1][0] + transMatrix[2][0]);
     
     return [lon, lat];
 }
@@ -182,38 +180,6 @@ export function addConstraintsCricles(map, transformation, x, y, type) {
         return circle;
     }
 }
-
-/*function normalizeStrength(strength) {
-   if (strength < -90) return 0;
-   if (strength < -80) return 0.25;
-   if (strength < -70) return 0.5;
-   if (strength < -60) return 0.75;
-   return 1;
-}*/
-
-/*function weightedAverage(group) {
-    const k = 5;
-    const sortedGroup = group.sort((a, b) => a.distance - b.distance);
-    const origin = sortedGroup[0];
-    const kClosest = sortedGroup.slice(1, k + 1);
-
-    const ssidCounts = {};
-    kClosest.map((item) => {
-        item.data.map((e) => {
-            ssidCounts[e["SSID"]] = (ssidCounts[e["SSID"]] || 0) + 1;
-        });
-    });
-
-    let weightedSum = 0;
-    let weightSum = 0;
-
-    origin.data.map((e) => {
-        weightedSum += (ssidCounts[e["SSID"]] + 1 || 1) * e["RSSI"];
-        weightSum +=(ssidCounts[e["SSID"]] + 1 || 1);
-    });
-    
-    return weightSum !== 0 ? weightedSum / weightSum : 0;
-}*/
 
 export function removeHeatMap(map) {
     map.eachLayer(function(layer) {
