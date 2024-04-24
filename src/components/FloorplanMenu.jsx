@@ -134,4 +134,3 @@ export default (props) => {
     </div>
   );
 }
-// TODO: Long messages overflow the popup body.

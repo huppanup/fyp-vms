@@ -9,4 +9,3 @@ export function LargeButton(props){
         </button>
     );
 }
-// TODO: Long messages overflow the popup body.
