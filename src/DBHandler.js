@@ -1,6 +1,6 @@
 import {database, firestore} from "./firebase"
-import { get, ref, push, update, set, remove } from "firebase/database";
-import {collection, doc, getDocs,deleteField, getDoc, updateDoc} from 'firebase/firestore'
+import { get, ref, push, update, set, remove, onValue } from "firebase/database";
+import { doc, setDoc, deleteField, getDoc, updateDoc} from 'firebase/firestore'
 
 export function addVenue(name) {
     return push(ref(database,'venues/'), {"name": name}).key; // Returns key value of added venue
@@ -28,7 +28,42 @@ export function deleteVenue(id){
 export async function getLikedLocations(id){
   const likedVenues = await getDoc(doc(firestore, "users", id));
   return likedVenues.get("likedLocations");
+}
 
+export function handleAdminRequest(approve, uid){
+  // Remove uid from waitlist
+  const waitlistUserRef = ref(database, 'waitlist/' + uid);
+  remove(waitlistUserRef).then(() => {
+    if (approve){
+      // Change user type on firestore
+      setDoc(doc(firestore, "users", uid), { type: 1 }, { merge: true });
+    }
+  }).catch((e) => console.log(e))
+}
+
+export function applyAdmin(uid, email){
+  console.log(uid, email)
+  const waitlistUserRef = ref(database, 'waitlist');
+  set(waitlistUserRef, { [uid] : {
+    email: email,
+    dateAdded : new Date().toISOString().split('T')[0]
+  }});
+}
+
+
+export function getWaitlist(callback){
+  const waitlistRef = ref(database, 'waitlist');
+  return onValue(waitlistRef, (snapshot) => {
+    const data = snapshot.val();
+    callback(data);
+  });
+}
+
+export function getPending(uid, callback){
+  const waitlistRef = ref(database, 'waitlist/' + uid);
+  return onValue(waitlistRef, (snapshot) => {
+    callback(snapshot.exists());
+  });
 }
 
 export function getVenues() {
@@ -67,17 +102,6 @@ export function removeLikedLocations(uid, id) {
   });
 
 }
-
-// export function updateLikedLocations(uid, locations) {
-//     const likedLocationRef = ref(database, `users/${uid}/likedLocations`);
-//     update(likedLocationRef, locations)
-//     .then(() => {
-//       return("Data updated successfully");
-//     })
-//     .catch((error) => {
-//       console.error("Error updating data:", error);
-//     });
-// }
 
 export function createLikedLocations(uid, locations) {
   const likedLocationRef = ref(database, `users/${uid}/likedLocations`);
