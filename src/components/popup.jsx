@@ -53,4 +53,3 @@ export default ({modalOpen, setModalOpen, message, navigateTo}) => {
         </Modal>
     );
 }
-// TODO: Long messages overflow the popup body.

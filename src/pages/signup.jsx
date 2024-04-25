@@ -9,7 +9,7 @@ import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "
 
 
 export default () => {
-    const {signup, verify} = useAuth();
+    const {signup, verify, logout} = useAuth();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -34,11 +34,13 @@ export default () => {
         e.preventDefault();
         try{
             const user = await signup(email, password);
-            addUser(user.user.uid);
+            console.log(user);
             await verify(user.user);
             setModalOpen(true);
             setLink('/login');
             setMessage("Your account has been successfully created! Please check your inbox to verify your account.");
+            logout();
+
         } catch(error) {
             if (error.code === "auth/email-already-in-use"){
                 setMessage(email + " is already in use. Please try again with a different email.");              

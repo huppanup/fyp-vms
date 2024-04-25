@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 import { useVenue } from "../LocationContext";
 import { FaEllipsisV } from "react-icons/fa";
 import Modal from "react-modal";
@@ -104,6 +104,7 @@ export default (props) => {
     const [message, setMessage] = React.useState('');
     const [inCircles, setInCircles] = React.useState([]);
     const [outCircles, setoutCircles] = React.useState([]);
+    const {isAdmin} = useAuth();
 
     React.useEffect(() => {
         if (venueID === null || floor === null) return;
@@ -162,7 +163,7 @@ export default (props) => {
         })
         .catch((error) => {
             console.error(error);
-            setMessage(error);
+            setMessage(error.message);
             setIsModalOpen(false);
             setPopupOpen(true);
         });
@@ -172,7 +173,7 @@ export default (props) => {
         return (
             <div style={constraintItemStyle} id={id}>
             { type === "in" ? <div style={Object.assign({}, circle, {color:"#003366", backgroundColor:"white"})}>IN</div> : <div style={Object.assign({}, circle, {color:"white", backgroundColor:"#003366"})}>OUT</div> 
-            } <div style={constraintStyle}><div style={constraintTextStyle}>{x}</div><div style={constraintTextStyle}>{y}</div></div><div  style={optionStyle} ><FaEllipsisV onClick={() => handleModalOpen(type, id, x, y, fullPath)}/></div>
+            } <div style={constraintStyle}><div style={constraintTextStyle}>{x}</div><div style={constraintTextStyle}>{y}</div></div><div  style={optionStyle} >{isAdmin === 1 && <FaEllipsisV onClick={() => handleModalOpen(type, id, x, y, fullPath)}/>}</div>
             </div>
         )
     }
@@ -218,4 +219,3 @@ export default (props) => {
         </div>
     );
 }
-// TODO: Long messages overflow the popup body.

@@ -43,18 +43,14 @@
     flex-direction: column;
 }
 
-form{
-
-}
-
-label{
+.add-label{
     flex: 1;
     text-align: center;
     font-weight: 300;
     font-size: 14px;
 }
 
-input{
+.add-input{
     flex:4;
     height:30px;
 }

@@ -8,8 +8,10 @@ import Popup from "../components/popup";
 import { useVenue } from "../LocationContext";
 import Modal from "react-modal";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 export default () => {
+  const { isAdmin } = useAuth();
   const storage = getStorage();
   const [files, setFiles] = useState([]);
   const [currentFolder, setCurrentFolder] = useState("");
@@ -238,7 +240,7 @@ export default () => {
                 <FaArrowLeft size={20} className="arrow-left" onClick={() => handlePreviousClick()} />
                 {venueID && currentFolder && (currentFolder.indexOf("/") != -1 ? currentFolder.substring(currentFolder.indexOf("/")) : "/")}
               </h2>
-              <div className="button-container">
+              {isAdmin === 1 && (<div className="button-container">
                 {
                   Object.values(checkedItems).includes(true) && (
                     <button className="upload-button" onClick={deleteFile}> <FaTrash size={15} className="upload" /> Delete Files </button>
@@ -260,7 +262,7 @@ export default () => {
                     <button className="upload" onClick={uploadFile}>Upload</button>
                   </div>
                 </Modal>
-              </div>
+              </div>) }
           </div>
           <div className="list-container">
           <table id="file-list">
@@ -286,7 +288,7 @@ export default () => {
                       <input
                         type="checkbox"
                         checked={checkedItems[file.data.filename] || false}
-                        disabled={file.data.isFolder}
+                        disabled={isAdmin !== 1 || file.data.isFolder}
                         onChange={(e) => handleCheckBox(e, file.data.filename)}
                         className="cloud-checkbox"
                       />

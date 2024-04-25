@@ -1,19 +1,20 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import validator from 'validator';
 import "../stylesheets/personalinfo.css";
 import { LargeButton } from "../components/LargeButton";
 import * as icons from "react-icons/fa6";
-import Popup from "../components/popup";
 import Waitlist from "../components/Waitlist";
 
 
 import { useAuth } from "../AuthContext";
+import { applyAdmin, getPending } from "../DBHandler";
 
 export default () => {
     const auth = useAuth();
 
     const [passwordInput,setPasswordInput] = useState(false);
+    const [isPending, setIsPending] = useState(false);
     const [emailInput, setEmailInput] = useState(false);
     const [password, setPassword] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -23,9 +24,19 @@ export default () => {
     const pwStrengthMessage = ['','Password Strength: Strong', 'Password Strength: Weak. Your password should be at least 8 characters long, including 1 lowercase, number, and symbol.'];
     const pwMatchMessage = ['', 'Password does not match','Verified.'];
 
+    useEffect(() => {
+        getPending(auth.currentUser.uid, setIsPending);
+    },[]);
+
 
     const changeEmail = () => {setEmailInput(true)};
     const changePassword = () => {setPasswordInput(true)};
+
+    const requestAdmin = (
+    <div style={{display:"flex", flexDirection:'column', gap:'30px', justifyContent:"center", marginTop: "30px"}}>
+        <img style={{width: "80%", maxWidth:'300px'}} src="./role.png" />
+        <div style={{display:"flex", justifyContent:"center"}}><LargeButton value="Apply for Admin" width="190px" onClick={() => applyAdmin(auth.currentUser.uid, auth.currentUser.email)} active={isPending}/></div>
+    </div>);
 
     const submitEmail = () => {      
         auth.resetEmail(oldpassword, email).then((result) => {
@@ -101,6 +112,7 @@ export default () => {
                 <table id="personal-table">
                     <tbody>
                         <tr><td className="personal-table-label">Email</td><td className="personal-table-value">{auth.currentUser.email}</td></tr>
+                        <tr><td className="personal-table-label">Role</td><td className="personal-table-value">{auth.isAdmin === 1 ? 'Administrator' : 'Viewer'}</td></tr>
                         { emailInput && emailField }
                         { passwordInput && passwordField}
                     </tbody>
@@ -116,9 +128,9 @@ export default () => {
             </div>
         </div>
         <div id="personal-role" className="personal-body">
-        <div className="personal-items" id="personal-heading" style={{alignItems:"center",justifyContent:"center"}}></div>
+        <div className="personal-items" id="personal-heading" style={{alignItems:"center",justifyContent:"center"}}>{auth.isAdmin === 0 ? 'Upgrade to Admin' : auth.isAdmin === 1 ? 'Admin Requests' : ''}</div>
 
-            {/*<Waitlist />*/}
+        { auth.isAdmin === 0 ? requestAdmin : auth.isAdmin === 1 ? <Waitlist /> : ''}
         </div>
         </div>
     </>

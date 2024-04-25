@@ -110,7 +110,7 @@ function calculateBoundsMatrix(transformationMatrix, x, y) {
     let transMatrix = transformationMatrix.map(row => row.map(e => parseFloat(e)));
     let lon = (y * transMatrix[1][0] - x * transMatrix[1][1] - transMatrix[1][0] * transMatrix[2][1] + transMatrix[2][0] * transMatrix[1][1]) / (transMatrix[1][0] * transMatrix[0][1] - transMatrix[0][0] * transMatrix[1][1]);
     let lat = (y * transMatrix[0][0] - x * transMatrix[0][1] - transMatrix[0][0] * transMatrix[2][1]  + transMatrix[2][0] * transMatrix[0][1]) / (transMatrix[0][0] * transMatrix[1][1] - transMatrix[1][0] * transMatrix[0][1]);
-
+    
     return [lon, lat];
 }
 
@@ -181,38 +181,6 @@ export function addConstraintsCricles(map, transformation, x, y, type) {
     }
 }
 
-function normalizeStrength(strength) {
-   if (strength < -90) return 0;
-   if (strength < -80) return 0.25;
-   if (strength < -70) return 0.5;
-   if (strength < -60) return 0.75;
-   return 1;
-}
-
-function weightedAverage(group) {
-    const k = 5;
-    const sortedGroup = group.sort((a, b) => a.distance - b.distance);
-    const origin = sortedGroup[0];
-    const kClosest = sortedGroup.slice(1, k + 1);
-
-    const ssidCounts = {};
-    kClosest.map((item) => {
-        item.data.map((e) => {
-            ssidCounts[e["SSID"]] = (ssidCounts[e["SSID"]] || 0) + 1;
-        });
-    });
-
-    let weightedSum = 0;
-    let weightSum = 0;
-
-    origin.data.map((e) => {
-        weightedSum += (ssidCounts[e["SSID"]] + 1 || 1) * e["RSSI"];
-        weightSum +=(ssidCounts[e["SSID"]] + 1 || 1);
-    });
-    
-    return weightSum !== 0 ? weightedSum / weightSum : 0;
-}
-
 export function removeHeatMap(map) {
     map.eachLayer(function(layer) {
         if (layer instanceof L.HeatLayer) {
@@ -221,8 +189,24 @@ export function removeHeatMap(map) {
     });
 }
 
-export function displayHeatmap(map, data, transformation) {
-    if (map == null || data == null || transformation == null) return;
+export function displayHeatmap(map, data, transformation, maxAP, threshold) {
+    if (map == null || data == null || transformation == null || maxAP == null) return;
+
+    let changedthreshold = -1000;
+    if (threshold === "0") {
+        changedthreshold = -60;
+    }
+    if (threshold === "25") {
+        changedthreshold = -70;
+    }
+    if (threshold === "50") {
+        changedthreshold = -80;
+    }
+    if (threshold === "75") {
+        changedthreshold = -90;
+    }
+
+    console.log(changedthreshold);
 
     map.eachLayer(function(layer) {
         if (layer instanceof L.HeatLayer) {
@@ -238,19 +222,23 @@ export function displayHeatmap(map, data, transformation) {
     });
 
     parsedData.map((element) => {
-        const distances = parsedData.map((item) => {
-            const distance = Math.sqrt(
-              Math.pow(item.x - element.x, 2) +
-              Math.pow(item.y - element.y, 2)
-            );
-
-            return {...item, distance: distance};
-        });
-        
-        const weightedRSSI = weightedAverage(distances);
-        let normalizedStrength = normalizeStrength(weightedRSSI);
-        heatmap.push([element.y, element.x, normalizedStrength]);
+        const count = element.data.reduce((acc, currentItem) => {
+            if (currentItem["RSSI"] > changedthreshold) {
+                return acc + 1;
+            }
+            return acc;
+        }, 0);
+        heatmap.push([element.y, element.x, parseFloat(count) / maxAP]);
     });
 
-    var heat = L.heatLayer(heatmap, {radius: 10, blur: 0, minOpacity: 0, max: 0.001, gradient: {"0.25": 'red', "0.5": 'orange', "0.75": 'yellow', "1": 'lime'}}).addTo(map);
+    var heat = L.heatLayer(heatmap, {radius: 10, blur: 0, minOpacity: 0, max: 0.01, gradient: {"0.25": 'red', "0.5": 'orange', "0.75": 'yellow', "1": 'lime'}}).addTo(map);
+}
+
+export function calculateMaxAP(data) {
+    let maxNum = 0;
+    data.map((item, index) => {
+        let numAP = item["data"].length;
+        if (numAP > maxNum) maxNum = numAP;
+    });
+    return maxNum;
 }

@@ -1,8 +1,9 @@
 // Handles all authorization processes
 
 import React, { useContext, useState, useEffect } from "react"
-import { auth } from "./firebase"
+import { auth, firestore } from "./firebase"
 import { sendEmailVerification, deleteUser, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
+import {doc, setDoc, getDoc, onSnapshot} from 'firebase/firestore'
 
 const AuthContext = React.createContext()
 
@@ -14,9 +15,12 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  function signup(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password)
+  async function signup(email, password) {
+    const user = (await auth.createUserWithEmailAndPassword(email, password));
+    await setDoc(doc(firestore,"users",user.user.uid),{likedLocations:{}, type:0}); // Creates user with default type 'viewer'
+    return user;
   }
 
   function verify(user) {
@@ -90,13 +94,20 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
-      setLoading(false)
+      if (user){
+        const unsub = onSnapshot(doc(firestore, "users", user.uid), (doc) => {
+          setIsAdmin(doc.data().type);
+        });
+      }
+      setLoading(false);
     })
+
     return unsubscribe
   }, [])
 
   const value = {
     currentUser,
+    isAdmin,
     login,
     signup,
     verify,
